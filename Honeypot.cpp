@@ -51,7 +51,7 @@ class Honeypot {
 				return true;
 			}
 
-			return !strncmp(readContent, FILE_CONTENT, strlen(FILE_CONTENT));
+			return !!strncmp(readContent, FILE_CONTENT, strlen(FILE_CONTENT));
 		}
 
 		void destory() {
