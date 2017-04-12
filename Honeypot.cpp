@@ -1,6 +1,3 @@
-#include <windows.h>
-#include <string.h>
-
 #include "stdafx.h"
 #include "Honeypot.h"
 
@@ -8,71 +5,66 @@
 
 #define MAX_LENGTH_READ_FILE_CONTENT (sizeof(FILE_CONTENT) + 1024)
 
+using namespace std;
+
 /* This class handles the Honeyput file status and maintainess */
-class Honeypot {
-	private:
-	LPCTSTR lpFileName;
+Honeypot::Honeypot(LPCTSTR lpFileName) {
+	this->lpFileName = lpFileName;
+}
 
-	public:
-		Honeypot(LPCTSTR lpFileName)
-		{
-			this->lpFileName = lpFileName;
-		}
+LPCTSTR Honeypot::getFileName() {
+	return lpFileName;
+}
 
-		LPCTSTR getFileName() {
-			return lpFileName;
-		}
+DWORD Honeypot::create() {
+	HANDLE fileHandle = CreateFile(lpFileName, GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, CREATE_NEW, FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
-		DWORD create() {
-			HANDLE fileHandle = CreateFile(lpFileName, GENERIC_READ | GENERIC_WRITE,
-				FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-				NULL, CREATE_NEW, FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-			
-			if (fileHandle == INVALID_HANDLE_VALUE) {
-				/* File creation failed */
-				return GetLastError();
-			}
+	if (fileHandle == INVALID_HANDLE_VALUE) {
+		/* File creation failed */
+		return GetLastError();
+	}
 
-			if (!WriteFile(fileHandle, FILE_CONTENT, wcslen(FILE_CONTENT), NULL, NULL)) {
-				/* Write content to file failed */
-				DeleteFile(lpFileName);
+	if (!WriteFile(fileHandle, FILE_CONTENT, wcslen(FILE_CONTENT), NULL, NULL)) {
+		/* Write content to file failed */
+		DeleteFile(lpFileName);
 
-				return GetLastError();
-			}
+		return GetLastError();
+	}
 
-			CloseHandle(fileHandle);
+	CloseHandle(fileHandle);
 
-			return 0;
-		}
+	return 0;
+}
 
-		bool isChanged() {
-			wchar_t readContent[MAX_LENGTH_READ_FILE_CONTENT];
+bool Honeypot::isChanged() {
+	wchar_t readContent[MAX_LENGTH_READ_FILE_CONTENT];
 
-			HANDLE fileHandle = CreateFile(lpFileName, GENERIC_READ,
-				FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	HANDLE fileHandle = CreateFile(lpFileName, GENERIC_READ,
+		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
-			if (fileHandle == INVALID_HANDLE_VALUE) {
-				/* File creation failed */
-				return true;
-			}
+	if (fileHandle == INVALID_HANDLE_VALUE) {
+		/* File creation failed */
+		return true;
+	}
 
-			if (!ReadFile(fileHandle, readContent, MAX_LENGTH_READ_FILE_CONTENT, NULL, NULL)) {
-				CloseHandle(fileHandle);
+	if (!ReadFile(fileHandle, readContent, MAX_LENGTH_READ_FILE_CONTENT, NULL, NULL)) {
+		CloseHandle(fileHandle);
 
-				return true;
-			}
+		return true;
+	}
 
-			CloseHandle(fileHandle);
+	CloseHandle(fileHandle);
 
-			if (wcslen(FILE_CONTENT) != wcslen(readContent)) {
-				return true;
-			}
+	if (wcslen(FILE_CONTENT) != wcslen(readContent)) {
+		return true;
+	}
 
-			return !!wcsncmp(readContent, FILE_CONTENT, wcslen(FILE_CONTENT));
-		}
+	return !!wcsncmp(readContent, FILE_CONTENT, wcslen(FILE_CONTENT));
+}
 
-		bool destory() {
-			return DeleteFile(lpFileName);
-		}
-};
+bool Honeypot::destory() {
+	return !!DeleteFile(lpFileName);
+}

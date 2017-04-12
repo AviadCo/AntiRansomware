@@ -1,3 +1,6 @@
+#include <windows.h>
+#include <string.h>
+
 #pragma once
 class Honeypot
 {

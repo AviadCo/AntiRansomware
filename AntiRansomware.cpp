@@ -1,9 +1,9 @@
 // AntiRansomware.cpp : Defines the entry point for the console application.
 //
 
-#include <string>
-
 #include "stdafx.h"
+
+#include <string>
 
 using std::string;
 
