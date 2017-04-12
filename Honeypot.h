@@ -12,6 +12,6 @@ public:
 		LPCTSTR getFileName();
 		DWORD create();
 		bool isChanged();
-		bool destory();
+		bool destroy();
 };
 

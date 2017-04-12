@@ -22,12 +22,12 @@ void HoneypotsManager::setLimitToHoneypots(unsigned int newLimit)
 		{
 			Honeypot& temp = *iter;
 
-			/*if (temp.destroy()) {
+			if (temp.destroy()) {
 				iter = honeypots.erase(iter);
 			}
 			else {
 				iter++;
-			}*/
+			}
 		}
 	}
 
@@ -51,13 +51,13 @@ void HoneypotsManager::removeHoneypots()
 	while (iter != honeypots.end())
 	{
 		Honeypot& temp = *iter;
-		/*if (temp.destroy()) {
+		if (temp.destroy()) {
 			iter = honeypots.erase(iter);
 		} 
 		else {
 			errorFlag = true;
 			iter++;
-		}*/
+		}
 	}
 
 	if (errorFlag) {

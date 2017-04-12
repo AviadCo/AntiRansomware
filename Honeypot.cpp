@@ -65,6 +65,6 @@ bool Honeypot::isChanged() {
 	return !!wcsncmp(readContent, FILE_CONTENT, wcslen(FILE_CONTENT));
 }
 
-bool Honeypot::destory() {
+bool Honeypot::destroy() {
 	return !!DeleteFile(lpFileName);
 }
