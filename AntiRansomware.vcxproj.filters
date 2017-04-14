@@ -48,6 +48,9 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="HoneypotNameGenerator.h">
+      <Filter>Header Files\Honeypots</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="AntiRansomware.cpp">
       <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="HoneypotNameGenerator.cpp">
+      <Filter>Source Files\Honeypots</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
