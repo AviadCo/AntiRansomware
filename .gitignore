@@ -3,3 +3,4 @@ ipch/*
 AntiRansomware.VC.VC.opendb
 AntiRansomware.VC.db
 *.suo
+log.txt

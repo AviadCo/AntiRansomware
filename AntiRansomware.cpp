@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+#include "Logger.h"
+
 #include <string>
 
 using std::string;
@@ -28,6 +30,7 @@ int main()
 		"ott", "odt", "DOC" , "pem", "csr", "crt", "kev",
 	};
 
+	log().info("Stating Main!!!");
 
     return 0;
 }
