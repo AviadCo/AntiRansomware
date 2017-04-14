@@ -74,6 +74,7 @@ void Logger::print(const string verbosity, const string msg)
 	}
 }
 
+/* std::string Functions */
 void Logger::debug(const string msg)
 {
 	if (this->verbosity_level <= VERBOSE_LEVEL_DEBUG) {
@@ -94,6 +95,32 @@ void Logger::error(const string msg)
 		print("[ERROR]", msg);
 	}
 }
+
+/* std::string Functions End */
+
+/* Unicode functions */
+string Logger::unicodeToString(LPCWSTR str) {
+	wstring ws(str);
+
+	return string(ws.begin(), ws.end());
+}
+
+void Logger::debug(LPCWSTR msg)
+{
+	debug(unicodeToString(msg));
+}
+
+void Logger::info(LPCWSTR msg)
+{
+	info(unicodeToString(msg));
+}
+
+void Logger::error(LPCWSTR msg)
+{
+	error(unicodeToString(msg));
+}
+
+/* Unicode functions End */
 
 Logger::~Logger()
 {

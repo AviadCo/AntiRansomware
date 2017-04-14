@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Honeypot.h"
+#include "Logger.h"
 
 #define FILE_CONTENT L"@NOAM YOU MAKE ME CRAZY AHHHHHHHHHHHHH 01234\n"
 
-#define MAX_LENGTH_READ_FILE_CONTENT (sizeof(FILE_CONTENT) + 1024)
+#define MAX_LENGTH_READ_FILE_CONTENT ((sizeof(FILE_CONTENT) + 1024) * sizeof(wchar_t))
 
 using namespace std;
 
@@ -32,12 +33,16 @@ DWORD Honeypot::create() {
 		NULL, CREATE_NEW, FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (fileHandle == INVALID_HANDLE_VALUE) {
-		/* File creation failed */
+		log().error("CreateFile failed to open Honeypot " + Logger::unicodeToString(lpFileName) + ", errno: " + to_string(GetLastError()));
+
 		return GetLastError();
 	}
 
 	if (!WriteFile(fileHandle, FILE_CONTENT, wcslen(FILE_CONTENT), NULL, NULL)) {
 		/* Write content to file failed */
+		log().error("CreateFile failed to write content to Honeyput " + Logger::unicodeToString(lpFileName) + ", errno: " + to_string(GetLastError()));
+		log().error("Removing Honeypot from system.");
+
 		DeleteFile(lpFileName);
 
 		return GetLastError();
@@ -57,10 +62,14 @@ bool Honeypot::isChanged() {
 
 	if (fileHandle == INVALID_HANDLE_VALUE) {
 		/* File creation failed */
+		log().error("Failed to open Honeypot " + Logger::unicodeToString(lpFileName) + " to check modifications.");
+
 		return true;
 	}
 
 	if (!ReadFile(fileHandle, readContent, MAX_LENGTH_READ_FILE_CONTENT, NULL, NULL)) {
+		log().error("Failed to read Honeypot " + Logger::unicodeToString(lpFileName) + " to check modifications.");
+
 		CloseHandle(fileHandle);
 
 		return true;
@@ -69,6 +78,8 @@ bool Honeypot::isChanged() {
 	CloseHandle(fileHandle);
 
 	if (wcslen(FILE_CONTENT) != wcslen(readContent)) {
+		log().info("Honeypot " + Logger::unicodeToString(lpFileName) + " content length was modified.");
+
 		return true;
 	}
 
