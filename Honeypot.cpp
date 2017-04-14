@@ -7,6 +7,16 @@
 
 using namespace std;
 
+void Honeypot::findUserDirectories()
+{
+	
+	/*PWSTR strResult;
+	HRESULT SHGetKnownFolderPath(	_In_     REFKNOWNFOLDERID rfid,
+		0, NULL, &strResult
+	);*/
+
+}
+
 /* This class handles the Honeyput file status and maintainess */
 Honeypot::Honeypot(LPCTSTR lpFileName) {
 	this->lpFileName = lpFileName;

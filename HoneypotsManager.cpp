@@ -3,6 +3,7 @@
 
 #define DEFAULT_HONEYPOTS_LIMIT 10
 
+
 HoneypotsManager::HoneypotsManager()
 {
 	this->honeypotsLimit = DEFAULT_HONEYPOTS_LIMIT;
@@ -36,6 +37,7 @@ void HoneypotsManager::setLimitToHoneypots(unsigned int newLimit)
 
 DWORD HoneypotsManager::deployHoneypots()
 {
+
 	return 0;
 }
 
