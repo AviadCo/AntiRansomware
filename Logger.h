@@ -14,7 +14,7 @@ private:
 	int verbosity_level;
 	bool enable_logger;
 
-	void print(const string verbosity, const string msg);
+	void print(const string verbosity, const string tag, const string msg);
 	string get_time();
 public:
 	/* Verbosity level can be: */
@@ -26,15 +26,15 @@ public:
 	~Logger();
 
 	/* std::string functions */
-	void debug(const string msg);
-	void info(const string msg);
-	void error(const string msg);
+	void debug(const string tag, const string msg);
+	void info(const string tag, const string msg);
+	void error(const string tag, const string msg);
 
 	/* Unicode functions */
 	static string unicodeToString(LPCWSTR str);
-	void debug(LPCWSTR msg);
-	void info(LPCWSTR msg);
-	void error(LPCWSTR msg);
+	void debug(const string tag, LPCWSTR msg);
+	void info(const string tag, LPCWSTR msg);
+	void error(const string tag, LPCWSTR msg);
 };
 
 class LoggerFailedToOpenLogException : public exception {};

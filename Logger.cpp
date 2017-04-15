@@ -58,7 +58,7 @@ string Logger::get_time()
 	return "[ " + string(buffer) + " ] - ";
 }
 
-void Logger::print(const string verbosity, const string msg)
+void Logger::print(const string verbosity, const string tag, const string msg)
 {
 	if (!this->enable_logger) {
 		return;
@@ -66,7 +66,7 @@ void Logger::print(const string verbosity, const string msg)
 
 	ofstream myfile(this->file_log_name, ios_base::app);
 	if (myfile.is_open()) {
-		myfile << verbosity << get_time() << msg << endl;
+		myfile << verbosity << get_time() << tag << ":  " << msg << endl;
 		myfile.close();
 	}
 	else {
@@ -75,24 +75,24 @@ void Logger::print(const string verbosity, const string msg)
 }
 
 /* std::string Functions */
-void Logger::debug(const string msg)
+void Logger::debug(const string tag, const string msg)
 {
 	if (this->verbosity_level <= VERBOSE_LEVEL_DEBUG) {
-		print("[DEBUG]", msg);
+		print("[DEBUG]", tag, msg);
 	}
 }
 
-void Logger::info(const string msg)
+void Logger::info(const string tag, const string msg)
 {
 	if (this->verbosity_level <= VERBOSE_LEVEL_INFO) {
-		print("[INFO]", msg);
+		print("[INFO]", tag, msg);
 	}
 }
 
-void Logger::error(const string msg)
+void Logger::error(const string tag, const string msg)
 {
 	if (this->verbosity_level <= VERBOSE_LEVEL_ERROR) {
-		print("[ERROR]", msg);
+		print("[ERROR]", tag, msg);
 	}
 }
 
@@ -105,19 +105,19 @@ string Logger::unicodeToString(LPCWSTR str) {
 	return string(ws.begin(), ws.end());
 }
 
-void Logger::debug(LPCWSTR msg)
+void Logger::debug(const string tag, LPCWSTR msg)
 {
-	debug(unicodeToString(msg));
+	debug(tag, unicodeToString(msg));
 }
 
-void Logger::info(LPCWSTR msg)
+void Logger::info(const string tag, LPCWSTR msg)
 {
-	info(unicodeToString(msg));
+	info(tag, unicodeToString(msg));
 }
 
-void Logger::error(LPCWSTR msg)
+void Logger::error(const string tag, LPCWSTR msg)
 {
-	error(unicodeToString(msg));
+	error(tag, unicodeToString(msg));
 }
 
 /* Unicode functions End */

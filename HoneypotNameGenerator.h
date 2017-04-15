@@ -50,7 +50,7 @@ public:
 	static string HoneypotNameGenerator::getFileExtenstion(unsigned int extension)
 	{
 		if (extension >= FILE_EXTENSTIONS.size()) {
-			log().error("Failed to get file extension with index " + extension);
+			log().error(__FUNCTION__, "Failed to get file extension with index " + extension);
 
 			throw HoneypotsNameGeneratorFailure();
 		}
@@ -62,7 +62,7 @@ public:
 		string fileName;
 
 		if (len > MAX_FILENAME_LENGTH) {
-			log().error("Failed to generate random file name, file name length is bigger than " + MAX_FILENAME_LENGTH);
+			log().error(__FUNCTION__, "Failed to generate random file name, file name length is bigger than " + MAX_FILENAME_LENGTH);
 
 			throw HoneypotsNameGeneratorFailure();
 		}
@@ -91,13 +91,13 @@ public:
 		if (SUCCEEDED(SHGetKnownFolderPath(rdid, 0, NULL, &path))) {
 			pathStr = Logger::unicodeToString(path);
 
-			log().debug("Succeeded to get folder path: " + pathStr);
+			log().debug(__FUNCTION__, "Succeeded to get folder path: " + pathStr);
 
 			/* must call free on SHGetKnownFolderPath success */
 			CoTaskMemFree(path);
 		}
 		else {
-			log().error("Failed to get folder path to create Honeypot name.");
+			log().error(__FUNCTION__, "Failed to get folder path to create Honeypot name.");
 
 			throw HoneypotsNameGeneratorFailure();
 		}
@@ -153,7 +153,7 @@ public:
 		for (unsigned int i = 0; i < num_of_files; ++i) {
 			string newFileName = getRandomFullFileName(getRandomFolderID());
 
-			log().info("New Honeypot name created: " + newFileName);
+			log().info(__FUNCTION__, "New Honeypot name created: " + newFileName);
 
 			filesList.push_back(newFileName);
 		}
