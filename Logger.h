@@ -5,6 +5,7 @@
 #include <windows.h>
 
 using std::string;
+using std::wstring;
 using std::exception;
 
 class Logger
@@ -29,6 +30,12 @@ public:
 	void debug(const string tag, const string msg);
 	void info(const string tag, const string msg);
 	void error(const string tag, const string msg);
+
+	/* wstring functions */
+	static string wstringToString(wstring str);
+	void debug(const string tag, wstring msg);
+	void info(const string tag, wstring msg);
+	void error(const string tag, wstring msg);
 
 	/* Unicode functions */
 	static string unicodeToString(LPCWSTR str);

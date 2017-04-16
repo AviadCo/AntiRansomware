@@ -98,6 +98,29 @@ void Logger::error(const string tag, const string msg)
 
 /* std::string Functions End */
 
+/* std::wstring functions */
+string Logger::wstringToString(wstring str) {
+
+	return string(str.begin(), str.end());
+}
+
+void Logger::debug(const string tag, wstring msg)
+{
+	debug(tag, wstringToString(msg));
+}
+
+void Logger::info(const string tag, wstring msg)
+{
+	info(tag, wstringToString(msg));
+}
+
+void Logger::error(const string tag, wstring msg)
+{
+	error(tag, wstringToString(msg));
+}
+
+/* Unicode functions End */
+
 /* Unicode functions */
 string Logger::unicodeToString(LPCWSTR str) {
 	wstring ws(str);

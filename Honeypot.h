@@ -3,25 +3,23 @@
 #include <windows.h>
 #include <string>
 
-using std::string;
+using std::wstring;
 
 class Honeypot
 {
 private:
-	LPCTSTR lpFileName;
-	static const string dirUserPictures;
-	static const string dirUserDocuments;
-	static const string dirUserVideos;
-	static const string dirUser;
-
-
-	void findUserDirectories();
+	wstring lpFileName;
 
 public:
-	Honeypot(LPCTSTR lpFileName);
-	LPCTSTR getFileName();
+	Honeypot(const wstring lpFileName);
+	Honeypot(LPCWSTR lpFileName);
+	const wstring getFileName();
 	DWORD create();
 	bool isChanged();
 	bool destroy();
+	bool operator==(const Honeypot& other);
+	bool operator==(const wstring& other);
+	bool operator==(LPCWSTR other);
+	
 };
 
