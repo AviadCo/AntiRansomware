@@ -2,20 +2,12 @@
 #include "HoneypotsManager.h"
 #include "HoneypotNameGenerator.h"
 
-
-void StringToWString(std::wstring &ws, const std::string &s)
-{
-	std::wstring wsTmp(s.begin(), s.end());
-	ws = wsTmp;
-}
-
 void HoneypotsManager::addHoneypots(unsigned int num)
 {
-	list<string> newFilenames = HoneypotNameGenerator::createFullFileNames(num);
+	list<wstring> newFilenames = HoneypotNameGenerator::createFullFileNames(num);
 	unsigned int i = 0;
 	while (i <= num) {
 		wstring filename;
-		StringToWString(filename, HoneypotNameGenerator::createFullFileNames(1).front());
 		Honeypot tempHP(filename);
 
 		bool tempHPfound = std::find(honeypots.begin(), honeypots.end(), tempHP) != honeypots.end();
