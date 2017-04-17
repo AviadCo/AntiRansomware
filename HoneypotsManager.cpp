@@ -1,40 +1,66 @@
 #include "stdafx.h"
 
+#include <iostream>
+
 #include "HoneypotsManager.h"
 #include "HoneypotNameGenerator.h"
+
+using std::wcout;
+
+void HoneypotsManager::addHoneypot(Honeypot& honeypot)
+{
+	honeypots.push_front(honeypot);
+	honeypot.create();
+	registryIO.writeHoneypot(honeypot.getFileName());
+}
+
+void HoneypotsManager::removeOneHoneypot()
+{
+	Honeypot& honeypot = honeypots.front();
+	registryIO.removeHoneypot(honeypot.getFileName());
+	honeypot.destroy();
+	honeypots.pop_front();
+}
 
 void HoneypotsManager::addHoneypots(unsigned int num)
 {
 	list<wstring> newFilenames = HoneypotNameGenerator::createFullFileNames(num);
-	unsigned int i = 0;
-	while (i <= num) {
-		wstring filename;
+	unsigned int countAlreadyExist = 0; /* some of the files might exist already */
+
+	for (wstring const& filename : newFilenames) {
 		Honeypot tempHP(filename);
 
+		/* check if the given Honeypot already exists */
 		bool tempHPfound = std::find(honeypots.begin(), honeypots.end(), tempHP) != honeypots.end();
 		if (!tempHPfound) {
-			honeypots.push_front(tempHP);
-			tempHP.create();
-			registryIO.writeHoneypot(filename);
-			i++;
+			addHoneypot(tempHP);
 		}
+		else {
+			++countAlreadyExist;
+		}
+	}
+
+	/* some of the file names already exists, generating new names */
+	if (countAlreadyExist) {
+		addHoneypots(countAlreadyExist);
 	}
 }
 
 void HoneypotsManager::removeHoneypots(unsigned int num)
 {
 	unsigned int i = 0;
+
 	while (i <= num) {
-		Honeypot tempHP = honeypots.front();
-		registryIO.removeHoneypot(tempHP.getFileName());
-		tempHP.destroy();
-		honeypots.pop_front();
-		i++;
+		removeOneHoneypot();
+
+		++i;
 	}
 }
 
-void HoneypotsManager::changeHoneypotsAmountInFileSystem(unsigned int oldSize, unsigned int newSize)
+void HoneypotsManager::changeHoneypotsAmountInFileSystem(unsigned int newSize)
 {
+	unsigned int oldSize = honeypots.size();
+
 	if (newSize > oldSize) {
 		addHoneypots(newSize - oldSize);
 	}
@@ -51,75 +77,36 @@ void HoneypotsManager::loadHoneypotsFromRegistry()
 		Honeypot tempHP(filename);
 		honeypots.push_front(tempHP);
 	}
-	
-	honeypotsLimit = honeypots.size();
 }
 
 HoneypotsManager::HoneypotsManager()
 {
 	loadHoneypotsFromRegistry();
 	if (honeypots.empty()) {
-		this->honeypotsLimit = DEFAULT_HONEYPOTS_LIMIT;
-		changeHoneypotsAmountInFileSystem(0, honeypotsLimit);
+		changeHoneypotsAmountInFileSystem(DEFAULT_HONEYPOTS_LIMIT);
 	}
-	
 }
 
-HoneypotsManager::HoneypotsManager(unsigned int limit)
+HoneypotsManager::HoneypotsManager(unsigned int numOfHP)
 {
 	loadHoneypotsFromRegistry();
-	changeHoneypotsAmountInFileSystem(this->honeypotsLimit, limit);
-	this->honeypotsLimit = limit;
-}
-
-
-//todo: here you need to change the amount of honeypots acorrding to the new limit
-void HoneypotsManager::setLimitToHoneypots(unsigned int newLimit)
-{
-	if (newLimit > honeypotsLimit) {
-		//delutes the honeypots to fit the new limit
-		list<Honeypot>::iterator iter = honeypots.begin();
-		while (honeypots.size() > newLimit)
-		{
-			Honeypot& temp = *iter;
-
-			if (temp.destroy()) {
-				iter = honeypots.erase(iter);
-			}
-			else {
-				iter++;
-			}
-		}
-	}
-
-	honeypotsLimit = newLimit;
+	changeHoneypotsAmountInFileSystem(numOfHP);
 }
 
 void HoneypotsManager::monitorHoneypots()
 {
+	for (Honeypot& honeypot : honeypots) {
+		if (honeypot.isChanged()) {
+			wcout << L"Alert - Honeypot Manager found suspicious act in one of the Honeypots";
+			wcout << L"Honeypot path is: " + honeypot.getFileName();
+			wcout << L"Please be aware that ransom ware might be detected in the system!!!";
+		}
+	}
 }
 
 void HoneypotsManager::removeAllHoneypots()
 {
-	bool errorFlag = false;
-
-	list<Honeypot>::iterator iter = honeypots.begin();
-	while (iter != honeypots.end())
-	{
-		Honeypot& temp = *iter;
-		if (temp.destroy()) {
-			registryIO.removeHoneypot(temp.getFileName());
-			iter = honeypots.erase(iter);
-		} 
-		else {
-			errorFlag = true;
-			iter++;
-		}
-	}
-
-	if (errorFlag) {
-		throw CantRemoveHoneypot();
-	}
+	changeHoneypotsAmountInFileSystem(0);
 }
 
 HoneypotsManager::~HoneypotsManager()

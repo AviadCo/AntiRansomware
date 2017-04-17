@@ -16,11 +16,12 @@ class HoneypotsManager
 private:
 	RegistryIO registryIO;
 	list<Honeypot> honeypots;
-	unsigned int honeypotsLimit;
 	
+	void addHoneypot(Honeypot& honeypot);
+	void removeOneHoneypot();
 	void addHoneypots(unsigned int num);
 	void removeHoneypots(unsigned int num);
-	void changeHoneypotsAmountInFileSystem(unsigned int oldSize, unsigned int newSize);
+	void changeHoneypotsAmountInFileSystem(unsigned int newSize);
 	void loadHoneypotsFromRegistry();
 
 public:
