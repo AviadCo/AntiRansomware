@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "Logger.h"
 
 #include <iostream>
 #include <fstream>
 #include <ctime>
+
+#include "Logger.h"
 
 using namespace std;
 

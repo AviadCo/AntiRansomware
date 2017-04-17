@@ -1,15 +1,15 @@
 #pragma once
-#include <Windows.h>
+
 #include <list>
 #include <exception>
 
 #include "Honeypot.h"
 #include "RegistryIO.h"
 
-#define DEFAULT_HONEYPOTS_LIMIT 10
-
 using std::list;
 using std::exception;
+
+#define DEFAULT_HONEYPOTS_LIMIT 10
 
 class HoneypotsManager
 {

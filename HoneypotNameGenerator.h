@@ -1,13 +1,12 @@
 #pragma once
 
 #include <Windows.h>
-#include <KnownFolders.h>
 #include <shlobj.h>
+#include <KnownFolders.h>
+
 #include <vector>
 #include <list>
-#include <exception>
 
-#include "HoneypotNameGenerator.h"
 #include "Logger.h"
 
 using std::list;

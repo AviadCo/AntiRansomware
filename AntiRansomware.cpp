@@ -3,11 +3,7 @@
 
 #include "stdafx.h"
 
-#include "Logger.h"
 #include "HoneypotNameGenerator.h"
-
-#include <string>
-#include <list>
 
 using std::wstring;
 using std::list;

@@ -3,12 +3,11 @@
 #include "Honeypot.h"
 #include "Logger.h"
 
+using namespace std;
+
 #define FILE_CONTENT L"@NOAM YOU MAKE ME CRAZY AHHHHHHHHHHHHH 01234\n"
 
 #define MAX_LENGTH_READ_FILE_CONTENT ((sizeof(FILE_CONTENT) + 1024) * sizeof(wchar_t))
-
-using namespace std;
-
 
 /* This class handles the Honeyput file status and maintainess */
 Honeypot::Honeypot(LPCWSTR lpFileName): lpFileName(lpFileName){

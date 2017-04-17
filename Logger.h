@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <exception>
 #include <windows.h>
+
+#include <string>
 
 using std::string;
 using std::wstring;
