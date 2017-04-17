@@ -6,6 +6,7 @@
 #include "HoneypotNameGenerator.h"
 
 using std::wcout;
+using std::endl;
 
 void HoneypotsManager::addHoneypot(Honeypot& honeypot)
 {
@@ -93,15 +94,21 @@ HoneypotsManager::HoneypotsManager(unsigned int numOfHP)
 	changeHoneypotsAmountInFileSystem(numOfHP);
 }
 
-void HoneypotsManager::monitorHoneypots()
+bool HoneypotsManager::monitorHoneypots()
 {
+	bool alert = false;
+
 	for (Honeypot& honeypot : honeypots) {
 		if (honeypot.isChanged()) {
-			wcout << L"Alert - Honeypot Manager found suspicious act in one of the Honeypots";
-			wcout << L"Honeypot path is: " + honeypot.getFileName();
-			wcout << L"Please be aware that ransom ware might be detected in the system!!!";
+			wcout << L"Alert - Honeypot Manager found suspicious act in one of the Honeypots" << endl;
+			wcout << L"Honeypot path is: " + honeypot.getFileName() << endl;
+			wcout << L"Please be aware that ransom ware might be detected in the system!!!" << endl;
+
+			alert = true;
 		}
 	}
+	
+	return alert;
 }
 
 void HoneypotsManager::removeAllHoneypots()

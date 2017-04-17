@@ -3,22 +3,56 @@
 
 #include "stdafx.h"
 
-#include "HoneypotNameGenerator.h"
-#include "Honeypot.h"
 #include <fstream>
 #include <iostream>
 
+#include "HoneypotsManager.h"
+#include "HoneypotNameGenerator.h"
+#include "Honeypot.h"
+
 using std::wstring;
 using std::list;
+using std::wcout;
+using std::cin;
+using std::endl;
 
 int main()
 {
-	list<wstring> checkList = HoneypotNameGenerator::createFullFileNames();
+	unsigned int totalTime, intervalTime;
+	HoneypotsManager honeypotsManager = HoneypotsManager();
 
-	log().info(__FUNCTION__, "Stating Main!!!");
+	wcout << L"Creating default number of honeypots" << endl;
 
-	for (list<wstring>::iterator it = checkList.begin(); it != checkList.end(); ++it)
-		log().info(__FUNCTION__, L"File name: " + *it);
+	wcout << L"Please Enter total time to run the application in seconds" << endl;
+	cin >> totalTime;
+
+	log().info(__FUNCTION__, "Total time from user: " + totalTime);
+
+	wcout << L"Please Enter interval time to run the application in seconds" << endl;
+	cin >> intervalTime;
+
+	log().info(__FUNCTION__, "Interval time from user: " + intervalTime);
+
+	if (totalTime < intervalTime) {
+		wcout << L"Interval time must be lower than total time, quiting" << endl;
+	}
+
+	for (unsigned int i = 0; i < totalTime / intervalTime; ++i) {
+		wcout << L"Interval " << i << " started" << endl;
+
+		if (honeypotsManager.monitorHoneypots()) {
+			wcout << L"Alert - Honeypot has changed" << endl;
+		}
+		else {
+			wcout << L"Interval finished with no alerts" << endl;
+		}
+
+		Sleep(intervalTime * 1000);
+	}
+
+	wcout << L"Total time passed, removing honeypots and quiting" << endl;
+
+	honeypotsManager.removeAllHoneypots();
 
     return 0;
 }

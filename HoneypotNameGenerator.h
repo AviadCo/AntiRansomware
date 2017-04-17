@@ -3,6 +3,9 @@
 #include <Windows.h>
 #include <shlobj.h>
 #include <KnownFolders.h>
+#include <stdlib.h>
+
+#include <time.h> 
 
 #include <vector>
 #include <list>
@@ -14,7 +17,7 @@ using std::vector;
 
 #define MAX_FILENAME_LENGTH 50
 #define DEFAULT_NUMBER_OF_HONEYPOTS_NAME 20
-#define DEFAULT_NUMBER_OF_DOLFER_IDS 7
+#define DEFAULT_NUMBER_OF_DOLFER_IDS 6
 
 static const wstring BITCOIN_WALLET = L"wallet.dat";
 static const vector<wstring> FILE_EXTENSTIONS = {
@@ -43,6 +46,8 @@ private:
 public:
 	static wstring HoneypotNameGenerator::getRandomFileExtenstion()
 	{
+		srand(time(NULL));
+
 		return FILE_EXTENSTIONS[rand() % (FILE_EXTENSTIONS.size() - 1)];
 	}
 
@@ -67,10 +72,9 @@ public:
 		}
 
 		static const wchar_t alphanum[] =
-			L"0123456789"
-			L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-			L"abcdefghijklmnopqrstuvwxyz";
+			L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
+		srand(time(NULL));
 		for (unsigned int i = 0; i < len; ++i) {
 			fileName += alphanum[rand() % (sizeof(alphanum) - 1)];
 		}
@@ -79,6 +83,8 @@ public:
 	}
 
 	static wstring HoneypotNameGenerator::generateRandomFileName(wstring fileExtenstion) {
+		srand(time(NULL));
+
 		return generateRandomFileName(rand() % MAX_FILENAME_LENGTH, fileExtenstion);
 	}
 
@@ -121,6 +127,8 @@ public:
 
 	static REFKNOWNFOLDERID getRandomFolderID()
 	{
+		srand(time(NULL));
+
 		switch ((rand() % DEFAULT_NUMBER_OF_DOLFER_IDS)) {
 		case 0:
 			return FOLDERID_Desktop;
@@ -139,9 +147,6 @@ public:
 
 		case 5:
 			return FOLDERID_Pictures;
-
-		case 6:
-			return FOLDERID_ProgramFiles;
 		}
 	}
 
