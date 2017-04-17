@@ -26,21 +26,108 @@ public:
 	Logger(string file_log_name, int verbosity_level, bool enable_logger);
 	~Logger();
 
-	/* std::string functions */
+	/************************************************************************/
+	/* string functions                                                    */
+	/************************************************************************/
+	//************************************
+	// Method:    debug - print in the log file with log level 'debug'
+	// FullName:  Logger::debug
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: string msg - Content of the log message
+	//************************************
 	void debug(const string tag, const string msg);
+	//************************************
+	// Method:    info - print in the log file with log level 'info'
+	// FullName:  Logger::info
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: string msg - Content of the log message
+	//************************************
 	void info(const string tag, const string msg);
+	//************************************
+	// Method:    error - print in the log file with log level 'error'
+	// FullName:  Logger::error
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: string msg - Content of the log message
+	//************************************
 	void error(const string tag, const string msg);
 
-	/* wstring functions */
+	/************************************************************************/
+	/* wstring functions                                                    */
+	/************************************************************************/
 	static string wstringToString(wstring str);
+	//************************************
+	// Method:    debug - print in the log file with log level 'debug'
+	// FullName:  Logger::debug
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: wstring msg - Content of the log message
+	//************************************
 	void debug(const string tag, wstring msg);
+	//************************************
+	// Method:    info - print in the log file with log level 'info'
+	// FullName:  Logger::info
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: wstring msg - Content of the log message
+	//************************************
 	void info(const string tag, wstring msg);
+	//************************************
+	// Method:    error - print in the log file with log level 'error'
+	// FullName:  Logger::error
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: wstring msg - Content of the log message
+	//************************************
 	void error(const string tag, wstring msg);
 
-	/* Unicode functions */
+	/************************************************************************/
+	/* Unicode functions                                                    */
+	/************************************************************************/
 	static string unicodeToString(LPCWSTR str);
+	//************************************
+	// Method:    debug - print in the log file with log level 'debug'
+	// FullName:  Logger::debug
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: LPCWSTR msg - Content of the log message
+	//************************************
 	void debug(const string tag, LPCWSTR msg);
+	//************************************
+	// Method:    info - print in the log file with log level 'info'
+	// FullName:  Logger::info
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: LPCWSTR msg - Content of the log message
+	//************************************
 	void info(const string tag, LPCWSTR msg);
+	//************************************
+	// Method:    error - print in the log file with log level 'error'
+	// FullName:  Logger::error
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: const string tag - Common use: name of the called function (__FUNCTION__)
+	// Parameter: LPCWSTR msg - Content of the log message
+	//************************************
 	void error(const string tag, LPCWSTR msg);
 };
 

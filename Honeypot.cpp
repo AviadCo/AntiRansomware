@@ -13,6 +13,9 @@ using namespace std;
 Honeypot::Honeypot(LPCWSTR lpFileName): lpFileName(lpFileName){
 }
 
+/************************************************************************/
+/* This is Constructor                                                  */
+/************************************************************************/
 Honeypot::Honeypot(const wstring lpFileName) : lpFileName(lpFileName) {
 }
 

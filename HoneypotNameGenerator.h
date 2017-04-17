@@ -41,8 +41,6 @@ class HoneypotNameGenerator
 private:
 
 public:
-	HoneypotNameGenerator();
-	~HoneypotNameGenerator();
 	static wstring HoneypotNameGenerator::getRandomFileExtenstion()
 	{
 		return FILE_EXTENSTIONS[rand() % (FILE_EXTENSTIONS.size() - 1)];

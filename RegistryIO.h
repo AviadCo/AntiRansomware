@@ -41,8 +41,31 @@ private:
 	*/
 public:
 	RegistryIO();
+	//************************************
+	// Method:    writeHoneypot
+	// FullName:  RegistryIO::writeHoneypot
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: wstring path - save the Honeypot path in the registry.
+	//************************************
 	void writeHoneypot(wstring path);
+	//************************************
+	// Method:    readHoneypots
+	// FullName:  RegistryIO::readHoneypots
+	// Access:    public 
+	// Returns:   list<wstring> - list of all stored Honeypots in the system
+	// Qualifier:
+	//************************************
 	list<wstring> readHoneypots();
+	//************************************
+	// Method:    removeHoneypot
+	// FullName:  RegistryIO::removeHoneypot
+	// Access:    public 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: wstring path - the path of the Honeypot to be removed
+	//************************************
 	void removeHoneypot(wstring path);
 	~RegistryIO();
 };
