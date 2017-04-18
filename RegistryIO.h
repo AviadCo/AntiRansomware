@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <exception>
+#include "Honeypot.h"
 
 using std::wstring;
 using std::list;
@@ -41,15 +42,17 @@ private:
 	*/
 public:
 	RegistryIO();
+
 	//************************************
 	// Method:    writeHoneypot
 	// FullName:  RegistryIO::writeHoneypot
 	// Access:    public 
 	// Returns:   void
 	// Qualifier:
-	// Parameter: wstring path - save the Honeypot path in the registry.
+	// Parameter: Honeypot honeypot - save the Honeypot in the registry.
 	//************************************
-	void writeHoneypot(wstring path);
+	void writeHoneypot(Honeypot honeypot);
+
 	//************************************
 	// Method:    readHoneypots
 	// FullName:  RegistryIO::readHoneypots
@@ -58,15 +61,17 @@ public:
 	// Qualifier:
 	//************************************
 	list<wstring> readHoneypots();
+
 	//************************************
 	// Method:    removeHoneypot
 	// FullName:  RegistryIO::removeHoneypot
 	// Access:    public 
 	// Returns:   void
 	// Qualifier:
-	// Parameter: wstring path - the path of the Honeypot to be removed
+	// Parameter: Honeypot honeypot - the Honeypot to be removed
 	//************************************
-	void removeHoneypot(wstring path);
+	void removeHoneypot(Honeypot honeypot);
+
 	~RegistryIO();
 };
 

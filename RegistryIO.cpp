@@ -147,9 +147,9 @@ RegistryIO::RegistryIO() : regkeyHome(openKey(HKEY_CURRENT_USER, REGISTRY_KEY_HO
 { 
 }
 
-void RegistryIO::writeHoneypot(wstring path)
+void RegistryIO::writeHoneypot(Honeypot honeypot)
 {
-	setValueData(regkeyHonypots, path, L"");
+	setValueData(regkeyHonypots, honeypot.getFileName(), L"");
 }
 
 list<wstring> RegistryIO::readHoneypots()
@@ -157,9 +157,9 @@ list<wstring> RegistryIO::readHoneypots()
 	return getAllValuesNames(regkeyHonypots);
 }
 
-void RegistryIO::removeHoneypot(wstring path)
+void RegistryIO::removeHoneypot(Honeypot honeypot)
 {
-	deleteValueByName(regkeyHonypots, path);
+	deleteValueByName(regkeyHonypots, honeypot.getFileName());
 }
 
 

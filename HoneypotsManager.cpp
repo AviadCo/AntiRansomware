@@ -12,13 +12,13 @@ void HoneypotsManager::addHoneypot(Honeypot& honeypot)
 {
 	honeypots.push_front(honeypot);
 	honeypot.create();
-	registryIO.writeHoneypot(honeypot.getFileName());
+	registryIO.writeHoneypot(honeypot);
 }
 
 void HoneypotsManager::removeOneHoneypot()
 {
 	Honeypot& honeypot = honeypots.front();
-	registryIO.removeHoneypot(honeypot.getFileName());
+	registryIO.removeHoneypot(honeypot);
 	honeypot.destroy();
 	honeypots.pop_front();
 }
