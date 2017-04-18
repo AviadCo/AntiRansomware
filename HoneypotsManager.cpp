@@ -51,7 +51,7 @@ void HoneypotsManager::removeHoneypots(unsigned int num)
 {
 	unsigned int i = 0;
 
-	while (i <= num) {
+	while (i < num) {
 		removeOneHoneypot();
 
 		++i;

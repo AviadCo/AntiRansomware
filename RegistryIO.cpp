@@ -48,8 +48,8 @@ void RegistryIO::closeKey(HKEY where)
 
 void RegistryIO::setValueData(HKEY where, wstring name, wstring value)
 {
-	DWORD cbData = 0;
-	LONG nError = RegSetValue(where, name.c_str(), REG_SZ, value.c_str(), cbData);
+	DWORD cbData = (value.length() + 1) * sizeof(WCHAR);
+	LONG nError = RegSetKeyValue(where, NULL, name.c_str(), REG_SZ, value.c_str(), cbData);
 
 	if (nError != ERROR_SUCCESS) {
 		log().error(__FUNCTION__, L"can't set value " + name);
