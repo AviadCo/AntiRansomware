@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -13,20 +9,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Honeypots">
-      <UniqueIdentifier>{ea03257c-7100-4f86-813d-2704389a5e90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\utils">
-      <UniqueIdentifier>{e1510f5d-1f2c-4ae9-bee7-f2df96d034e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\main">
-      <UniqueIdentifier>{a2941204-bf58-449f-8267-4201a818fd00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Honeypots">
       <UniqueIdentifier>{849054d0-0b4b-4534-8ccf-0383945edc98}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\utils">
       <UniqueIdentifier>{12eb54e9-b51a-4039-a755-ef0bf4c0109b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Source Files\Honeypots">
+      <UniqueIdentifier>{ea03257c-7100-4f86-813d-2704389a5e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Source Files\utils">
+      <UniqueIdentifier>{e1510f5d-1f2c-4ae9-bee7-f2df96d034e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Source Files\main">
+      <UniqueIdentifier>{a2941204-bf58-449f-8267-4201a818fd00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,28 +54,34 @@
     <ClInclude Include="RegistryIO.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystemHelper.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Honeypot.cpp">
-      <Filter>Source Files\Honeypots</Filter>
+      <Filter>Resource Files\Source Files\Honeypots</Filter>
     </ClCompile>
     <ClCompile Include="HoneypotsManager.cpp">
-      <Filter>Source Files\Honeypots</Filter>
+      <Filter>Resource Files\Source Files\Honeypots</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Source Files\utils</Filter>
+      <Filter>Resource Files\Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="AntiRansomware.cpp">
-      <Filter>Source Files\main</Filter>
+      <Filter>Resource Files\Source Files\main</Filter>
     </ClCompile>
     <ClCompile Include="HoneypotNameGenerator.cpp">
-      <Filter>Source Files\Honeypots</Filter>
+      <Filter>Resource Files\Source Files\Honeypots</Filter>
     </ClCompile>
     <ClCompile Include="RegistryIO.cpp">
-      <Filter>Source Files\utils</Filter>
+      <Filter>Resource Files\Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystemHelper.cpp">
+      <Filter>Resource Files\Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

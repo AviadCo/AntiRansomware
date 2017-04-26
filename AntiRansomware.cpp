@@ -9,6 +9,8 @@
 #include "HoneypotsManager.h"
 #include "HoneypotNameGenerator.h"
 #include "Honeypot.h"
+#include "FileSystemHelper.h"
+#include <algorithm>
 
 using std::wstring;
 using std::list;
@@ -18,6 +20,7 @@ using std::endl;
 
 int main()
 {
+	/*
 	unsigned int totalTime, intervalTime;
 	HoneypotsManager honeypotsManager = HoneypotsManager();
 
@@ -52,7 +55,16 @@ int main()
 
 	wcout << L"Total time passed, removing honeypots and quiting" << endl;
 
-	honeypotsManager.removeAllHoneypots();
+	honeypotsManager.removeAllHoneypots(); */
+
+	list<wstring> subDir = FileSystemHelper::getAllSubDirectories(L"C:\\Users\\ransomware\\Downloads");
+
+	std::for_each(subDir.begin(), subDir.end(), [](wstring cur)
+	{
+		wcout << cur << endl;
+	});
+
+	Sleep(6000);
 
     return 0;
 }
