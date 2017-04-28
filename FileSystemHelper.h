@@ -12,8 +12,7 @@ class FileSystemHelper
 {
 public:
 	static list<wstring> getAllSubDirectories(const wstring& directoryPath);
-	FileSystemHelper();
-	~FileSystemHelper();
+	static list<wstring> getAllFilesInDir(const wstring& directoryPath);
 };
 
 class FileSystemHelperException : public exception {};

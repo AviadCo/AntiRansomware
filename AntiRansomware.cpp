@@ -57,6 +57,17 @@ int main()
 
 	honeypotsManager.removeAllHoneypots(); */
 
+	/*
+	list<wstring> subDir = FileSystemHelper::getAllFilesInDir(L"C:\\Users\\ransomware\\Downloads");
+
+	std::for_each(subDir.begin(), subDir.end(), [](wstring cur)
+	{
+		wcout << cur << endl;
+	});
+
+	Sleep(6000);
+	*/
+
     return 0;
 }
 
