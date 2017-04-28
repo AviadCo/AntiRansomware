@@ -57,16 +57,22 @@ int main()
 
 	honeypotsManager.removeAllHoneypots(); */
 
-	/*
+	
 	list<wstring> subDir = FileSystemHelper::getAllFilesInDir(L"C:\\Users\\ransomware\\Downloads");
+	wstring firstFile, lastFile;
 
+	FileSystemHelper::getFirstAndLastFileLexicographicOrder(L"C:\\Users\\ransomware\\Downloads", firstFile, lastFile);
+
+	wcout << firstFile << endl;
+	wcout << lastFile << endl;
+
+	/*
 	std::for_each(subDir.begin(), subDir.end(), [](wstring cur)
 	{
 		wcout << cur << endl;
 	});
-
+*/
 	Sleep(6000);
-	*/
 
     return 0;
 }
