@@ -12,7 +12,6 @@ using namespace std;
 
 list<wstring> FileSystemHelper::getAllSubDirectories(const wstring& directoryPath)
 {
-	bool first_sub_dir = true;
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;
@@ -29,7 +28,7 @@ list<wstring> FileSystemHelper::getAllSubDirectories(const wstring& directoryPat
 	/* Prepare string for use with FindFile functions.  First, copy the
 	   string to a buffer, then append '\*' to the directory name. */
 
-	hFind = FindFirstFile(directoryPath.c_str(), &ffd);
+	hFind = FindFirstFile((directoryPath + L"\\*").c_str(), &ffd);
 
 	if (INVALID_HANDLE_VALUE == hFind)
 	{
@@ -41,18 +40,18 @@ list<wstring> FileSystemHelper::getAllSubDirectories(const wstring& directoryPat
 	do
 	{
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-		{ 
-			if (first_sub_dir) {
-				/* jumping on first Dir - it's parent Dir */
-				first_sub_dir = false;
+		{
+			if (!wcscmp(ffd.cFileName, L".") || (!wcscmp(ffd.cFileName, L".."))) {
 				continue;
 			}
-			wstring subDir = wstring(directoryPath + ffd.cFileName);
+			wstring subDir = wstring(directoryPath + L"\\" + ffd.cFileName);
+			list<wstring> subDirList = list<wstring>();
 
 			log().debug(__FUNCTION__, L"Found sub directory " + subDir + L" in " + directoryPath);
 			
 			subDirectories.push_back(subDir);
-			subDirectories.merge(getAllSubDirectories(subDir));
+			subDirList = getAllSubDirectories(subDir);
+			subDirectories.insert(subDirectories.end(), subDirList.begin(), subDirList.end());
 		}
 	} while (FindNextFile(hFind, &ffd) != 0);
 
