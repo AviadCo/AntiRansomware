@@ -206,3 +206,79 @@ void FileSystemHelper::getFirstAndLastFileWriteTimeOrder(const wstring& director
 
 	getFirstAndLastByCoparable(directoryPath, firstFile, lastFile, compareFilesByWriteTime);
 }
+
+FILETIME FileSystemHelper::getFileAttribute(const wstring & filename, int fileAttributeType)
+{
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	DWORD dwError = 0;
+
+	log().debug(__FUNCTION__, L"Getting file name in " + filename);
+
+	if (filename.length() > MAX_PATH - 3) {
+		log().error(__FUNCTION__, filename + L" length is greater than my max path allowed");
+
+		throw FileSystemHelperException();
+	}
+
+	hFind = FindFirstFile((filename).c_str(), &ffd);
+
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		log().error(__FUNCTION__, L"Failed to get file in " + filename + L"Error: " + to_wstring(GetLastError()));
+
+		throw FileSystemHelperException();
+	}
+
+	FindClose(hFind);
+
+	switch (fileAttributeType) {
+	case FILE_ACCESS_TIME_ATTRIBUTE:
+		return ffd.ftLastAccessTime;
+
+	case FILE_CREATION_TIME_ATTRIBUTE:
+		return ffd.ftCreationTime;
+
+	case FILE_WRITE_TIME_ATTRIBUTE:
+		return ffd.ftLastWriteTime;
+
+	default:
+		log().error(__FUNCTION__, L"Failed to get file attribute with type " + to_wstring(fileAttributeType) + L" for file " + filename);
+
+		throw FileSystemHelperException();
+	}
+}
+
+void FileSystemHelper::setFileAttribute(const wstring & filename, FILETIME creationTime, FILETIME accessTime, FILETIME writeTime)
+{
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	DWORD dwError = 0;
+
+	log().debug(__FUNCTION__, L"Getting file name in " + filename);
+
+	if (filename.length() > MAX_PATH - 3) {
+		log().error(__FUNCTION__, filename + L" length is greater than my max path allowed");
+
+		throw FileSystemHelperException();
+	}
+
+	hFind = FindFirstFile((filename).c_str(), &ffd);
+
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		log().error(__FUNCTION__, L"Failed to get file in " + filename + L"Error: " + to_wstring(GetLastError()));
+
+		throw FileSystemHelperException();
+	}
+
+	if (! SetFileTime(hFind, &creationTime, &accessTime, &writeTime)) {
+		log().error(__FUNCTION__, L"Failed to set file attributes to " + filename + L"Error: " + to_wstring(GetLastError()));
+
+		FindClose(hFind);
+
+		throw FileSystemHelperException();
+	}
+
+	FindClose(hFind);
+}
