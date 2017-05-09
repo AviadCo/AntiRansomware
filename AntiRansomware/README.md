@@ -6,13 +6,13 @@ This is an application, running in Windows environment on standalone computer, w
 The application main goals are:
 1.	Detect Ransomware activity on the victim's computer with minimum damage:
 
-  a.	Detect the ransomware fast.
+    a.	Detect the ransomware fast.
   
-  b.	Stop Ransomware to continue the encryption.
+    b.	Stop Ransomware to continue the encryption.
   
-  c.	Understand which files were already encrypted (if at all).
+    c.	Understand which files were already encrypted (if at all).
   
-  d.	Eliminate completely the Ransomware from the victim's computer.
+    d.	Eliminate completely the Ransomware from the victim's computer.
   
 2.	Avoid alerting False-Positive – the application shouldn't alert on legitimate running application.
 
