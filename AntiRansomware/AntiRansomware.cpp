@@ -18,8 +18,31 @@ using std::wcout;
 using std::cin;
 using std::endl;
 
+
+///////////
+#include "FunctionCalledHandlerWrapper.h"
+#include "MessageHandlerWrapper.h"
+#include "ProcessHookMonitorWrapper.h"
+
+class cls : public FunctionCalledHandlerWrapper {
+	virtual void report(int pid, char* functionName, char* param) {
+		std::cout << functionName << endl;
+	}
+};
+
+class clsMSG : public MessageHandlerWrapper {
+	virtual void report(int pid, char* msg) {
+		std::cout << msg << endl;
+	}
+};
+
 int main()
 {
+	int pid = 13104;
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(new clsMSG());
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new cls());
+	cin >> pid;
+
 	/*
 	unsigned int totalTime, intervalTime;
 	HoneypotsManager honeypotsManager = HoneypotsManager();
@@ -57,7 +80,7 @@ int main()
 
 	honeypotsManager.removeAllHoneypots(); */
 
-	
+	/**
 	list<wstring> subDir = FileSystemHelper::getAllFilesInDir(L"C:\\Users\\ransomware\\Downloads");
 	wstring firstFile, lastFile;
 
@@ -72,6 +95,7 @@ int main()
 		wcout << cur << endl;
 	});
 */
+	
 	Sleep(6000);
 
     return 0;
