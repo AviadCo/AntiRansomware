@@ -1,11 +1,1 @@
-﻿  Stdafx.cpp
-  AssemblyInfo.cpp
-  FunctionCalledHandlerThunk.cpp
-  MessageHandlerThunk.cpp
-  ProcessHookMonitorWrapper.cpp
-  Generating Code...
-  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
-  AssemblyInfo.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-     Creating library C:\Users\noam\Documents\Visual Studio 2015\Projects\AntiRansomware\ProcessHookMonitorWrapper\Debug\ProcessHookMonitorWrapper.lib and object C:\Users\noam\Documents\Visual Studio 2015\Projects\AntiRansomware\ProcessHookMonitorWrapper\Debug\ProcessHookMonitorWrapper.exp
-  ProcessHookMonitorWrapper.vcxproj -> C:\Users\noam\Documents\Visual Studio 2015\Projects\AntiRansomware\ProcessHookMonitorWrapper\Debug\ProcessHookMonitorWrapper.dll
-  ProcessHookMonitorWrapper.vcxproj -> C:\Users\noam\Documents\Visual Studio 2015\Projects\AntiRansomware\ProcessHookMonitorWrapper\Debug\ProcessHookMonitorWrapper.pdb (Partial PDB)
+﻿

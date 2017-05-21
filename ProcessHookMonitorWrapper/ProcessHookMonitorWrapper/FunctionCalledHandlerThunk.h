@@ -8,6 +8,6 @@ ref class FunctionCalledHandlerThunk
 public:
 	FunctionCalledHandlerThunk(FunctionCalledHandlerWrapper* handler);
 
-	void report(int pid, System::String^ functionName);
+	void report(int pid, System::String^ functionName, System::String^ param);
 };
 

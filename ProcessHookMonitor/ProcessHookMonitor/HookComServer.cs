@@ -17,7 +17,8 @@ namespace ProcessHookMonitor
         {
             for (int i = 0; i < events.Length; i++)
             {
-                ProcessHookMonitor.notifyFunctionCall(pid, events[i]);
+                String[] args = events[i].Split(new string[] { demiliter }, StringSplitOptions.None);
+                ProcessHookMonitor.notifyFunctionCall(pid, args[0], args[1]);
             }
 
         }

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace ProcessHookMonitor
 {
 
-    public delegate void FunctionCalledHandler(int pid, string functionName);
+    public delegate void FunctionCalledHandler(int pid, string functionName, string param);
     
     public delegate void MessageHandler(int pid, string msg);
 
     public class ProcessHookMonitor
     {
         private static Dictionary<int, FunctionCalledHandler> processListeners = new Dictionary<int, FunctionCalledHandler>();
-        private static MessageHandler messageHanlder = new MessageHandler(doNothingMethod);
+        private static MessageHandler messageHanlder = new MessageHandler(doNothingMessageHandler);
         private static string channelName = null;
         private static bool serverUp = false;
         private const string dllInjectionName = "ProcessHook.dll";
@@ -35,7 +35,7 @@ namespace ProcessHookMonitor
         {
             if (processListeners.ContainsKey(pid))
             {
-                processListeners[pid] = new FunctionCalledHandler(doNothingMethod);
+                processListeners[pid] = new FunctionCalledHandler(doNothingFunctionCalledHandler);
             }
         }
 
@@ -88,12 +88,12 @@ namespace ProcessHookMonitor
         /*
          * This section is used by the server to notify about events and messages
          */
-        public static void notifyFunctionCall(int pid, string functionCalledName)
+        public static void notifyFunctionCall(int pid, string functionCalledName, string param)
         {
             if (processListeners.ContainsKey(pid))
             {
                 FunctionCalledHandler listener = processListeners[pid];
-                listener(pid, functionCalledName);
+                listener(pid, functionCalledName, param);
             }
         }
 
@@ -102,7 +102,12 @@ namespace ProcessHookMonitor
             messageHanlder(pid, message);
         }
 
-        private static void doNothingMethod(int pid, string str)
+        private static void doNothingMessageHandler(int pid, string str)
+        {
+            //empty on purpose. meant to be default behavior when no listener exist
+        }
+
+        private static void doNothingFunctionCalledHandler(int pid, string str, string param)
         {
             //empty on purpose. meant to be default behavior when no listener exist
         }

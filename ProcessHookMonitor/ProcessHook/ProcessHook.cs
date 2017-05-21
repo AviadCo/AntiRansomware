@@ -11,7 +11,7 @@ namespace ProcessHook
 
     {
 
-        private IHookServer server = null;
+        private static IHookServer server = null;
         private static Queue<string> eventsQueue = new Queue<string>();
 
         /// <summary>
@@ -44,6 +44,8 @@ namespace ProcessHook
             string channelName)
         {
             int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            List<EasyHook.LocalHook> hooks = new List<EasyHook.LocalHook>();
+
             // Injection is now complete and the server interface is connected
             server.ReportStatus(currentPid, "Hook installed successfully");
 
@@ -52,8 +54,38 @@ namespace ProcessHook
             // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
             var createFileHook = EasyHook.LocalHook.Create(
                 EasyHook.LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
-                new FunctionHooks.CreateFileWDelegate(FunctionHooks.CreateFileWHook),
+                new FunctionHooks.CreateFileW_Delegate(FunctionHooks.CreateFileW_Hook),
                 this);
+            hooks.Add(createFileHook);
+
+            server.ReportStatus(111, hooks.Count.ToString());
+
+            // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
+            var writeFileHook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "WriteFile"),
+                new FunctionHooks.WriteFile_Delegate(FunctionHooks.WriteFile_Hook),
+                this);
+            hooks.Add(writeFileHook);
+
+            server.ReportStatus(111, hooks.Count.ToString());
+            /*
+            // DeleteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915(v=vs.85).aspx
+            var deleteFileHook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "DeleteFile"),
+                new FunctionHooks.DeleteFile_Delegate(FunctionHooks.DeleteFile_Hook),
+                this);
+            hooks.Add(deleteFileHook);
+
+            server.ReportStatus(111, hooks.Count.ToString());
+
+            // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
+            var moveFileHook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "MoveFile"),
+                new FunctionHooks.DeleteFile_Delegate(FunctionHooks.DeleteFile_Hook),
+                this);
+            hooks.Add(moveFileHook);
+            server.ReportStatus(111, hooks.Count.ToString());
+            */
 
             /*
             // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
@@ -62,20 +94,19 @@ namespace ProcessHook
                 new ReadFile_Delegate(ReadFile_Hook),
                 this);
 
-            // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
-            var writeFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "WriteFile"),
-                new WriteFile_Delegate(WriteFile_Hook),
-                this);
-
             */
 
             // Activate hooks on all threads except the current thread
-            createFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-            
+            foreach ( EasyHook.LocalHook hook in hooks)
+            {
+                hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+
+
             /*
-            readFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            createFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             writeFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            readFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             */
 
             server.ReportStatus(currentPid, "function hooks installed successfully");
@@ -86,6 +117,7 @@ namespace ProcessHook
                 // Loop until FileMonitor closes (i.e. IPC fails)
                 while (true)
                 {
+                    
                     System.Threading.Thread.Sleep(500);
 
                     string[] queued = null;
@@ -95,6 +127,8 @@ namespace ProcessHook
                         queued = eventsQueue.ToArray();
                         eventsQueue.Clear();
                     }
+
+                    
 
                     // Send newly monitored file accesses to FileMonitor
                     if (queued != null && queued.Length > 0)
@@ -113,20 +147,27 @@ namespace ProcessHook
             }
 
             // Remove hooks
-            
-            createFileHook.Dispose();
+            foreach (EasyHook.LocalHook hook in hooks)
+            {
+                hook.Dispose();
+            }
             /*
-            readFileHook.Dispose();
+            createFileHook.Dispose();
             writeFileHook.Dispose();
+            readFileHook.Dispose();
             */
 
             // Finalise cleanup of hooks
             EasyHook.LocalHook.Release();
         }
 
-        public static void enqueueEvent(string hookEvent)
+        public static void enqueueEvent(string hookEvent, string param)
         {
-            eventsQueue.Enqueue(hookEvent);
+            server.ReportStatus(EasyHook.RemoteHooking.GetCurrentProcessId(), hookEvent);
+            lock (eventsQueue) {
+                eventsQueue.Enqueue(hookEvent + IHookServer.demiliter + param);
+            }
+            
         }
 
     }

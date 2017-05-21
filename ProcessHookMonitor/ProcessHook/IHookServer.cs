@@ -8,6 +8,7 @@ namespace ProcessHookCommunication
 {
     public abstract class IHookServer : MarshalByRefObject
     {
+        public const string demiliter = "|? ! P|";
 
         /// <summary>
         /// Called to confirm that the IPC channel is still open / host application has not closed

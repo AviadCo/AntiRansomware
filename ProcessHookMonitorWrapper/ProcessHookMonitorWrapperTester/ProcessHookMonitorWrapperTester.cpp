@@ -8,15 +8,15 @@
 #include "ProcessHookMonitorWrapper.h"
 
 class func : public FunctionCalledHandlerWrapper {
-	virtual void report(int pid, char* functionName) {
-		std::cout << functionName;
+	virtual void report(int pid, char* functionName, char* param) {
+		std::cout << functionName << " , " << param << std::endl;
 	}
 };
 
 int main()
 {
 	char c;
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(13652, new func());
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(12860, new func());
 
 	std::cout << "hi";
 	std::cin >> c;

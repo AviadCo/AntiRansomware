@@ -14,10 +14,15 @@ namespace ProcessHookMonitorTester
             Console.WriteLine(pid + ": " + name + ", ");
         }
 
+        static void reportToConsole(int pid, string name, string param)
+        {
+            Console.WriteLine(pid + ": " + name + ", " + param);
+        }
+
         static void Main(string[] args)
         {
             ProcessHookMonitor.ProcessHookMonitor.setStatusHandler(new MessageHandler(reportToConsole));
-            ProcessHookMonitor.ProcessHookMonitor.inject(9244,
+            ProcessHookMonitor.ProcessHookMonitor.inject(10028,
                 new FunctionCalledHandler(reportToConsole));
             Console.WriteLine("hello");
             Console.ReadKey();
