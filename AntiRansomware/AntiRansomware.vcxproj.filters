@@ -54,14 +54,23 @@
     <ClInclude Include="RegistryIO.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessAnalyzer.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessPolicy.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessesMonitor.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTypes.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
     <ClInclude Include="FileSystemHelper.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Honeypot.cpp">
       <Filter>Resource Files\Source Files\Honeypots</Filter>
     </ClCompile>
@@ -78,6 +87,18 @@
       <Filter>Resource Files\Source Files\Honeypots</Filter>
     </ClCompile>
     <ClCompile Include="RegistryIO.cpp">
+      <Filter>Resource Files\Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessAnalyzer.cpp">
+      <Filter>Resource Files\Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessPolicy.cpp">
+      <Filter>Resource Files\Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Resource Files\Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessesMonitor.cpp">
       <Filter>Resource Files\Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="FileSystemHelper.cpp">
