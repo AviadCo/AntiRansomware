@@ -1,7 +1,7 @@
-Debug/*
-ipch/*
-AntiRansomware.VC.VC.opendb
-AntiRansomware.VC.db
+*/Debug/*
+*/ipch/*
+AntiRansomware/AntiRansomware.VC.VC.opendb
+AntiRansomware/AntiRansomware.VC.db
 *.suo
-log.txt
-x64/
+AntiRansomware/log.txt
+*/x64/*
