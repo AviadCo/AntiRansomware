@@ -30,6 +30,7 @@ public:
 	bool monitorHoneypots();
 	void removeAllHoneypots();
 	~HoneypotsManager();
+	bool isFileHoneypot(wstring filename);
 };
 
 class HoneypotsManagerExceptoins : public exception{};

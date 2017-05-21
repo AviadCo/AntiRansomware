@@ -119,3 +119,14 @@ void HoneypotsManager::removeAllHoneypots()
 HoneypotsManager::~HoneypotsManager()
 {
 }
+
+bool HoneypotsManager::isFileHoneypot(wstring filename)
+{
+	for (Honeypot& honeypot : honeypots) {
+		if (honeypot.getFileName() == filename) {
+			return true;
+		}
+	}
+
+	return false;
+}

@@ -28,7 +28,7 @@ void ProcessesMonitor::initProcessAnalyzers()
 
 	for (unsigned int i = 0; i < numOfIDs; ++i) {
 		try {
-			processAnalyzers[pProcessIDs[i]] = ProcessAnalyzer(pProcessIDs[i], this);
+			processAnalyzers[pProcessIDs[i]] = ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
 		}
 		catch (ProcessAnalyzerException e) {
 			log().error(__FUNCTION__, L"Failed to init events notifier");
@@ -40,7 +40,7 @@ void ProcessesMonitor::initProcessAnalyzers()
 
 void ProcessesMonitor::addNewProcess(unsigned int processID)
 {
-	processAnalyzers[processID] = ProcessAnalyzer(processID, this);
+	processAnalyzers[processID] = ProcessAnalyzer(processID, this, honeypotsManager);
 }
 
 void ProcessesMonitor::checkProcessesLiveness()
@@ -59,11 +59,12 @@ void ProcessesMonitor::checkProcessesLiveness()
 	}
 }
 
-ProcessesMonitor::ProcessesMonitor()
+ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 {
+	this->honeypotsManager = honeypotsManager;
+
 	initProcessAnalyzers();
 }
-
 
 ProcessesMonitor::~ProcessesMonitor()
 {

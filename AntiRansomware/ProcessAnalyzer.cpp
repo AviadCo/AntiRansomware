@@ -4,11 +4,15 @@
 #include "ProcessesMonitor.h"
 #include "Logger.h"
 
+void ProcessAnalyzer::setHooks(DWORD proccessID)
+{
+}
+
 ProcessAnalyzer::ProcessAnalyzer()
 {
 }
 
-ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMonitor)
+ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMonitor, const HoneypotsManager *honeypotsManager)
 {
 	//TODO check if a lower level of access is needed
 	processHandle = OpenProcess(PROCESS_ALL_ACCESS, TRUE, proccessID);
@@ -26,6 +30,10 @@ ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMo
 	}
 
 	this->processesMonitor = processesMonitor;
+	this->honeypotsManager = honeypotsManager;
+	currentScore = 0;
+
+	setHooks(proccessID);
 }
 
 ProcessAnalyzer::~ProcessAnalyzer()
@@ -53,4 +61,16 @@ bool ProcessAnalyzer::isProcessStillActive() const
 	}
 
 	return exitCode == STILL_ACTIVE;
+}
+
+bool ProcessAnalyzer::checkIfAlert() const
+{
+	return currentScore >= 100;
+}
+
+bool ProcessAnalyzer::updateScore(ProcessPolicy::ProcessOperation processOperation)
+{
+	currentScore += ProcessPolicy::getScoreForOperation(processOperation);
+
+	return checkIfAlert();
 }
