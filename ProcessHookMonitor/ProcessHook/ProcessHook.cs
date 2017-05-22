@@ -57,28 +57,28 @@ namespace ProcessHook
             {
                 // DeleteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915(v=vs.85).aspx
                 var deleteFileHook = EasyHook.LocalHook.Create(
-                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.DeleteFileStr),
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.DeleteFileWStr),
                     new FunctionHooks.DeleteFileW_Delegate(FunctionHooks.DeleteFileW_Hook),
                     this);
                 resHooks.Add(deleteFileHook);
             }
             catch (System.MissingMethodException)
             {
-                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.DeleteFileStr);
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.DeleteFileWStr);
             }
 
             try
             {
                 // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
                 var moveFileHook = EasyHook.LocalHook.Create(
-                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.MoveFileStr),
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.MoveFileWStr),
                     new FunctionHooks.MoveFileW_Delegate(FunctionHooks.MoveFileW_Hook),
                     this);
                 resHooks.Add(moveFileHook);
             }
             catch (System.MissingMethodException)
             {
-                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.MoveFileStr);
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.MoveFileWStr);
             }
 
             try

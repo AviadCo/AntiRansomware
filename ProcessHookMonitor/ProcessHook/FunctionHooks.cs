@@ -14,8 +14,8 @@ namespace ProcessHook
          ***************************************/
         public const string CreateFileWStr = "CreateFileW";
         public const string WriteFileStr = "WriteFile";
-        public const string DeleteFileStr = "DeleteFileW";
-        public const string MoveFileStr = "MoveFileW";
+        public const string DeleteFileWStr = "DeleteFileW";
+        public const string MoveFileWStr = "MoveFileW";
         public const string CryptEncryptStr = "CryptEncrypt";
 
 
@@ -190,7 +190,7 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(DeleteFileStr, filename);
+                reportEvent(DeleteFileWStr, filename);
             }
             catch
             {
@@ -222,7 +222,7 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(MoveFileStr, lpExistingFileName, lpNewFileName);
+                reportEvent(MoveFileWStr, lpExistingFileName, lpNewFileName);
             }
             catch
             {
