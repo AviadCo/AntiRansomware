@@ -22,7 +22,7 @@ namespace ProcessHookMonitorTester
         static void Main(string[] args)
         {
             ProcessHookMonitor.ProcessHookMonitor.setStatusHandler(new MessageHandler(reportToConsole));
-            ProcessHookMonitor.ProcessHookMonitor.inject(10028,
+            ProcessHookMonitor.ProcessHookMonitor.inject(12076,
                 new FunctionCalledHandler(reportToConsole));
             Console.WriteLine("hello");
             Console.ReadKey();

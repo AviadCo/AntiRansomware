@@ -47,7 +47,7 @@ namespace ProcessHook
             List<EasyHook.LocalHook> hooks = new List<EasyHook.LocalHook>();
 
             // Injection is now complete and the server interface is connected
-            server.ReportStatus(currentPid, "Hook installed successfully");
+            reportStatus("Hook installed successfully");
 
             // Install hooks
              
@@ -109,7 +109,7 @@ namespace ProcessHook
             readFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             */
 
-            server.ReportStatus(currentPid, "function hooks installed successfully");
+            reportStatus("function hooks installed successfully");
             
 
             try
@@ -163,11 +163,15 @@ namespace ProcessHook
 
         public static void enqueueEvent(string hookEvent, string param)
         {
-            server.ReportStatus(EasyHook.RemoteHooking.GetCurrentProcessId(), hookEvent);
             lock (eventsQueue) {
                 eventsQueue.Enqueue(hookEvent + IHookServer.demiliter + param);
             }
             
+        }
+
+        public static void reportStatus(string status)
+        {
+            server.ReportStatus(EasyHook.RemoteHooking.GetCurrentProcessId(), status);
         }
 
     }
