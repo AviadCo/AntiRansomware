@@ -19,3 +19,4 @@ ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/Debug/*
 ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/x64/*
 ProcessHookMonitor/ProcessHookMonitorTester/bin/*
 ProcessHookMonitor/ProcessHookMonitorTester/obj/*
+ProcessHookMonitorWrapper/ipch/*
