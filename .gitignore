@@ -5,3 +5,13 @@ AntiRansomware/AntiRansomware.VC.db
 *.suo
 AntiRansomware/log.txt
 */x64/*
+ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/Debug/*
+ProcessHookMonitor/ProcessHook/bin/*
+ProcessHookMonitor/ProcessHookMonitor/obj/*
+ProcessHookMonitor/ProcessHook/obj/Debug/*
+ProcessHookMonitor/ProcessHookMonitor/bin/*
+AntiRansomware/packages/*
+AntiRansomware/Debug/*
+ProcessHookMonitor/ProcessHook/obj/Debug/*
+ProcessHookMonitor/ProcessHookMonitor/obj/Debug/*
+ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/Debug/*

@@ -38,7 +38,7 @@ class clsMSG : public MessageHandlerWrapper {
 
 int main()
 {
-	int pid = 13104;
+	int pid = 572;
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(new clsMSG());
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new cls());
 	cin >> pid;
