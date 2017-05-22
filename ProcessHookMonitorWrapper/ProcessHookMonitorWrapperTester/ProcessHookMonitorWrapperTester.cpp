@@ -3,20 +3,29 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <io.h>
+#include <fcntl.h>
+#include <Windows.h>
+#include <string>
 #include "FunctionCalledHandlerWrapper.h"
 #include "MessageHandlerWrapper.h"
 #include "ProcessHookMonitorWrapper.h"
 
 class func : public FunctionCalledHandlerWrapper {
-	virtual void report(int pid, char* functionName, char* param) {
-		std::cout << functionName << " , " << param << std::endl;
+	virtual void report(int pid, LPUWSTR functionName, LPUWSTR param) {
+		std::wstring name(functionName);
+		std::wstring par(param);
+		std::wcout << functionName /*<< " , " << param */ << std::endl << std::flush;
 	}
 };
 
 int main()
 {
+	
 	char c;
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(12860, new func());
+	int pid;
+	std::cin >> pid;
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
 
 	std::cout << "hi";
 	std::cin >> c;

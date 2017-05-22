@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FunctionCalledHandlerThunk.h"
+#include <Windows.h>
 
 FunctionCalledHandlerThunk::FunctionCalledHandlerThunk(FunctionCalledHandlerWrapper * handler)
 {
@@ -8,7 +9,11 @@ FunctionCalledHandlerThunk::FunctionCalledHandlerThunk(FunctionCalledHandlerWrap
 
 void FunctionCalledHandlerThunk::report(int pid, System::String^ functionName, System::String^ param)
 {
+	
 	handler->report(pid,
-		(char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(functionName).ToPointer(),
-		(char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(param).ToPointer());
+		(LPUWSTR)System::Runtime::InteropServices::Marshal::StringToHGlobalUni(functionName).ToPointer(),
+		(LPUWSTR)System::Runtime::InteropServices::Marshal::StringToHGlobalUni(param).ToPointer());
 }
+
+
+

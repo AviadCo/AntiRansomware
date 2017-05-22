@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MessageHandlerThunk.h"
-
-
+#include <Windows.h>
 
 
 MessageHandlerThunk::MessageHandlerThunk(MessageHandlerWrapper * handler)
@@ -12,5 +11,5 @@ MessageHandlerThunk::MessageHandlerThunk(MessageHandlerWrapper * handler)
 void MessageHandlerThunk::report(int pid, System::String^ functionName)
 {
 	handler->report(pid,
-		(char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(functionName).ToPointer());
+		(LPUWSTR)System::Runtime::InteropServices::Marshal::StringToHGlobalUni(functionName).ToPointer());
 }

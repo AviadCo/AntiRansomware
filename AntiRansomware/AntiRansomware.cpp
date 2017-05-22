@@ -28,19 +28,21 @@ using std::endl;
 using namespace FunctionHooksDefinitions;
 
 class cls : public FunctionCalledHandlerWrapper {
-	virtual void report(int pid, char* functionName, char* param) {
-		std::cout << functionName << endl;
+	virtual void report(int pid, LPUWSTR functionName, LPUWSTR param) {
+		std::wcout << functionName << "," << param << endl;
 	}
 };
 
 class clsMSG : public MessageHandlerWrapper {
-	virtual void report(int pid, char* msg) {
-		std::cout << msg << endl;
+	virtual void report(int pid, LPUWSTR msg) {
+		std::wcout << msg << endl;
 	}
 };
 
 int main()
 {
+	
+
 	int pid = 572;
 	cin >> pid;
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(new clsMSG());
