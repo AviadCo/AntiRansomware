@@ -1,5 +1,6 @@
 */Debug/*
 */ipch/*
+*.log
 AntiRansomware/AntiRansomware.VC.VC.opendb
 AntiRansomware/AntiRansomware.VC.db
 *.suo
@@ -15,3 +16,6 @@ AntiRansomware/Debug/*
 ProcessHookMonitor/ProcessHook/obj/Debug/*
 ProcessHookMonitor/ProcessHookMonitor/obj/Debug/*
 ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/Debug/*
+ProcessHookMonitorWrapper/ProcessHookMonitorWrapper/x64/*
+ProcessHookMonitor/ProcessHookMonitorTester/bin/*
+ProcessHookMonitor/ProcessHookMonitorTester/obj/*
