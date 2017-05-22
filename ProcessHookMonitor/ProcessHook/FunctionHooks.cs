@@ -1,25 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ProcessHook
 {
     class FunctionHooks
     {
-        
+        public const string argsDemiliter = "|/|/|";
         /****************************************
          * 
          * Constants of messages
          * 
          ***************************************/
-        private const string CreateFileWStr = "CreateFileW";
-        private const string WriteFileStr = "WriteFile";
-        private const string DeleteFileStr = "DeleteFile";
-        private const string MoveFileStr = "MoveFile";
+        public const string CreateFileWStr = "CreateFileW";
+        public const string WriteFileStr = "WriteFile";
+        public const string DeleteFileStr = "DeleteFileW";
+        public const string MoveFileStr = "MoveFileW";
+        public const string CryptEncryptStr = "CryptEncrypt";
 
+
+        /****************************************
+         * 
+         *  private helper functions
+         * 
+         * *************************************/
+        private static void reportEvent(string functionName, params string[] args)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(args[0]);
+            for (int i = 1; i < args.Length; i++)
+            {
+                sb.Append(argsDemiliter);
+                sb.Append(args[i]);
+            }
+
+            ProcessHook.enqueueEvent(functionName, sb.ToString());
+        }
 
         /****************************************
          * 
@@ -80,8 +96,9 @@ namespace ProcessHook
         {
             try
             {
-                ProcessHook.enqueueEvent(CreateFileWStr, filename);
-            } catch
+                reportEvent(CreateFileWStr, filename);
+            }
+            catch
             {
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
@@ -142,7 +159,7 @@ namespace ProcessHook
                 StringBuilder filename = new StringBuilder(255);
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
 
-                ProcessHook.enqueueEvent(WriteFileStr, filename.ToString());
+                reportEvent(WriteFileStr, filename.ToString());
 
             }
             catch
@@ -154,65 +171,116 @@ namespace ProcessHook
         }
 
         /****************************************
-         * hook for: DeleteFile
+         * hook for: DeleteFileW
          ***************************************/
         // delegate of 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public delegate bool DeleteFile_Delegate(
+        public delegate bool DeleteFileW_Delegate(
             string filename);
 
         // import of original api
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool DeleteFile(string lpFileName);
+        static extern bool DeleteFileW(string lpFileName);
 
         // hook function
-        public static bool DeleteFile_Hook(
+        public static bool DeleteFileW_Hook(
             string filename)
         {
             try
             {
-                ProcessHook.enqueueEvent(DeleteFileStr, filename);
+                reportEvent(DeleteFileStr, filename);
             }
             catch
             {
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
 
-            return DeleteFile(filename);
+            return DeleteFileW(filename);
         }
 
 
         /****************************************
-         * hook for: MoveFile
+         * hook for: MoveFileW
          ***************************************/
         // delegate of 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public delegate bool MoveFile_Delegate(string lpExistingFileName,
+        public delegate bool MoveFileW_Delegate(string lpExistingFileName,
             string lpNewFileName);
 
         // import of original api
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool MoveFile(string lpExistingFileName,
+        static extern bool MoveFileW(string lpExistingFileName,
             string lpNewFileName);
 
         // hook function
-        public static bool MoveFile_Hook(string lpExistingFileName,
+        public static bool MoveFileW_Hook(string lpExistingFileName,
            string lpNewFileName)
         {
             try
             {
-                ProcessHook.enqueueEvent(DeleteFileStr, lpExistingFileName + "|||" + lpNewFileName);
+                reportEvent(MoveFileStr, lpExistingFileName, lpNewFileName);
             }
             catch
             {
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
 
-            return MoveFile(lpExistingFileName, lpNewFileName);
+            return MoveFileW(lpExistingFileName, lpNewFileName);
+        }
+
+
+
+        /****************************************
+         * hook for: CryptEncrypt
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool CryptEncrypt_Delegate(
+            IntPtr hKey,
+            IntPtr hHash,
+            int Final,
+            uint dwFlags,
+            byte[] pbData,
+            ref uint pdwDataLen,
+            uint dwBufLen);
+
+        // import of original api
+        [DllImport(@"advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool CryptEncrypt(
+            IntPtr hKey,
+            IntPtr hHash,
+            int Final,
+            uint dwFlags,
+            byte[] pbData,
+            ref uint pdwDataLen,
+            uint dwBufLen);
+
+        // hook function
+        public static bool CryptEncrypt_Hook(
+            IntPtr hKey,
+            IntPtr hHash,
+            int Final,
+            uint dwFlags,
+            byte[] pbData,
+            ref uint pdwDataLen,
+            uint dwBufLen)
+        {
+            try
+            {
+                reportEvent(CryptEncryptStr, "");
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return CryptEncrypt(hKey, hHash, Final, dwFlags, pbData, ref pdwDataLen, dwBufLen);
         }
     }
 }

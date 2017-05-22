@@ -10,9 +10,104 @@ namespace ProcessHook
     public class ProcessHook : EasyHook.IEntryPoint
 
     {
+        private const string ERROR_CANT_FIND_HOOK = "Error. Cant find function: ";
 
         private static IHookServer server = null;
         private static Queue<string> eventsQueue = new Queue<string>();
+
+        /// <summary>
+        /// creates function hook objects
+        /// </summary>
+        /// <returns></returns>
+        private List<EasyHook.LocalHook> createFunctionsHooks()
+        {
+            List<EasyHook.LocalHook> resHooks = new List<EasyHook.LocalHook>();
+
+            // Install hooks
+
+            try
+            {
+                // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
+                var createFileHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.CreateFileWStr),
+                    new FunctionHooks.CreateFileW_Delegate(FunctionHooks.CreateFileW_Hook),
+                    this);
+                resHooks.Add(createFileHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CreateFileWStr);
+            }
+
+            try
+            {
+                // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
+                var writeFileHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.WriteFileStr),
+                    new FunctionHooks.WriteFile_Delegate(FunctionHooks.WriteFile_Hook),
+                    this);
+                resHooks.Add(writeFileHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.WriteFileStr);
+            }
+
+            try
+            {
+                // DeleteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915(v=vs.85).aspx
+                var deleteFileHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.DeleteFileStr),
+                    new FunctionHooks.DeleteFileW_Delegate(FunctionHooks.DeleteFileW_Hook),
+                    this);
+                resHooks.Add(deleteFileHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.DeleteFileStr);
+            }
+
+            try
+            {
+                // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
+                var moveFileHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.MoveFileStr),
+                    new FunctionHooks.MoveFileW_Delegate(FunctionHooks.MoveFileW_Hook),
+                    this);
+                resHooks.Add(moveFileHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.MoveFileStr);
+            }
+
+            try
+            {
+                // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
+                var cryptEncryptHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Advapi32.dll", FunctionHooks.CryptEncryptStr),
+                    new FunctionHooks.CryptEncrypt_Delegate(FunctionHooks.CryptEncrypt_Hook),
+                    this);
+                resHooks.Add(cryptEncryptHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CryptEncryptStr);
+            }
+
+
+            /*
+            // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
+            var readFileHook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "ReadFile"),
+                new ReadFile_Delegate(ReadFile_Hook),
+                this);
+
+            */
+
+            return resHooks;
+        }
+
 
         /// <summary>
         /// c'tor of process hook
@@ -44,57 +139,13 @@ namespace ProcessHook
             string channelName)
         {
             int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
-            List<EasyHook.LocalHook> hooks = new List<EasyHook.LocalHook>();
+            List<EasyHook.LocalHook> hooks;
 
             // Injection is now complete and the server interface is connected
             reportStatus("Hook installed successfully");
 
             // Install hooks
-             
-            // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
-            var createFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
-                new FunctionHooks.CreateFileW_Delegate(FunctionHooks.CreateFileW_Hook),
-                this);
-            hooks.Add(createFileHook);
-
-            server.ReportStatus(111, hooks.Count.ToString());
-
-            // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
-            var writeFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "WriteFile"),
-                new FunctionHooks.WriteFile_Delegate(FunctionHooks.WriteFile_Hook),
-                this);
-            hooks.Add(writeFileHook);
-
-            server.ReportStatus(111, hooks.Count.ToString());
-            /*
-            // DeleteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915(v=vs.85).aspx
-            var deleteFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "DeleteFile"),
-                new FunctionHooks.DeleteFile_Delegate(FunctionHooks.DeleteFile_Hook),
-                this);
-            hooks.Add(deleteFileHook);
-
-            server.ReportStatus(111, hooks.Count.ToString());
-
-            // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
-            var moveFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "MoveFile"),
-                new FunctionHooks.DeleteFile_Delegate(FunctionHooks.DeleteFile_Hook),
-                this);
-            hooks.Add(moveFileHook);
-            server.ReportStatus(111, hooks.Count.ToString());
-            */
-
-            /*
-            // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
-            var readFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "ReadFile"),
-                new ReadFile_Delegate(ReadFile_Hook),
-                this);
-
-            */
+            hooks = createFunctionsHooks();
 
             // Activate hooks on all threads except the current thread
             foreach ( EasyHook.LocalHook hook in hooks)
