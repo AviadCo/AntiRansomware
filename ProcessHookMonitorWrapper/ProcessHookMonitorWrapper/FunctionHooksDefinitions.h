@@ -1,8 +1,8 @@
 #pragma once
-
+#include <Windows.h>
 namespace FunctionHooksDefinitions {
 	namespace HookCreateFileW {
-		char* name = "CreateFileW";
+		LPUWSTR name = L"CreateFileW";
 
 		typedef enum args { 
 			FILEPATH		//char* 
@@ -10,7 +10,7 @@ namespace FunctionHooksDefinitions {
 	}
 
 	namespace HookWriteFile {
-		char* name = "WriteFile";
+		LPUWSTR name = L"WriteFile";
 
 		typedef enum args {
 			FILEPATH		//char* 
@@ -18,7 +18,7 @@ namespace FunctionHooksDefinitions {
 	}
 
 	namespace HookDeleteFileW {
-		char* name = "DeleteFileW";
+		LPUWSTR name = L"DeleteFileW";
 
 		typedef enum args {
 			FILEPATH		//char* 
@@ -26,7 +26,7 @@ namespace FunctionHooksDefinitions {
 	}
 
 	namespace HookMoveFileW {
-		char* name = "MoveFileW";
+		LPUWSTR name = L"MoveFileW";
 
 		typedef enum args {
 			FILEPATH_SRC,	//char*
@@ -35,6 +35,6 @@ namespace FunctionHooksDefinitions {
 	}
 
 	namespace HookCryptEncrypt {
-		char* name = "CryptEncrypt";
+		LPUWSTR name = L"CryptEncrypt";
 	}
 }

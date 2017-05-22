@@ -2,6 +2,7 @@
 
 #include "ProcessesMonitor.h"
 #include "Logger.h"
+#include "ProcessHookMonitorWrapper.h"
 
 #include <psapi.h>
 #include <windows.h>
@@ -15,7 +16,7 @@ void ProcessesMonitor::initProcessAnalyzers()
 	DWORD pProcessIDs[MAX_NUMBER_OF_PROCESSES];
 	DWORD numOfIDs;
 
-	processAnalyzers = map<unsigned int, ProcessAnalyzer>();
+	processAnalyzers = map<unsigned int, ProcessAnalyzer *>();
 
 	if (!EnumProcesses(pProcessIDs, MAX_NUMBER_OF_PROCESSES * sizeof(DWORD), &numOfIDs)) {
 		log().error(__FUNCTION__, L"Failed to get process IDs, errno: " + GetLastError());
@@ -28,7 +29,7 @@ void ProcessesMonitor::initProcessAnalyzers()
 
 	for (unsigned int i = 0; i < numOfIDs; ++i) {
 		try {
-			processAnalyzers[pProcessIDs[i]] = ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
+			processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
 		}
 		catch (ProcessAnalyzerException e) {
 			log().error(__FUNCTION__, L"Failed to init events notifier");
@@ -40,14 +41,14 @@ void ProcessesMonitor::initProcessAnalyzers()
 
 void ProcessesMonitor::addNewProcess(unsigned int processID)
 {
-	processAnalyzers[processID] = ProcessAnalyzer(processID, this, honeypotsManager);
+	processAnalyzers[processID] = new ProcessAnalyzer(processID, this, honeypotsManager);
 }
 
 void ProcessesMonitor::checkProcessesLiveness()
 {
-	for (auto const &processAnalyzer : processAnalyzers) {
+	for (auto const processAnalyzer : processAnalyzers) {
 		try {
-			if (processAnalyzer.second.isProcessStillActive()) {
+			if (processAnalyzer.second->isProcessStillActive()) {
 				processAnalyzers.erase(processAnalyzer.first);
 			}
 		}
@@ -61,11 +62,40 @@ void ProcessesMonitor::checkProcessesLiveness()
 
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 {
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);
+
 	this->honeypotsManager = honeypotsManager;
 
 	initProcessAnalyzers();
+	
+}
+
+ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, unsigned int pid)
+{
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);
+
+	this->honeypotsManager = honeypotsManager;
+
+	processAnalyzers = map<unsigned int, ProcessAnalyzer *>();
+
+	try {
+		processAnalyzers[pid] = new ProcessAnalyzer(pid, this, honeypotsManager);
+	}
+	catch (ProcessAnalyzerException e) {
+		log().error(__FUNCTION__, L"Failed to init events notifier");
+
+		throw ProcessesMonitorException();
+	}
+}
+
+void ProcessesMonitor::report(int pid, LPUWSTR functionName)
+{
+	log().info(__FUNCTION__, functionName);
 }
 
 ProcessesMonitor::~ProcessesMonitor()
 {
+	for (auto const processAnalyzer : processAnalyzers) {
+		delete processAnalyzer.second;
+	}
 }

@@ -65,6 +65,8 @@ void Logger::print(const string verbosity, const string tag, const string msg)
 		return;
 	}
 
+	cout << verbosity << get_time() << tag << ":  " << msg << endl;
+
 	ofstream myfile(this->file_log_name, ios_base::app);
 	if (myfile.is_open()) {
 		myfile << verbosity << get_time() << tag << ":  " << msg << endl;

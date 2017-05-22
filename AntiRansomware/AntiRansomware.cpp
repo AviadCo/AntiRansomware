@@ -10,43 +10,26 @@
 #include "HoneypotNameGenerator.h"
 #include "Honeypot.h"
 #include "FileSystemHelper.h"
+#include "ProcessesMonitor.h"
 #include <algorithm>
 
+
+#include "FunctionCalledHandlerWrapper.h"
+#include "ProcessHookMonitorWrapper.h"
 using std::wstring;
 using std::list;
 using std::wcout;
 using std::cin;
 using std::endl;
 
-
-///////////
-#include "FunctionCalledHandlerWrapper.h"
-#include "MessageHandlerWrapper.h"
-#include "ProcessHookMonitorWrapper.h"
-#include "FunctionHooksDefinitions.h"
-
-using namespace FunctionHooksDefinitions;
-
-class cls : public FunctionCalledHandlerWrapper {
-	virtual void report(int pid, LPUWSTR functionName, LPUWSTR param) {
-		std::wcout << functionName << "," << param << endl;
-	}
-};
-
-class clsMSG : public MessageHandlerWrapper {
-	virtual void report(int pid, LPUWSTR msg) {
-		std::wcout << msg << endl;
-	}
-};
-
 int main()
 {
-	
+	unsigned int pid = 572;
 
-	int pid = 572;
 	cin >> pid;
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(new clsMSG());
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new cls());
+
+	ProcessesMonitor processesMonitor = ProcessesMonitor(NULL, pid);
+
 	cin >> pid;
 
 	/*
@@ -106,4 +89,3 @@ int main()
 
     return 0;
 }
-
