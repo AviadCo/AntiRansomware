@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="FunctionCalledHandlerThunk.h" />
     <ClInclude Include="FunctionCalledHandlerWrapper.h" />
+    <ClInclude Include="FunctionHooksDefinitions.h" />
     <ClInclude Include="MessageHandlerThunk.h" />
     <ClInclude Include="MessageHandlerWrapper.h" />
     <ClInclude Include="ProcessHookMonitorWrapper.h" />

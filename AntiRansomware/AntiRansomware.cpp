@@ -23,6 +23,9 @@ using std::endl;
 #include "FunctionCalledHandlerWrapper.h"
 #include "MessageHandlerWrapper.h"
 #include "ProcessHookMonitorWrapper.h"
+#include "FunctionHooksDefinitions.h"
+
+using namespace FunctionHooksDefinitions;
 
 class cls : public FunctionCalledHandlerWrapper {
 	virtual void report(int pid, char* functionName, char* param) {
