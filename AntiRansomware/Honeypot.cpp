@@ -7,10 +7,6 @@
 
 using namespace std;
 
-#define FILE_CONTENT L"@The is the original content of the Honeypot\n"
-
-#define LENGTH_FILE_CONTENT (sizeof(FILE_CONTENT))
-
 /* This class handles the Honeypot file status and maintainers */
 Honeypot::Honeypot(LPCWSTR lpFileName): lpFileName(lpFileName),
 							priority(HoneypotNameGenerator::getFilePriority(lpFileName)) {
@@ -27,63 +23,76 @@ const wstring Honeypot::getFileName() {
 	return lpFileName;
 }
 
+//TODO remove this function
+static wstring ExePath() {
+	wchar_t buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	string::size_type pos = wstring(buffer).find_last_of(L"\\/");
+	return wstring(buffer).substr(0, pos);
+}
+
 DWORD Honeypot::create() {
-	HANDLE fileHandle = CreateFile(lpFileName.c_str(), GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, CREATE_NEW, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	wstring fileType;
 
-	if (fileHandle == INVALID_HANDLE_VALUE) {
-		log().error(__FUNCTION__, L"CreateFile failed to open Honeypot " + lpFileName + L", errno: " + to_wstring(GetLastError()));
+	fileType = HoneypotNameGenerator::getFileExtenstion(lpFileName);
+	fileType = ExePath() + L"\\..\\fileTypes\\" + fileType + L"." + fileType;
 
-		return GetLastError();
-	}
-
-	if (!WriteFile(fileHandle, FILE_CONTENT, LENGTH_FILE_CONTENT, NULL, NULL)) {
-		/* Write content to file failed */
-		log().error(__FUNCTION__, L"CreateFile failed to write content to Honeypot " + lpFileName + L", errno: " + to_wstring(GetLastError()));
-		log().error(__FUNCTION__, L"Removing Honeypot from system.");
-
-		DeleteFile(lpFileName.c_str());
+	if (CopyFile(fileType.c_str(), lpFileName.c_str(), TRUE) == 0) {
+		log().error(__FUNCTION__, L"CopyFile failed to create honeypot " + lpFileName + L", errno: " + to_wstring(GetLastError()));
 
 		return GetLastError();
 	}
-
-	CloseHandle(fileHandle);
 
 	return 0;
 }
 
+#define TEMP_BUFFER_LENGTH 10000
+bool Honeypot::compareFile(FILE* f1, FILE* f2) {
+	char buf1[TEMP_BUFFER_LENGTH];
+	char buf2[TEMP_BUFFER_LENGTH];
+
+	do {
+		size_t r1 = fread(buf1, 1, TEMP_BUFFER_LENGTH, f1);
+		size_t r2 = fread(buf2, 1, TEMP_BUFFER_LENGTH, f2);
+
+		if (r1 != r2 || memcmp(buf1, buf2, r1)) {
+			return false;
+		}
+	} while (!feof(f1) || !feof(f2));
+
+	return feof(f1) && feof(f2);
+}
+
 bool Honeypot::isChanged() {
-	wchar_t readContent[LENGTH_FILE_CONTENT + 1024];
+	bool result;
+	errno_t err;
+	wstring fileType;
+	FILE *originalFile, *honeypotFile;
 
-	HANDLE fileHandle = CreateFile(lpFileName.c_str(), GENERIC_READ,
-		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	fileType = HoneypotNameGenerator::getFileExtenstion(lpFileName);
+	fileType = ExePath() + L"\\..\\fileTypes\\" + fileType + L"." + fileType;
 
-	if (fileHandle == INVALID_HANDLE_VALUE) {
-		/* File creation failed */
-		log().error(__FUNCTION__, L"Failed to open Honeypot " + lpFileName + L" to check modifications.");
+	err = fopen_s(&originalFile, string(fileType.begin(), fileType.end()).c_str(), "r");
+	if (err != 0) {
+
+		log().error(__FUNCTION__, L"fopen_s failed to open file " + fileType + L" errno: " + to_wstring(err));
+
+		return true;
+	}
+	err = fopen_s(&honeypotFile, string(lpFileName.begin(), lpFileName.end()).c_str(), "r");
+	if (err != 0) {
+
+		log().error(__FUNCTION__, L"fopen_s failed to open file " + lpFileName + to_wstring(err));
 
 		return true;
 	}
 
-	if (!ReadFile(fileHandle, readContent, LENGTH_FILE_CONTENT, NULL, NULL)) {
-		log().error(__FUNCTION__, L"Failed to read Honeypot " + lpFileName + L" to check modifications.");
+	result = !compareFile(originalFile, honeypotFile);
 
-		CloseHandle(fileHandle);
+	fclose(honeypotFile);
+	fclose(originalFile);
 
-		return true;
-	}
-
-	CloseHandle(fileHandle);
-
-	if (wcslen(FILE_CONTENT) != wcslen(readContent)) {
-		log().info(__FUNCTION__, L"Honeypot " + lpFileName + L" content length was modified.");
-
-		return true;
-	}
-
-	return !!wcsncmp(readContent, FILE_CONTENT, wcslen(FILE_CONTENT));
+	return result;
 }
 
 bool Honeypot::destroy() {

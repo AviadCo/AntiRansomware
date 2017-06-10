@@ -25,9 +25,8 @@ static const vector<wstring> FILE_EXTENSTIONS = {
 	https://www.cise.ufl.edu/~traynor/papers/scaife-icdcs16.pdf 
 	on page 310 */
 	L"pdf", L"odt", L"docx", L"pptx", L"txt", L"mov", L"zip",
-	L"md", L"nmind", L"opml", L"pages", L"jpg", L"xls", L"csv",
-	L"doc", L"ppt", L"gif", L"png", L"xml", L"html", L"xlsx",
-	L"mp3", L"jpf", L"log", L"ogg", L"wav",
+	L"md", L"opml", L"jpg", L"xls", L"csv",
+	L"doc", L"ppt", L"gif", L"png", L"xml", L"html", L"xlsx", L"mp3",
 };
 
 static const vector<int> FILE_EXTENSTIONS_PRIORITY = {
@@ -35,9 +34,8 @@ static const vector<int> FILE_EXTENSTIONS_PRIORITY = {
 	https://www.cise.ufl.edu/~traynor/papers/scaife-icdcs16.pdf
 	on page 310 */
 	470, 360, 280, 210, 200, 190, 160,
-	150, 150, 150, 150, 90, 80, 30,
+	150, 150, 90, 80, 30,
 	20, 20, 20, 20, 15, 15, 15, 15,
-	5, 5, 5, 5,
 };
 
 class HoneypotsNameGeneratorFailure : public exception {};
@@ -56,11 +54,16 @@ private:
 		return 0;
 	}
 public:
-	static int getFilePriority(const wstring& fileName)
+	static wstring getFileExtenstion(const wstring& fileName)
 	{
 		std::wstring::size_type extIndex = fileName.find_first_of(L".");
 
-		return getPriorityByExtenstion(fileName.substr(extIndex + 1));
+		return fileName.substr(extIndex + 1);
+	}
+
+	static int getFilePriority(const wstring& fileName)
+	{
+		return getPriorityByExtenstion(getFileExtenstion(fileName));
 	}
 
 	static wstring HoneypotNameGenerator::getRandomFileExtenstion()
@@ -104,7 +107,7 @@ public:
 	static wstring HoneypotNameGenerator::generateRandomFileName(wstring fileExtenstion) {
 		srand(time(NULL));
 
-		return generateRandomFileName(rand() % MAX_FILENAME_LENGTH, fileExtenstion);
+		return generateRandomFileName(rand() % MAX_FILENAME_LENGTH + 1, fileExtenstion);
 	}
 
 	static wstring HoneypotNameGenerator::getDirectoryPath(REFKNOWNFOLDERID rdid)

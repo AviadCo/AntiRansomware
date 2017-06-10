@@ -28,9 +28,15 @@
     <Filter Include="Source Files\main">
       <UniqueIdentifier>{a2941204-bf58-449f-8267-4201a818fd00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\fileTypes">
+      <UniqueIdentifier>{5e2f5388-691a-40b7-84c9-c0da6690ec0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="fileTypes\txt.txt">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -104,5 +110,70 @@
     <ClCompile Include="FileSystemHelper.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="fileTypes\gif.gif">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Image>
+    <Image Include="fileTypes\jpg.jpg">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Image>
+    <Image Include="fileTypes\png.png">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fileTypes\html.html">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\md.md">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\odt.odt">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\opml.opml">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\pdf.pdf">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\ppt.ppt">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\pptx.pptx">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\xls.xls">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\xlsx.xlsx">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\zip.zip">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\csv.csv">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\doc.doc">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+    <None Include="fileTypes\docx.docx">
+      <Filter>Resource Files\fileTypes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="fileTypes\mov.mov">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Media>
+    <Media Include="fileTypes\mp3.mp3">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="fileTypes\xml.xml">
+      <Filter>Resource Files\fileTypes</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

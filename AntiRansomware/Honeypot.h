@@ -12,6 +12,7 @@ private:
 	wstring lpFileName;
 	int priority;
 
+	bool compareFile(FILE * f1, FILE * f2);
 public:
 	Honeypot(const wstring lpFileName);
 	Honeypot(LPCWSTR lpFileName);

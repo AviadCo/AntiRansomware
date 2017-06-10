@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.0">
+<head>
+<title>Vienna Subscriptions</title>
+<dateCreated>2007-11-13 22:14:09 -0600</dateCreated>
+</head>
+<body>
+<outline description="dot-net" xmlUrl="http://shawnblanc.net/feed" htmlUrl="http://shawnblanc.net" type="rss" text="Shawn Blanc {dot} net"/>
+<outline description="" xmlUrl="http://feeds.feedburner.com/fightingtostayawake" htmlUrl="http://thefightspot.com" type="rss" text="The Fight Spot"/>
+<outline description="Apple, Blogging, Productivity, Personal, Photography" xmlUrl="http://feeds.feedburner.com/GlennWolsey" htmlUrl="http://www.glennwolsey.com" type="rss" text="Glenn Wolsey"/>
+<outline description="A freelancing, 5ThirtyOne semi-coherent blogging, UNEASYsilence co-authoring, radio station tracking front-end lead Apple fan residing in the rainy Pacific Northwest." xmlUrl="http://feeds.feedburner.com/5thirtyone" htmlUrl="http://5thirtyone.com" type="rss" text="5ThirtyOne"/>
+<outline description="" xmlUrl="http://seansperte.com/rss" htmlUrl="http://seansperte.com/" type="rss" text="Geek &amp; Mild"/>
+<outline description="The Big Noob Feed: " xmlUrl="http://feeds.feedburner.com/thebignoob" htmlUrl="http://thebignoob.com" type="rss" text="The Big Noob"/>
+<outline description="by Craig Hockenberry" xmlUrl="http://furbo.org/feed/" htmlUrl="http://furbo.org" type="rss" text="furbo.org"/>
+<outline description="Tips for using Apple&apos;s iPhone." xmlUrl="http://nobodywantsastyl.us/atom.xml" htmlUrl="http://nobodywantsastyl.us/" type="rss" text="Nobody Wants A Styl.us"/>
+<outline description="Tech News, Reviews and Guides" xmlUrl="http://feeds.feedburner.com/paulstamatiou" htmlUrl="http://paulstamatiou.com" type="rss" text="PaulStamatiou.com"/>
+<outline description="" xmlUrl="http://www.cameronmoll.com/atom.xml" htmlUrl="http://cameronmoll.com/" type="rss" text="Authentic Boredom"/>
+<outline description="the online home of a Christian designer" xmlUrl="http://phil.electricweekend.com/feed" htmlUrl="http://phil.electricweekend.com" type="rss" text="electric weekend"/>
+<outline description="Daniel Mall&apos;s personal space, to write about all things design, code, and nonsense." xmlUrl="http://www.danielmall.com/index.rdf" htmlUrl="http://www.danielmall.com/" type="rss" text="Daniel Mall"/>
+<outline description="" xmlUrl="http://wilshipley.com/blog/feed.xml" htmlUrl="http://wilshipley.com/blog/" type="rss" text="Call Me Fishmeal."/>
+<outline description="This tumblelog is run by Cameron Hunt. This tumblelog is a simple and easy output for him. He&apos;s interested in design, the web, aesthetics, the way things work, tumblelogs, and tech." xmlUrl="http://feeds.feedburner.com/cameron_I/O" htmlUrl="http://cameron.io/" type="rss" text="cameron i/o"/>
+<outline description="" xmlUrl="http://www.shauninman.com/feeds/plus" htmlUrl="http://www.shauninman.com/" type="rss" text="ShaunInman.com // plus Elsewhere"/>
+<outline description="
+				Player 1 draws a character with a power. Player 2 then draws a character whose power cancels the power of that previous character. Repeat.
+		  	" xmlUrl="http://thesuperest.com/feed/rss.xml" htmlUrl="http://www.thesuperest.com/" type="rss" text="The Superest: Who is the superest hero of them all?"/>
+<outline description="Has a blog?" xmlUrl="http://feeds.feedburner.com/joshuabryant" htmlUrl="http://joshuabryant.com" type="rss" text="Joshua Bryant"/>
+<outline description="Design Bitts, Free Web Page Elements, Design Tutorials, Homemade Vector Freebies." xmlUrl="http://feeds.feedburner.com/Bittbox" htmlUrl="http://www.bittbox.com" type="rss" text="BittBox"/>
+<outline description="" xmlUrl="http://joshuablankenship.com/blog/feed/atom/" htmlUrl="http://joshuablankenship.com/blog" type="rss" text="Joshua Blankenship | Blog"/>
+<outline description="Brent Simmons&apos; weblog." xmlUrl="http://inessential.com/xml/rss.xml" htmlUrl="http://inessential.com/" type="rss" text="inessential.com"/>
+<outline description="" xmlUrl="http://www.randsinrepose.com/index.xml" htmlUrl="http://www.randsinrepose.com/" type="rss" text="Rands In Repose"/>
+<outline description="RSS Feed&lt;img src=&quot;http://feeds.newyorker.com/rss_views/reporting.gif&quot;&gt;" xmlUrl="http://feeds.newyorker.com/services/rss/feeds/reporting.xml" htmlUrl="http://www.newyorker.com/rss/feeds/reporting.xml" type="rss" text="Reporting &amp; Essays"/>
+</body>
+</opml>

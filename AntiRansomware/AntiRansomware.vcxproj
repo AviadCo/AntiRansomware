@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="fileTypes\txt.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,33 @@
     <ProjectReference Include="..\ProcessHookMonitorWrapper\ProcessHookMonitorWrapper\ProcessHookMonitorWrapper.vcxproj">
       <Project>{ce2529ee-ada3-44d6-8354-65b4a426125b}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="fileTypes\gif.gif" />
+    <Image Include="fileTypes\jpg.jpg" />
+    <Image Include="fileTypes\png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fileTypes\csv.csv" />
+    <None Include="fileTypes\doc.doc" />
+    <None Include="fileTypes\docx.docx" />
+    <None Include="fileTypes\html.html" />
+    <None Include="fileTypes\md.md" />
+    <None Include="fileTypes\odt.odt" />
+    <None Include="fileTypes\opml.opml" />
+    <None Include="fileTypes\pdf.pdf" />
+    <None Include="fileTypes\ppt.ppt" />
+    <None Include="fileTypes\pptx.pptx" />
+    <None Include="fileTypes\xls.xls" />
+    <None Include="fileTypes\xlsx.xlsx" />
+    <None Include="fileTypes\zip.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="fileTypes\mov.mov" />
+    <Media Include="fileTypes\mp3.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="fileTypes\xml.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
