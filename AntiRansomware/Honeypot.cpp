@@ -2,6 +2,7 @@
 
 #include "Honeypot.h"
 #include "Logger.h"
+#include "HoneypotNameGenerator.h"
 #include <string>
 
 using namespace std;
@@ -11,13 +12,15 @@ using namespace std;
 #define LENGTH_FILE_CONTENT (sizeof(FILE_CONTENT))
 
 /* This class handles the Honeypot file status and maintainers */
-Honeypot::Honeypot(LPCWSTR lpFileName): lpFileName(lpFileName){
+Honeypot::Honeypot(LPCWSTR lpFileName): lpFileName(lpFileName),
+							priority(HoneypotNameGenerator::getFilePriority(lpFileName)) {
 }
 
 /************************************************************************/
 /* This is Constructor                                                  */
 /************************************************************************/
-Honeypot::Honeypot(const wstring lpFileName) : lpFileName(lpFileName) {
+Honeypot::Honeypot(const wstring lpFileName) : lpFileName(lpFileName),
+						 priority(HoneypotNameGenerator::getFilePriority(lpFileName)){
 }
 
 const wstring Honeypot::getFileName() {
@@ -100,4 +103,9 @@ bool Honeypot::operator==(const wstring & other)
 bool Honeypot::operator==(LPCWSTR other)
 {
 	return *this == wstring(other);
+}
+
+int Honeypot::getPriority() const
+{
+	return priority;
 }

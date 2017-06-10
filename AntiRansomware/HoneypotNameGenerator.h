@@ -21,20 +21,23 @@ using std::vector;
 
 static const wstring BITCOIN_WALLET = L"wallet.dat";
 static const vector<wstring> FILE_EXTENSTIONS = {
-	L"mid", L"wma", L"flv", L"mkv", L"mov", L"avi", L"asf", L"mpeg", L"vob",
-	L"mpg", L"wmv", L"fla", L"swf", L"wav", L"qcow2", L"vdi", L"vmdk",
-	L"vmx", L"gpg", L"aes", L"ARC", L"PAQ", L"tar.bz2", L"tbk", L"bak", L"tar",
-	L"tgz", L"rar", L"zip", L"djv", L"djvu", L"svg", L"bmp", L"png", L"gif", L"raw",
-	L"cgm", L"jpeg", L"jpg", L"tif", L"tiff", L"NEF", L"psd", L"cmd", L"bat", L"class",
-	L"jar", L"java", L"asp", L"brd", L"sch", L"dch", L"dip", L"vbs", L"asm", L"pas", L"cpp",
-	L"php", L"ldf", L"mdf", L"ibd", L"MYI", L"MYD", L"frm", L"odb", L"dbf", L"mdb",
-	L"sql", L"SQLITEDB", L"SQLITE3", L"asc", L"lay6", L"lay", L"ms11", L"sldm",
-	L"sldx", L"ppsm", L"ppsx", L"ppam", L"pptm", L"std", L"sxd", L"pot", L"pps",
-	L"sti", L"sxi", L"otp", L"odp", L"wks", L"xltx", L"xltm", L"xlsx", L"xlsm",
-	L"slk", L"xlw", L"xlt", L"xlm", L"xlc", L"dif", L"stc", L"sxc", L"ots",
-	L"vods", L"hwp", L"dotm", L"dotx", L"docm", L"docx", L"DOT", L"max", L"xml",
-	L"txt", L"CSV", L"uot", L"RTF", L"pdf", L"XLS", L"PPT", L"stw", L"sxw",
-	L"ott", L"odt", L"DOC" , L"pem", L"csr", L"crt", L"kev",
+	/* This list of extenstions was taken from
+	https://www.cise.ufl.edu/~traynor/papers/scaife-icdcs16.pdf 
+	on page 310 */
+	L"pdf", L"odt", L"docx", L"pptx", L"txt", L"mov", L"zip",
+	L"md", L"nmind", L"opml", L"pages", L"jpg", L"xls", L"csv",
+	L"doc", L"ppt", L"gif", L"png", L"xml", L"html", L"xlsx",
+	L"mp3", L"jpf", L"log", L"ogg", L"wav",
+};
+
+static const vector<int> FILE_EXTENSTIONS_PRIORITY = {
+	/* This list of extenstions was taken from
+	https://www.cise.ufl.edu/~traynor/papers/scaife-icdcs16.pdf
+	on page 310 */
+	470, 360, 280, 210, 200, 190, 160,
+	150, 150, 150, 150, 90, 80, 30,
+	20, 20, 20, 20, 15, 15, 15, 15,
+	5, 5, 5, 5,
 };
 
 class HoneypotsNameGeneratorFailure : public exception {};
@@ -42,8 +45,24 @@ class HoneypotsNameGeneratorFailure : public exception {};
 class HoneypotNameGenerator
 {
 private:
+	static int getPriorityByExtenstion(const wstring& ext)
+	{
+		for (vector<int>::size_type i = 0; i < FILE_EXTENSTIONS.size(); ++i) {
+			if (FILE_EXTENSTIONS[i].compare(ext) == 0) {
+				return FILE_EXTENSTIONS_PRIORITY[i];
+			}
+		}
 
+		return 0;
+	}
 public:
+	static int getFilePriority(const wstring& fileName)
+	{
+		std::wstring::size_type extIndex = fileName.find_first_of(L".");
+
+		return getPriorityByExtenstion(fileName.substr(extIndex + 1));
+	}
+
 	static wstring HoneypotNameGenerator::getRandomFileExtenstion()
 	{
 		srand(time(NULL));

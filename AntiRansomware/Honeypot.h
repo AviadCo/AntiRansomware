@@ -10,6 +10,7 @@ class Honeypot
 {
 private:
 	wstring lpFileName;
+	int priority;
 
 public:
 	Honeypot(const wstring lpFileName);
@@ -49,6 +50,7 @@ public:
 	bool operator==(const Honeypot& other);
 	bool operator==(const wstring& other);
 	bool operator==(LPCWSTR other);
+	int getPriority() const;
 	
 };
 
