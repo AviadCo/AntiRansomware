@@ -27,7 +27,7 @@ const wstring Honeypot::getFileName() {
 DWORD Honeypot::create() {
 	HANDLE fileHandle = CreateFile(lpFileName.c_str(), GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, CREATE_NEW, FILE_ATTRIBUTE_HIDDEN | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+		NULL, CREATE_NEW, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (fileHandle == INVALID_HANDLE_VALUE) {
 		log().error(__FUNCTION__, L"CreateFile failed to open Honeypot " + lpFileName + L", errno: " + to_wstring(GetLastError()));
@@ -55,7 +55,7 @@ bool Honeypot::isChanged() {
 
 	HANDLE fileHandle = CreateFile(lpFileName.c_str(), GENERIC_READ,
 		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+		NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (fileHandle == INVALID_HANDLE_VALUE) {
 		/* File creation failed */
