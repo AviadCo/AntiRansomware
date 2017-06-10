@@ -24,14 +24,23 @@ using std::endl;
 
 int main()
 {
-	//unsigned int pid = 572;
+	unsigned int pid = 572;
 
-	//cin >> pid;
+	cin >> pid;
 
-	//ProcessesMonitor processesMonitor = ProcessesMonitor(NULL, pid);
+	ProcessesMonitor processesMonitor = ProcessesMonitor(NULL, pid);
 
-	//cin >> pid;
-	
+	processesMonitor.suspendProcess(pid);
+
+	Sleep(6000);
+
+	processesMonitor.resumeProcess(pid);
+
+	Sleep(6000);
+
+	processesMonitor.endProcess(pid);
+
+	/*
 	unsigned int totalTime, intervalTime;
 	HoneypotsManager honeypotsManager = HoneypotsManager();
 
@@ -67,7 +76,7 @@ int main()
 	wcout << L"Total time passed, removing honeypots and quiting" << endl;
 
 	honeypotsManager.removeAllHoneypots();
-
+	*/
 	/**
 	list<wstring> subDir = FileSystemHelper::getAllFilesInDir(L"C:\\Users\\ransomware\\Downloads");
 	wstring firstFile, lastFile;

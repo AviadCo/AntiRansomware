@@ -93,6 +93,48 @@ void ProcessesMonitor::report(int pid, LPUWSTR functionName)
 	log().info(__FUNCTION__, functionName);
 }
 
+typedef LONG(NTAPI *NtSuspendProcess)(IN HANDLE ProcessHandle);
+typedef LONG(NTAPI *NtResumeProcess)(IN HANDLE ProcessHandle);
+
+void ProcessesMonitor::toggleProcess(DWORD pid, int on)
+{
+	NtSuspendProcess pfnNtSuspendProcess = (NtSuspendProcess)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSuspendProcess");
+	NtResumeProcess pfnNtResumeProcess = (NtResumeProcess)GetProcAddress(GetModuleHandle(L"ntdll"), "NtResumeProcess");
+
+	HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	if (on)
+	{
+		pfnNtResumeProcess(processHandle);
+	}
+	else
+	{
+		pfnNtSuspendProcess(processHandle);
+	}
+
+	CloseHandle(processHandle);
+}
+
+void ProcessesMonitor::suspendProcess(int pid)
+{
+	toggleProcess(pid, false);
+}
+
+void ProcessesMonitor::resumeProcess(int pid)
+{
+	toggleProcess(pid, true);
+}
+
+void ProcessesMonitor::endProcess(int pid)
+{
+	HANDLE processHandle;
+
+	processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+
+	TerminateProcess(processHandle, 1);
+
+	CloseHandle(processHandle);
+}
+
 ProcessesMonitor::~ProcessesMonitor()
 {
 	for (auto const processAnalyzer : processAnalyzers) {
