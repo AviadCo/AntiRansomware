@@ -26,19 +26,12 @@ int main()
 {
 	unsigned int pid = 572;
 
-	cin >> pid;
-
-	ProcessesMonitor processesMonitor = ProcessesMonitor(NULL, pid);
+	HoneypotsManager honeypotsManager = HoneypotsManager();
+	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 
 	processesMonitor.suspendProcess(pid);
 
 	Sleep(6000);
-
-	processesMonitor.resumeProcess(pid);
-
-	Sleep(6000);
-
-	processesMonitor.endProcess(pid);
 
 	/*
 	unsigned int totalTime, intervalTime;
@@ -93,7 +86,5 @@ int main()
 	});
 */
 	
-	Sleep(6000);
-
     return 0;
 }

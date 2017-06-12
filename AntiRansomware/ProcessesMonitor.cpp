@@ -28,6 +28,15 @@ void ProcessesMonitor::initProcessAnalyzers()
 	numOfIDs /= sizeof(DWORD);
 
 	for (unsigned int i = 0; i < numOfIDs; ++i) {
+		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, TRUE, pProcessIDs[i]);
+		if (!processHandle || pProcessIDs[i] == GetCurrentProcessId()) {
+			/* no need to inject on self process or processes we can't open */
+			continue;
+		}
+		else {
+			CloseHandle(processHandle);
+		}
+
 		try {
 			processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
 		}
