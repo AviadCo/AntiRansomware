@@ -167,6 +167,17 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		//TODO update process monitor if needed
 	}
+	else if (!wcscmp(functionName.c_str(), ShellExecuteEx::name)) {
+		if ((param.find(L"vssadmin.exe") != std::wstring::npos) && (param.find(L"delete") != std::wstring::npos)) {
+			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
+
+			log().debug(__FUNCTION__, wstring(ShellExecuteEx::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
+		}
+		else {
+			/* no suspious activity */
+			return;
+		}
+	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);
 

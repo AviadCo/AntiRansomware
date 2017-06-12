@@ -1,6 +1,9 @@
 #pragma once
 #include <Windows.h>
 namespace FunctionHooksDefinitions {
+	//TODO define a better splitter
+	LPUWSTR PARAM_SPLITTER = L"|";
+
 	namespace HookCreateFileW {
 		LPUWSTR name = L"CreateFileW";
 
@@ -36,6 +39,15 @@ namespace FunctionHooksDefinitions {
 
 	namespace HookCryptEncrypt {
 		LPUWSTR name = L"CryptEncrypt";
+	}
+
+	namespace ShellExecuteEx {
+		LPUWSTR name = L"ShellExecuteEx";
+
+		typedef enum args {
+			FILE_EXE,	//char*
+			FILE_PARAM,	//char*
+		} args;
 	}
 
 	namespace WriteProcessMemory {

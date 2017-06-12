@@ -19,6 +19,9 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 	case PROCESS_INJECTION:
 		return PROCESS_INJECTION_SCORE;
 
+	case DISABLE_SHADOW_COPY:
+		return DISABLE_SHADOW_COPY_SCORE;
+
 	default:
 		throw ProcessPolicyException();
 	}
