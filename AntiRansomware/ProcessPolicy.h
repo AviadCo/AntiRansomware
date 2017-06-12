@@ -14,6 +14,9 @@ public:
 	static const unsigned int PROCESS_INJECTION_SCORE = 10;
 	static const unsigned int DISABLE_SHADOW_COPY_SCORE = 100;
 	static const unsigned int DISABLE_WINDOWS_BACKUP_SCORE = 100;
+	static const unsigned int DISABLE_WINDOWS_RESTORE_SCORE = 100;
+	static const unsigned int DISABLOE_WINDOWS_DEFENDER_SCORE = 100;
+
 
 	enum ProcessOperation {
 		FILE_DELETE,
@@ -23,6 +26,8 @@ public:
 		PROCESS_INJECTION,
 		DISABLE_SHADOW_COPY,
 		DISABLE_WINDOWS_BACKUP,
+		DISABLE_WINDOWS_RESTORE,
+		DISABLOE_WINDOWS_DEFENDER,
 		CREATE_PROCESS,
 	};
 

@@ -174,9 +174,19 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
 		}
 		else if ((param.find(L"wbadmin") != std::wstring::npos) && (param.find(L"disable") != std::wstring::npos) && (param.find(L"backup") != std::wstring::npos)) {
-			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
+			processOperation = ProcessPolicy::DISABLE_WINDOWS_BACKUP;
 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable backup from pid " + std::to_wstring(getProcessID()));
+		}
+		else if ((param.find(L"net") != std::wstring::npos) && (param.find(L"stop") != std::wstring::npos) && (param.find(L"srservice") != std::wstring::npos)) {
+			processOperation = ProcessPolicy::DISABLE_WINDOWS_RESTORE;
+
+			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable windows restore from pid " + std::to_wstring(getProcessID()));
+		}
+		else if ((param.find(L"sc") != std::wstring::npos) && (param.find(L"stop") != std::wstring::npos) && (param.find(L"WinDefend") != std::wstring::npos)) {
+			processOperation = ProcessPolicy::DISABLOE_WINDOWS_DEFENDER;
+
+			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable windows defender from pid " + std::to_wstring(getProcessID()));
 		}
 		else {
 			/* no suspious activity */

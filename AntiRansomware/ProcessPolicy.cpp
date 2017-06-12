@@ -25,6 +25,12 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 	case DISABLE_WINDOWS_BACKUP:
 		return DISABLE_WINDOWS_BACKUP_SCORE;
 
+	case DISABLE_WINDOWS_RESTORE:
+		return DISABLE_WINDOWS_RESTORE_SCORE;
+
+	case DISABLOE_WINDOWS_DEFENDER:
+		return DISABLOE_WINDOWS_DEFENDER_SCORE;
+
 	default:
 		throw ProcessPolicyException();
 	}
