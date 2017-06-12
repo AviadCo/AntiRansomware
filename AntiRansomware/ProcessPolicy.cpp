@@ -31,6 +31,9 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 	case DISABLOE_WINDOWS_DEFENDER:
 		return DISABLOE_WINDOWS_DEFENDER_SCORE;
 
+	case CREATE_REMOTE_THREAD:
+		return CREATE_REMOTE_THREAD_SCORE;
+
 	default:
 		throw ProcessPolicyException();
 	}

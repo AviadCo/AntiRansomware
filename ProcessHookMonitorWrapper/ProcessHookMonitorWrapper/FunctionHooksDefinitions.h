@@ -65,4 +65,8 @@ namespace FunctionHooksDefinitions {
 			PID,	//char*
 		} args;
 	}
+
+	namespace HookCreateRemoteThread {
+		LPUWSTR name = L"CreateRemoteThread";
+	}
 }

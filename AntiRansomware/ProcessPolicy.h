@@ -16,6 +16,7 @@ public:
 	static const unsigned int DISABLE_WINDOWS_BACKUP_SCORE = 100;
 	static const unsigned int DISABLE_WINDOWS_RESTORE_SCORE = 100;
 	static const unsigned int DISABLOE_WINDOWS_DEFENDER_SCORE = 100;
+	static const unsigned int CREATE_REMOTE_THREAD_SCORE = 10;
 
 
 	enum ProcessOperation {
@@ -29,6 +30,7 @@ public:
 		DISABLE_WINDOWS_RESTORE,
 		DISABLOE_WINDOWS_DEFENDER,
 		CREATE_PROCESS,
+		CREATE_REMOTE_THREAD,
 	};
 
 	static unsigned int getScoreForOperation(ProcessOperation operation);

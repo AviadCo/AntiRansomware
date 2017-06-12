@@ -195,12 +195,17 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateProcess::name)) {
 		log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
-					L" and crete process with pid " + param);
+					L" and created process with pid " + param);
 
 		processesMonitor->addNewProcess(std::stoi(param));
 
 		/* no suspious activity */
 		return;
+	}
+	else if (!wcscmp(functionName.c_str(), HookCreateRemoteThread::name)) {
+		processOperation = ProcessPolicy::CREATE_REMOTE_THREAD;
+
+		log().debug(__FUNCTION__, wstring(HookCreateRemoteThread::name) + L" was called from pid " + std::to_wstring(getProcessID()));
 	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);
