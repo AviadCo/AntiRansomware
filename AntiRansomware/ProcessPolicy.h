@@ -11,12 +11,14 @@ public:
 	static const unsigned int FILE_RENAME_SCORE = 100;
 	static const unsigned int FILE_CHNAGE_CONTENT_SCORE = 100;
 	static const unsigned int ENCRYPTION_SCORE = 20;
+	static const unsigned int PROCESS_INJECTION_SCORE = 10;
 
 	enum ProcessOperation {
 		FILE_DELETE,
 		FILE_RENAME,
 		FILE_CHNAGE_CONTENT,
 		ENCRYPTION,
+		PROCESS_INJECTION,
 	};
 
 	static unsigned int getScoreForOperation(ProcessOperation operation);

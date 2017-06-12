@@ -16,6 +16,9 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 	case ENCRYPTION:
 		return ENCRYPTION_SCORE;
 
+	case PROCESS_INJECTION:
+		return PROCESS_INJECTION_SCORE;
+
 	default:
 		throw ProcessPolicyException();
 	}

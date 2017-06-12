@@ -58,7 +58,7 @@ ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMo
 	}
 
 	parentID = GetParentProcessID(proccessID);
-
+	injectedByID = -1;
 	this->processesMonitor = processesMonitor;
 	this->honeypotsManager = honeypotsManager;
 	currentScore = 0;
@@ -157,6 +157,15 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		/* no suspious activity */
 		return;
+	}
+	else if (!wcscmp(functionName.c_str(), WriteProcessMemory::name)) {
+		log().debug(__FUNCTION__, wstring(WriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		processOperation = ProcessPolicy::PROCESS_INJECTION;
+
+		injectedByID = std::stoi(param);
+
+		//TODO update process monitor if needed
 	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);

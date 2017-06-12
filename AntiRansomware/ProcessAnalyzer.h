@@ -29,6 +29,7 @@ private:
 	const HoneypotsManager *honeypotsManager;
 	HANDLE processHandle;
 	DWORD parentID;
+	DWORD injectedByID;
 	unsigned int currentScore;
 	
 	void setHooks(DWORD proccessID);

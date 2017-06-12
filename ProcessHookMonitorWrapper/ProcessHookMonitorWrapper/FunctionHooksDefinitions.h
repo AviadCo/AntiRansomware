@@ -37,4 +37,12 @@ namespace FunctionHooksDefinitions {
 	namespace HookCryptEncrypt {
 		LPUWSTR name = L"CryptEncrypt";
 	}
+
+	namespace WriteProcessMemory {
+		LPUWSTR name = L"WriteProcessMemory";
+
+		typedef enum args {
+			DESC_PID,	//char*
+		} args;
+	}
 }
