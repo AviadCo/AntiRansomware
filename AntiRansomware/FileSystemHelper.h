@@ -31,6 +31,7 @@ public:
 	static void getFirstAndLastAccessTimeOrder(const wstring& directoryPath, wstring& firstFile, wstring& lastFile);
 	static void getFirstAndLastFileWriteTimeOrder(const wstring& directoryPath, wstring& firstFile, wstring& lastFile);
 	static void setFileAttribute(const wstring & filename, FILETIME creationTime, FILETIME accessTime, FILETIME writeTime);
+	static bool isTempOrAppData(const wstring & filename);
 	static FILETIME getFileAttribute(const wstring & filename, int fileAttributeType);
 };
 

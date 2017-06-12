@@ -7,6 +7,7 @@
 
 #include "ProcessAnalyzer.h"
 #include "ProcessesMonitor.h"
+#include "FileSystemHelper.h"
 #include "Logger.h"
 #include "FunctionCalledHandlerWrapper.h"
 #include "FunctionHooksDefinitions.h"
@@ -123,11 +124,23 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		processOperation = ProcessPolicy::FILE_DELETE;
 
 		log().debug(__FUNCTION__, wstring(HookDeleteFileW::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		if (FileSystemHelper::isTempOrAppData(param)) {
+			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
+
+			return;
+		}
 	}
 	else if (!wcscmp(functionName.c_str(), HookWriteFile::name)) {
 		processOperation = ProcessPolicy::FILE_CHNAGE_CONTENT;
 
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		if (FileSystemHelper::isTempOrAppData(param)) {
+			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
+
+			return;
+		}
 	}
 	else if (!wcscmp(functionName.c_str(), HookMoveFileW::name)) {
 		processOperation = ProcessPolicy::FILE_RENAME;

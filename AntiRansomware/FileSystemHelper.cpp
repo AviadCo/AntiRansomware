@@ -3,6 +3,8 @@
 #include "FileSystemHelper.h"
 #include "Logger.h"
 
+#include <shlobj.h>
+
 using namespace std;
 using std::function;
 
@@ -281,4 +283,37 @@ void FileSystemHelper::setFileAttribute(const wstring & filename, FILETIME creat
 	}
 
 	FindClose(hFind);
+}
+
+bool FileSystemHelper::isTempOrAppData(const wstring & filename)
+{
+	wstring TempPath;
+	wchar_t wcharPath[MAX_PATH];
+
+	/* Checking if file is temp file */
+	if (GetTempPathW(MAX_PATH, wcharPath)) {
+		TempPath = wcharPath;
+	}
+	else {
+		log().error(__FUNCTION__, L"Failed to get temp direcotry to check file " + filename);
+
+		return false;
+	}
+
+	if (filename.find(wcharPath) != std::wstring::npos) {
+		return true;
+	}
+
+	/* Checking if file is app data file */
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, wcharPath)))
+	{
+		TempPath = wcharPath;
+	}
+	else {
+		log().error(__FUNCTION__, L"Failed to get app data direcotry to check file " + filename);
+
+		return false;
+	}
+
+	return filename.find(wcharPath) != std::wstring::npos;
 }
