@@ -23,6 +23,7 @@ public:
 		PROCESS_INJECTION,
 		DISABLE_SHADOW_COPY,
 		DISABLE_WINDOWS_BACKUP,
+		CREATE_PROCESS,
 	};
 
 	static unsigned int getScoreForOperation(ProcessOperation operation);

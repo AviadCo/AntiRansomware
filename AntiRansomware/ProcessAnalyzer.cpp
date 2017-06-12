@@ -158,8 +158,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		/* no suspious activity */
 		return;
 	}
-	else if (!wcscmp(functionName.c_str(), WriteProcessMemory::name)) {
-		log().debug(__FUNCTION__, wstring(WriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+	else if (!wcscmp(functionName.c_str(), HookWriteProcessMemory::name)) {
+		log().debug(__FUNCTION__, wstring(HookWriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID()));
 
 		processOperation = ProcessPolicy::PROCESS_INJECTION;
 
@@ -167,21 +167,30 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		//TODO update process monitor if needed
 	}
-	else if (!wcscmp(functionName.c_str(), ShellExecuteEx::name)) {
+	else if (!wcscmp(functionName.c_str(), HookShellExecuteEx::name)) {
 		if ((param.find(L"vssadmin.exe") != std::wstring::npos) && (param.find(L"delete") != std::wstring::npos)) {
 			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
 
-			log().debug(__FUNCTION__, wstring(ShellExecuteEx::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
+			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
 		}
 		else if ((param.find(L"wbadmin") != std::wstring::npos) && (param.find(L"disable") != std::wstring::npos) && (param.find(L"backup") != std::wstring::npos)) {
 			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
 
-			log().debug(__FUNCTION__, wstring(ShellExecuteEx::name) + L" is trying to disable backup from pid " + std::to_wstring(getProcessID()));
+			log().debug(__FUNCTION__, wstring(HookShellExecuteEx::name) + L" is trying to disable backup from pid " + std::to_wstring(getProcessID()));
 		}
 		else {
 			/* no suspious activity */
 			return;
 		}
+	}
+	else if (!wcscmp(functionName.c_str(), HookCreateProcess::name)) {
+		log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
+					L" and crete process with pid " + param);
+
+		processesMonitor->addNewProcess(std::stoi(param));
+
+		/* no suspious activity */
+		return;
 	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);
