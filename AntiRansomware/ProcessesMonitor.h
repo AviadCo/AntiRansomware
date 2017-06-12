@@ -25,6 +25,7 @@ public:
 	void suspendProcess(int pid);
 	void resumeProcess(int pid);
 	void endProcess(int pid);
+	void updateProcessScore(int pid, ProcessPolicy::ProcessOperation processOperation);
 	~ProcessesMonitor();
 };
 

@@ -104,7 +104,13 @@ bool ProcessAnalyzer::checkIfAlert() const
 
 bool ProcessAnalyzer::updateScore(ProcessPolicy::ProcessOperation processOperation)
 {
+	DWORD parentID = GetParentProcessID(getProcessID());
 	currentScore += ProcessPolicy::getScoreForOperation(processOperation);
+
+	if (parentID != -1) {
+		/* updating parent score also */
+		processesMonitor->updateProcessScore(parentID, processOperation);
+	}
 
 	return checkIfAlert();
 }

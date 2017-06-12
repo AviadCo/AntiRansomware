@@ -135,6 +135,13 @@ void ProcessesMonitor::endProcess(int pid)
 	CloseHandle(processHandle);
 }
 
+void ProcessesMonitor::updateProcessScore(int pid, ProcessPolicy::ProcessOperation processOperation)
+{
+	if (processAnalyzers.at(pid) != NULL) {
+		processAnalyzers.at(pid)->updateScore(processOperation);
+	}
+}
+
 ProcessesMonitor::~ProcessesMonitor()
 {
 	for (auto const processAnalyzer : processAnalyzers) {
