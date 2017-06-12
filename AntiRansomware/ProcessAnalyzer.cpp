@@ -173,6 +173,11 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 			log().debug(__FUNCTION__, wstring(ShellExecuteEx::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
 		}
+		else if ((param.find(L"wbadmin") != std::wstring::npos) && (param.find(L"disable") != std::wstring::npos) && (param.find(L"backup") != std::wstring::npos)) {
+			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
+
+			log().debug(__FUNCTION__, wstring(ShellExecuteEx::name) + L" is trying to disable backup from pid " + std::to_wstring(getProcessID()));
+		}
 		else {
 			/* no suspious activity */
 			return;

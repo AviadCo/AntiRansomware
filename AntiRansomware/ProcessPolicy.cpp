@@ -22,6 +22,9 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 	case DISABLE_SHADOW_COPY:
 		return DISABLE_SHADOW_COPY_SCORE;
 
+	case DISABLE_WINDOWS_BACKUP:
+		return DISABLE_WINDOWS_BACKUP_SCORE;
+
 	default:
 		throw ProcessPolicyException();
 	}

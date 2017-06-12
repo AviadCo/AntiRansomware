@@ -13,6 +13,7 @@ public:
 	static const unsigned int ENCRYPTION_SCORE = 20;
 	static const unsigned int PROCESS_INJECTION_SCORE = 10;
 	static const unsigned int DISABLE_SHADOW_COPY_SCORE = 100;
+	static const unsigned int DISABLE_WINDOWS_BACKUP_SCORE = 100;
 
 	enum ProcessOperation {
 		FILE_DELETE,
@@ -21,6 +22,7 @@ public:
 		ENCRYPTION,
 		PROCESS_INJECTION,
 		DISABLE_SHADOW_COPY,
+		DISABLE_WINDOWS_BACKUP,
 	};
 
 	static unsigned int getScoreForOperation(ProcessOperation operation);
