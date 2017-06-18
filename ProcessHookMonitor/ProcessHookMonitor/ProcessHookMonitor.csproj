@@ -68,9 +68,282 @@
     <Content Include="EasyLoad64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="utils\file\bin\file.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\bin\magic1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\bin\regex2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\bin\zlib1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\man\cat1p\file.1p.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\man\cat1\file.1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\man\cat3\libmagic.3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\file\man\cat5\magic.5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-cli.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-srv.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\python27.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\sdhashuiserver.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\copy_csv_xls.swf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\copy_csv_xls_pdf.swf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\back_disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\back_enabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\back_enabled_hover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\forward_disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\forward_enabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\forward_enabled_hover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\sort_asc.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\sort_asc_disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\sort_both.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\sort_desc.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\sort_desc_disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_flat_0_aaaaaa_40x100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_flat_75_ffffff_40x100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_glass_55_fbf9ee_1x400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_glass_65_ffffff_1x400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_glass_75_dadada_1x400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_glass_75_e6e6e6_1x400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_glass_95_fef1ec_1x400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-icons_222222_256x240.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-icons_2e83ff_256x240.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-icons_454545_256x240.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-icons_888888_256x240.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\images\ui-icons_cd0a0a_256x240.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery-ui-1.8.22.custom.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery-ui-1.8.22.custom.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery.dataTables.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery.dataTables.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery.dataTables_themeroller.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\jquery.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\list-parser.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\site.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\TableTools.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\TableTools.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\static\ZeroClipboard.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\tcl85.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\templates\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\templates\layout.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\tk85.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash-ui\w9xpopen.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\sdhash.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utils\sdhash\vcomp100.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="utils\file\contrib\file\5.03\file-5.03-GnuWin32.README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\AUTHORS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\ChangeLog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\COPYING">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\INSTALL">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\magic\Header">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\magic\Magdir\fonts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\magic\Magdir\news">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\MAINT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\NEWS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\python\README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\tests\README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03-src\TODO">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03\check.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\manifest\file-5.03-bin.mft">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\manifest\file-5.03-bin.ver">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\share\misc\magic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\file\share\misc\magic.mgc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\hb.sdbf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\hb.sdbf.sdbf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\bz2.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\cherrypy.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\library.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\pyexpat.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\select.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\unicodedata.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\_ctypes.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\_hashlib.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\_socket.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\_ssl.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="utils\sdhash\sdhash-ui\_tkinter.pyd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProcessHook\ProcessHook.csproj">

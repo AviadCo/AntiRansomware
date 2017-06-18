@@ -70,4 +70,8 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="utils\sdhash\sdhash-ui\templates\index.html" />
+    <None Include="utils\sdhash\sdhash-ui\templates\layout.html" />
+  </ItemGroup>
 </Project>

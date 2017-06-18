@@ -11,6 +11,7 @@ namespace ProcessHook
 
     {
         private const string ERROR_CANT_FIND_HOOK = "Error. Cant find function: ";
+        private const string ERROR_CANT_FIND_DLL = "Error. Cant find DLL: ";
 
         private static IHookServer server = null;
         private static Queue<string> eventsQueue = new Queue<string>();
@@ -38,6 +39,10 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CreateFileWStr);
             }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
+            }
 
             try
             {
@@ -51,6 +56,10 @@ namespace ProcessHook
             catch (System.MissingMethodException)
             {
                 reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.WriteFileStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
             }
 
             try
@@ -66,6 +75,10 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.DeleteFileWStr);
             }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
+            }
 
             try
             {
@@ -80,10 +93,14 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.MoveFileWStr);
             }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
+            }
 
             try
             {
-                // MoveFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
+                // CryptEncrypt https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
                 var cryptEncryptHook = EasyHook.LocalHook.Create(
                     EasyHook.LocalHook.GetProcAddress("Advapi32.dll", FunctionHooks.CryptEncryptStr),
                     new FunctionHooks.CryptEncrypt_Delegate(FunctionHooks.CryptEncrypt_Hook),
@@ -94,6 +111,101 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CryptEncryptStr);
             }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Advapi32.dll");
+            }
+
+            try
+            {
+                // ShellExecuteExW https://msdn.microsoft.com/en-us/library/windows/desktop/bb762154(v=vs.85).aspx
+                var shellExecuteExWHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Shell32.dll", FunctionHooks.ShellExecuteExWStr),
+                    new FunctionHooks.ShellExecuteExW_Delegate(FunctionHooks.ShellExecuteExW_Hook),
+                    this);
+                resHooks.Add(shellExecuteExWHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.ShellExecuteExWStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Shell32.dll");
+            }
+
+            try
+            {
+                // WriteProcessMemory https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
+                var WriteProcessMemoryHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", FunctionHooks.WriteProcessMemoryStr),
+                    new FunctionHooks.WriteProcessMemory_Delegate(FunctionHooks.WriteProcessMemory_Hook),
+                    this);
+                resHooks.Add(WriteProcessMemoryHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.WriteProcessMemoryStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
+            }
+
+            try
+            {
+                // CreateProcessW https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
+                var CreateProcessWHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", FunctionHooks.CreateProcessWStr),
+                    new FunctionHooks.CreateProcessW_Delegate(FunctionHooks.CreateProcessW_Hook),
+                    this);
+                resHooks.Add(CreateProcessWHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CreateProcessWStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
+            }
+
+            try
+            {
+                // CreateRemoteThread https://msdn.microsoft.com/en-us/library/windows/desktop/ms682437(v=vs.85).aspx
+                var CreateRemoteThreadHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", FunctionHooks.CreateRemoteThreadStr),
+                    new FunctionHooks.CreateRemoteThread_Delegate(FunctionHooks.CreateRemoteThread_Hook),
+                    this);
+                resHooks.Add(CreateRemoteThreadHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CreateRemoteThreadStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
+            }
+
+            try
+            {
+                // CreateRemoteThreadEx https://msdn.microsoft.com/en-us/library/windows/desktop/ms682437(v=vs.85).aspx
+                var CreateRemoteThreadExHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", FunctionHooks.CreateRemoteThreadExStr),
+                    new FunctionHooks.CreateRemoteThreadEx_Delegate(FunctionHooks.CreateRemoteThreadEx_Hook),
+                    this);
+                resHooks.Add(CreateRemoteThreadExHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.CreateRemoteThreadExStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
+            }
+
 
 
             /*

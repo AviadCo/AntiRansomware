@@ -17,6 +17,8 @@ namespace ProcessHookMonitorWrapper {
 	{
 		int pid;
 	public: 
+		static void initialize();
+
 		static void setStatusHandler(MessageHandlerWrapper* listener);
 
 		static void setFunctionListener(int pid, FunctionCalledHandlerWrapper* listener);
@@ -24,5 +26,7 @@ namespace ProcessHookMonitorWrapper {
 		static void removeFunctionListener(int pid);
 
 		static void inject(int pid, FunctionCalledHandlerWrapper* listener);
+
+		static void close();
 	};
 }

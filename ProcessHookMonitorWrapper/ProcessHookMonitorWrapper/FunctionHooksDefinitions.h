@@ -41,8 +41,8 @@ namespace FunctionHooksDefinitions {
 		LPUWSTR name = L"CryptEncrypt";
 	}
 
-	namespace HookShellExecuteEx {
-		LPUWSTR name = L"ShellExecuteEx";
+	namespace HookShellExecuteExW {
+		LPUWSTR name = L"ShellExecuteExW";
 
 		typedef enum args {
 			FILE_EXE,	//char*
@@ -54,7 +54,7 @@ namespace FunctionHooksDefinitions {
 		LPUWSTR name = L"WriteProcessMemory";
 
 		typedef enum args {
-			DESC_PID,	//char*
+			DESC_PID,	//int
 		} args;
 	}
 
@@ -62,11 +62,25 @@ namespace FunctionHooksDefinitions {
 		LPUWSTR name = L"CreateProcess";
 
 		typedef enum args {
-			PID,	//char*
+			PID,	//int
+			APPLICATION_NAME,	//char*
+			COMMAND_LINE,	//char*
 		} args;
 	}
 
 	namespace HookCreateRemoteThread {
 		LPUWSTR name = L"CreateRemoteThread";
+
+		typedef enum args {
+			PID,	//int
+		} args;
+	}
+
+	namespace HookCreateRemoteThreadEx {
+		LPUWSTR name = L"CreateRemoteThreadEx";
+
+		typedef enum args {
+			PID,	//int
+		} args;
 	}
 }

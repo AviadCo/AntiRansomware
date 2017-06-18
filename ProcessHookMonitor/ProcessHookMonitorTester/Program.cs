@@ -21,11 +21,13 @@ namespace ProcessHookMonitorTester
 
         static void Main(string[] args)
         {
+            ProcessHookMonitor.ProcessHookMonitor.initialize();
             ProcessHookMonitor.ProcessHookMonitor.setStatusHandler(new MessageHandler(reportToConsole));
-            ProcessHookMonitor.ProcessHookMonitor.inject(11868,
+            ProcessHookMonitor.ProcessHookMonitor.inject(15952,
                 new FunctionCalledHandler(reportToConsole));
             Console.WriteLine("hello");
             Console.ReadKey();
+            ProcessHookMonitor.ProcessHookMonitor.close();
         }
     }
 }

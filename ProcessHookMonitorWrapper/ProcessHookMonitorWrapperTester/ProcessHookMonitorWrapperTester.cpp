@@ -25,6 +25,7 @@ int main()
 	char c;
 	int pid;
 	std::cin >> pid;
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
 
 	std::cout << "hi";

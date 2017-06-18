@@ -14,12 +14,51 @@ namespace ProcessHookMonitor
 
     public class ProcessHookMonitor
     {
+        private static readonly string appWorkPath = Path.GetTempPath() + "ant.ram.temp";
+
         private static Dictionary<int, FunctionCalledHandler> processListeners = new Dictionary<int, FunctionCalledHandler>();
         private static MessageHandler messageHanlder = new MessageHandler(doNothingMessageHandler);
         private static string channelName = null;
         private static bool serverUp = false;
         private const string dllInjectionName = "ProcessHook.dll";
 
+        public static void initialize()
+        {
+            CopyDir("utils", Path.GetTempPath() + "ant.ram.temp\\utils");
+        }
+
+        public static string getWorkPath()
+        {
+            return appWorkPath;
+        }
+
+        private static void CopyDir(string sourceDirectory, string targetDirectory)
+        {
+            DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
+            DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
+
+            CopyAll(diSource, diTarget);
+        }
+
+        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            // Copy each file into the new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                //Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
+                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+            }
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
+        }
 
         public static void setStatusHandler(MessageHandler listener)
         {
@@ -110,6 +149,12 @@ namespace ProcessHookMonitor
         private static void doNothingFunctionCalledHandler(int pid, string str, string param)
         {
             //empty on purpose. meant to be default behavior when no listener exist
+        }
+
+        public static void close()
+        {
+            DirectoryInfo target = new DirectoryInfo(Path.GetTempPath() + "ant.ram.temp");
+            Directory.Delete(target.FullName, true);
         }
     }
 

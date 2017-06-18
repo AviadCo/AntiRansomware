@@ -50,6 +50,7 @@
     <Compile Include="IHookServer.cs" />
     <Compile Include="ProcessHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreamAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="EasyHook32.dll">

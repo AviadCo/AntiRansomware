@@ -24,12 +24,12 @@ using std::endl;
 
 int main()
 {
-	unsigned int pid = 572;
-
+	unsigned int pid = 20900;
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
 	HoneypotsManager honeypotsManager = HoneypotsManager();
-	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
+	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager,pid);
 
-	processesMonitor.suspendProcess(pid);
+	//processesMonitor.suspendProcess(pid);
 
 	Sleep(6000);
 

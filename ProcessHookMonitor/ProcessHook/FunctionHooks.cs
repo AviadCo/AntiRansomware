@@ -17,6 +17,11 @@ namespace ProcessHook
         public const string DeleteFileWStr = "DeleteFileW";
         public const string MoveFileWStr = "MoveFileW";
         public const string CryptEncryptStr = "CryptEncrypt";
+        public const string ShellExecuteExWStr = "ShellExecuteExW";
+        public const string WriteProcessMemoryStr = "WriteProcessMemory";
+        public const string CreateProcessWStr = "CreateProcessW";
+        public const string CreateRemoteThreadStr = "CreateRemoteThread";
+        public const string CreateRemoteThreadExStr = "CreateRemoteThreadEx";
 
 
         /****************************************
@@ -53,6 +58,54 @@ namespace ProcessHook
         /// <returns></returns>
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern uint GetFinalPathNameByHandle(IntPtr hFile, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszFilePath, uint cchFilePath, uint dwFlags);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SHELLEXECUTEINFO
+        {
+            public int cbSize;
+            public uint fMask;
+            public IntPtr hwnd;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpVerb;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpFile;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpParameters;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpDirectory;
+            public int nShow;
+            public IntPtr hInstApp;
+            public IntPtr lpIDList;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpClass;
+            public IntPtr hkeyClass;
+            public uint dwHotKey;
+            public IntPtr hIcon;
+            public IntPtr hProcess;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern uint GetProcessId(IntPtr handle);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SECURITY_ATTRIBUTES
+        {
+            public int nLength;
+            public IntPtr lpSecurityDescriptor;
+            public int bInheritHandle;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PROCESS_INFORMATION
+        {
+            public IntPtr hProcess;
+            public IntPtr hThread;
+            public int dwProcessId;
+            public int dwThreadId;
+        }
+
 
 
         /****************************************
@@ -148,6 +201,26 @@ namespace ProcessHook
         out uint lpNumberOfBytesWritten,
         IntPtr lpOverlapped)
         {
+            string hashBeforeFile = "", hashAfterFile = "";
+            string typeBefore = "", typeAfter = "";
+            StringBuilder filename = new StringBuilder(255);
+            int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+
+            try
+            {
+                // Retrieve filename from the file handle
+                GetFinalPathNameByHandle(hFile, filename, 255, 0);
+                if (!filename.ToString().Equals(""))
+                {
+                    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
+                    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
+                }
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
             bool result = false;
 
             // Call original first so we get lpNumberOfBytesWritten
@@ -155,12 +228,22 @@ namespace ProcessHook
 
             try
             {
-                // Retrieve filename from the file handle
-                StringBuilder filename = new StringBuilder(255);
-                GetFinalPathNameByHandle(hFile, filename, 255, 0);
+                string hashDiffrence = "-1";
+                string typeDiffrence = "-1";
 
-                reportEvent(WriteFileStr, filename.ToString());
+                if (!filename.ToString().Equals(""))
+                {
+                    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
+                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
+                    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
 
+                    //deletes temp files
+                    DeleteFileW(hashBeforeFile);
+                    DeleteFileW(hashAfterFile);
+                }
+
+                reportEvent(WriteFileStr, filename.ToString(), typeDiffrence, hashDiffrence);
             }
             catch
             {
@@ -282,5 +365,242 @@ namespace ProcessHook
 
             return CryptEncrypt(hKey, hHash, Final, dwFlags, pbData, ref pdwDataLen, dwBufLen);
         }
+
+        /****************************************
+         * hook for: ShellExecuteExW
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool ShellExecuteExW_Delegate(
+            ref SHELLEXECUTEINFO lpExecInfo);
+
+        [DllImport(@"shell32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool ShellExecuteExW(ref SHELLEXECUTEINFO lpExecInfo);
+
+        // hook function
+        public static bool ShellExecuteExW_Hook(
+            ref SHELLEXECUTEINFO lpExecInfo)
+        {
+            try
+            {
+                reportEvent(ShellExecuteExWStr, lpExecInfo.lpFile, lpExecInfo.lpParameters);
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return ShellExecuteExW(ref lpExecInfo);
+        }
+
+        /****************************************
+         * hook for: WriteProcessMemory
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool WriteProcessMemory_Delegate(
+            IntPtr hProcess,
+            int lpBaseAddress,
+            IntPtr lpBuffer,
+            int nSize,
+            ref int lpNumberOfBytesWritten);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        static extern bool WriteProcessMemory(
+            IntPtr hProcess,
+            int lpBaseAddress,
+            IntPtr lpBuffer,
+            int nSize,
+            ref int lpNumberOfBytesWritten);
+
+        // hook function
+        public static bool WriteProcessMemory_Hook(
+            IntPtr hProcess,
+            int lpBaseAddress,
+            IntPtr lpBuffer,
+            int nSize,
+            ref int lpNumberOfBytesWritten)
+        {
+            try
+            {
+                reportEvent(WriteProcessMemoryStr, Convert.ToString(GetProcessId(hProcess)));
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, ref lpNumberOfBytesWritten);
+        }
+
+        /****************************************
+         * hook for: CreateProcessW
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool CreateProcessW_Delegate(
+            string lpApplicationName,
+            string lpCommandLine,
+            ref SECURITY_ATTRIBUTES lpProcessAttributes,
+            ref SECURITY_ATTRIBUTES lpThreadAttributes,
+            bool bInheritHandles,
+            uint dwCreationFlags,
+            IntPtr lpEnvironment,
+            string lpCurrentDirectory,
+            [In] IntPtr lpStartupInfo,
+            out PROCESS_INFORMATION lpProcessInformation);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        static extern bool CreateProcessW(
+            string lpApplicationName,
+            string lpCommandLine,
+            ref SECURITY_ATTRIBUTES lpProcessAttributes,
+            ref SECURITY_ATTRIBUTES lpThreadAttributes,
+            bool bInheritHandles,
+            uint dwCreationFlags,
+            IntPtr lpEnvironment,
+            string lpCurrentDirectory,
+            [In] IntPtr lpStartupInfo,
+            out PROCESS_INFORMATION lpProcessInformation);
+
+        // hook function
+        public static bool CreateProcessW_Hook(
+            string lpApplicationName,
+            string lpCommandLine,
+            ref SECURITY_ATTRIBUTES lpProcessAttributes,
+            ref SECURITY_ATTRIBUTES lpThreadAttributes,
+            bool bInheritHandles,
+            uint dwCreationFlags,
+            IntPtr lpEnvironment,
+            string lpCurrentDirectory,
+            [In] IntPtr lpStartupInfo,
+            out PROCESS_INFORMATION lpProcessInformation)
+        {
+
+            bool result = false;
+            result = CreateProcessW(lpApplicationName, lpCommandLine, ref lpProcessAttributes,
+                ref lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment,
+                lpCurrentDirectory, lpStartupInfo, out lpProcessInformation);
+
+            try
+            {
+                reportEvent(CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
+                    lpApplicationName, lpCommandLine);
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return result;
+        }
+
+        /****************************************
+         * hook for: CreateRemoteThread
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.SysInt)]
+        public delegate IntPtr CreateRemoteThread_Delegate(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            out IntPtr lpThreadId);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        static extern IntPtr CreateRemoteThread(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            out IntPtr lpThreadId);
+
+
+        // hook function
+        public static IntPtr CreateRemoteThread_Hook(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            out IntPtr lpThreadId)
+        {
+
+            try
+            {
+                reportEvent(CreateRemoteThreadStr, Convert.ToString(GetProcessId(hProcess)));
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, out lpThreadId);
+        }
+
+        /****************************************
+         * hook for: CreateRemoteThreadEx
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.SysInt)]
+        public delegate IntPtr CreateRemoteThreadEx_Delegate(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            IntPtr lpAttributeList,
+            [Out] IntPtr lpThreadId);
+
+        [DllImport("kernel32.dll", EntryPoint = "CreateRemoteThreadEx", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        public static extern IntPtr CreateRemoteThreadEx(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            IntPtr lpAttributeList,
+            [Out] IntPtr lpThreadId);
+
+
+        // hook function
+        public static IntPtr CreateRemoteThreadEx_Hook(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            uint dwStackSize,
+            IntPtr lpStartAddress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            IntPtr lpAttributeList,
+            [Out] IntPtr lpThreadId)
+        {
+
+            try
+            {
+                reportEvent(CreateRemoteThreadExStr, Convert.ToString(GetProcessId(hProcess)));
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
+        }
     }
 }
+

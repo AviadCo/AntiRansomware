@@ -172,6 +172,10 @@
       <Project>{258464ab-65b1-48f8-bc2f-00b0499711e2}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="utils\sdhash\sdhash-ui\templates\index.html" />
+    <None Include="utils\sdhash\sdhash-ui\templates\layout.html" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
