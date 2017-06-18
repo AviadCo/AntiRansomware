@@ -16,7 +16,9 @@ namespace FunctionHooksDefinitions {
 		LPUWSTR name = L"WriteFile";
 
 		typedef enum args {
-			FILEPATH		//char* 
+			FILEPATH,		//char* 
+			IS_TYPE_SAME,	//int (1-true, 0-flase)
+			SIMILARITY,		//int (between 0-100, where 100 is same)
 		} args;
 	}
 
@@ -59,7 +61,7 @@ namespace FunctionHooksDefinitions {
 	}
 
 	namespace HookCreateProcess {
-		LPUWSTR name = L"CreateProcess";
+		LPUWSTR name = L"CreateProcessW";
 
 		typedef enum args {
 			PID,	//int

@@ -27,7 +27,7 @@ int main()
 	unsigned int pid = 20900;
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
 	HoneypotsManager honeypotsManager = HoneypotsManager();
-	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager,pid);
+	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 
 
 	//processesMonitor.suspendProcess(pid);
