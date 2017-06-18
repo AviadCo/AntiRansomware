@@ -97,20 +97,9 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, un
 	}
 }
 
-void ProcessesMonitor::report(int pid, const wstring& functionName)
+void ProcessesMonitor::report(int pid, LPUWSTR functionName)
 {
-	log().info(__FUNCTION__, functionName + L" caused for process ID " + std::to_wstring(pid) + L" to be suspicious");
-
-	int btn = MessageBox(0, L"AntiRansomware - Suspicious Activity Detected", (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
-																			   L"Do you want to kill the process?").c_str(), MB_YESNO + MB_ICONQUESTION);
-	if (btn == IDYES) {
-		endProcess(pid);
-	}
-	else {
-		resumeProcess(pid);
-	}
-
-	log().info(__FUNCTION__, L"Process ID " + std::to_wstring(pid) + L" was " + ((btn == IDYES) ? L"killed." : L"resumed."));
+	log().info(__FUNCTION__, wstring(L"msg from ") + std::to_wstring(pid) + wstring(L": ") + functionName);
 }
 
 typedef LONG(NTAPI *NtSuspendProcess)(IN HANDLE ProcessHandle);
@@ -160,6 +149,22 @@ void ProcessesMonitor::updateProcessScore(int pid, ProcessPolicy::ProcessOperati
 	if (processAnalyzers.at(pid) != NULL) {
 		processAnalyzers.at(pid)->updateScore(processOperation);
 	}
+}
+
+void ProcessesMonitor::alert(int pid, const wstring & functionName)
+{
+	log().info(__FUNCTION__, functionName + L" caused for process ID " + std::to_wstring(pid) + L" to be suspicious");
+
+	int btn = MessageBox(0, L"AntiRansomware - Suspicious Activity Detected", (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
+																			   L"Do you want to kill the process?").c_str(), MB_YESNO + MB_ICONQUESTION);
+	if (btn == IDYES) {
+		endProcess(pid);
+	}
+	else {
+		resumeProcess(pid);
+	}
+
+	log().info(__FUNCTION__, L"Process ID " + std::to_wstring(pid) + L" was " + ((btn == IDYES) ? L"killed." : L"resumed."));
 }
 
 ProcessesMonitor::~ProcessesMonitor()

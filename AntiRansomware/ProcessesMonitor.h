@@ -21,11 +21,12 @@ public:
 	void checkProcessesLiveness();
 	ProcessesMonitor(const HoneypotsManager *honeypotsManager);
 	ProcessesMonitor(const HoneypotsManager * honeypotsManager, unsigned int pid); //TODO for debug only
-	virtual void report(int pid, const wstring& functionName);
+	virtual void report(int pid, LPUWSTR functionName);
 	void suspendProcess(int pid);
 	void resumeProcess(int pid);
 	void endProcess(int pid);
 	void updateProcessScore(int pid, ProcessPolicy::ProcessOperation processOperation);
+	void alert(int pid, const wstring& functionName);
 	~ProcessesMonitor();
 };
 

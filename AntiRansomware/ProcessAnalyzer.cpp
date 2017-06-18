@@ -207,6 +207,11 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		log().debug(__FUNCTION__, wstring(HookCreateRemoteThread::name) + L" was called from pid " + std::to_wstring(getProcessID()));
 	}
+	else if (!wcscmp(functionName.c_str(), HookCreateRemoteThreadEx::name)) {
+		processOperation = ProcessPolicy::CREATE_REMOTE_THREAD;
+
+		log().debug(__FUNCTION__, wstring(HookCreateRemoteThreadEx::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);
 
@@ -214,7 +219,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	}
 
 	if (updateScore(processOperation)) {
-		processesMonitor->report(getProcessID(), functionName);
+		//TODO uncomment this command
+		//processesMonitor->alert(getProcessID(), functionName);
 	}
 }
 

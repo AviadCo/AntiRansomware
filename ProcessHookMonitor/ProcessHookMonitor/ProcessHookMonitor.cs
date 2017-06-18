@@ -14,6 +14,7 @@ namespace ProcessHookMonitor
 
     public class ProcessHookMonitor
     {
+        public const int PROCESS_HOOK_MONITOR_CODEID = -1;
         private static readonly string appWorkPath = Path.GetTempPath() + "ant.ram.temp";
 
         private static Dictionary<int, FunctionCalledHandler> processListeners = new Dictionary<int, FunctionCalledHandler>();
@@ -97,7 +98,8 @@ namespace ProcessHookMonitor
 
             try
             {
-                Console.WriteLine("Attempting to inject into process {0}", pid);
+                reportStatus(PROCESS_HOOK_MONITOR_CODEID, "Attempting to inject into process " + pid);
+                // Console.WriteLine("Attempting to inject into process {0}", pid);
                 // inject into existing process
                 EasyHook.RemoteHooking.Inject(
                     pid,          // ID of process to inject into
@@ -106,19 +108,20 @@ namespace ProcessHookMonitor
                     channelName         // the parameters to pass into injected library
                                         // ...
                 );
+
+                //register listener
+                setFunctionListener(pid, listener);
             }
             catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("There was an error while injecting into target:");
-                Console.ResetColor();
-                Console.WriteLine(e.ToString());
+                reportStatus(PROCESS_HOOK_MONITOR_CODEID, "There was an error while injecting into target (pid: " + pid + "):\n" + e.Message);
+                //Console.ForegroundColor = ConsoleColor.Red;
+                //Console.WriteLine("There was an error while injecting into target:");
+                //Console.ResetColor();
+                //Console.WriteLine(e.ToString());
 
                 return -1;
             }
-
-            //register listener
-            setFunctionListener(pid, listener);
 
             //successful injection
             return 0;
