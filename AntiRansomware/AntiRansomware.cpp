@@ -13,7 +13,6 @@
 #include "ProcessesMonitor.h"
 #include <algorithm>
 
-
 #include "FunctionCalledHandlerWrapper.h"
 #include "ProcessHookMonitorWrapper.h"
 using std::wstring;
@@ -24,10 +23,12 @@ using std::endl;
 
 int main()
 {
+	/*
 	unsigned int pid = 20900;
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
 	HoneypotsManager honeypotsManager = HoneypotsManager();
 	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager,pid);
+	*/
 
 	//processesMonitor.suspendProcess(pid);
 

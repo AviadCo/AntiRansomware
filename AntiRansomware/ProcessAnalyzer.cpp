@@ -213,7 +213,9 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		return;
 	}
 
-	updateScore(processOperation);
+	if (updateScore(processOperation)) {
+		processesMonitor->report(getProcessID(), functionName);
+	}
 }
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)
