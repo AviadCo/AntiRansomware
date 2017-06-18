@@ -290,9 +290,7 @@
     <None Include="utils\file\contrib\file\5.03\file-5.03-src\TODO">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="utils\file\contrib\file\5.03\file-5.03\check.log">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="utils\file\contrib\file\5.03\file-5.03\check.log" />
     <None Include="utils\file\manifest\file-5.03-bin.mft">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
