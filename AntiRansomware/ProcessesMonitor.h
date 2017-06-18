@@ -1,12 +1,14 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include "MessageHandlerWrapper.h"
 #include "ProcessAnalyzer.h"
 #include "EventTypes.h"
 
 using std::map;
+using std::vector;
 
 class ProcessesMonitor : public MessageHandlerWrapper
 {
@@ -27,6 +29,7 @@ public:
 	void endProcess(int pid);
 	void updateProcessScore(int pid, ProcessPolicy::ProcessOperation processOperation);
 	void alert(int pid, const wstring& functionName);
+	map<unsigned int, ProcessAnalyzer *> getAllProcessesAnalyzers();
 	~ProcessesMonitor();
 };
 

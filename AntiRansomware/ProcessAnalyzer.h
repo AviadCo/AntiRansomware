@@ -31,6 +31,7 @@ private:
 	DWORD parentID;
 	DWORD injectedByID;
 	unsigned int currentScore;
+	wstring processName;
 	
 	void setHooks(DWORD proccessID);
 	DWORD GetParentProcessID(DWORD dwProcessID);
@@ -44,6 +45,8 @@ public:
 	bool checkIfAlert() const;
 	bool updateScore(ProcessPolicy::ProcessOperation processOperation);
 	void parseHookNotification(const wstring& functionName, const wstring& param);
+	wstring getProcessName() const;
+	unsigned int getCurrentScore() const;
 
 	virtual void report(int pid, LPUWSTR functionName, LPUWSTR param);
 };

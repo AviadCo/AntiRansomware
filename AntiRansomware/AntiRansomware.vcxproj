@@ -91,7 +91,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\ProcessHookMonitorWrapper\ProcessHookMonitorWrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ProcessHookMonitorWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -163,6 +163,7 @@
     <ClInclude Include="ProcessesMonitor.h" />
     <ClInclude Include="ProcessPolicy.h" />
     <ClInclude Include="RegistryIO.h" />
+    <ClInclude Include="resource\resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringFunctions.h" />
     <ClInclude Include="targetver.h" />
@@ -217,6 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="fileTypes\xml.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource\listview.rsrc.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

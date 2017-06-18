@@ -76,6 +76,7 @@
       <Filter>Header Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="StringFunctions.h">
+    <ClInclude Include="resource\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -181,5 +182,10 @@
     <Xml Include="fileTypes\xml.xml">
       <Filter>Resource Files\fileTypes</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource\listview.rsrc.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

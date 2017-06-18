@@ -39,6 +39,7 @@ DWORD ProcessAnalyzer::GetParentProcessID(DWORD dwProcessID)
 				if (dwProcessID == processEntry32.th32ProcessID)
 				{
 					dwParentProcessID = processEntry32.th32ParentProcessID;
+					processName = wstring(processEntry32.szExeFile);
 					break;
 				}
 			} while (Process32Next(hProcessSnapshot, &processEntry32));
@@ -258,6 +259,16 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		//TODO uncomment this command
 		//processesMonitor->alert(getProcessID(), functionName);
 	//}
+}
+
+wstring ProcessAnalyzer::getProcessName() const
+{
+	return processName;
+}
+
+unsigned int ProcessAnalyzer::getCurrentScore() const
+{
+	return currentScore;
 }
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)

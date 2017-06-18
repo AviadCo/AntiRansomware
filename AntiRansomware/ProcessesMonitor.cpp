@@ -167,6 +167,11 @@ void ProcessesMonitor::alert(int pid, const wstring & functionName)
 	log().info(__FUNCTION__, L"Process ID " + std::to_wstring(pid) + L" was " + ((btn == IDYES) ? L"killed." : L"resumed."));
 }
 
+map<unsigned int, ProcessAnalyzer *> ProcessesMonitor::getAllProcessesAnalyzers()
+{
+	return processAnalyzers;
+}
+
 ProcessesMonitor::~ProcessesMonitor()
 {
 	for (auto const processAnalyzer : processAnalyzers) {
