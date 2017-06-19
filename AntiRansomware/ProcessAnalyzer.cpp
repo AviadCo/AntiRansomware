@@ -125,6 +125,10 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	ProcessPolicy::ProcessOperation processOperation;
 
 	if (!wcscmp(functionName.c_str(), HookDeleteFileW::name)) {
+		if (param.find(L".ant.ram.temp") != std::wstring::npos) {
+			//our deletion - ignore
+			return;
+		}
 		processOperation = ProcessPolicy::FILE_DELETE;
 
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
@@ -221,14 +225,16 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
 
-		if (param.find(L"ant.ram.temp\\utils") == std::wstring::npos) {
+		if (param.find(L"ant.ram.temp\\utils") != std::wstring::npos) {
+			//our activity - ignore
+			return;
+		}
 			log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
 				L" and created process with pid " + params[FunctionHooksDefinitions::HookCreateProcess::PID]
 				+ L" file exe: " + params[FunctionHooksDefinitions::HookCreateProcess::APPLICATION_NAME]
 				+ L" command: " + params[FunctionHooksDefinitions::HookCreateProcess::COMMAND_LINE]);
 
 			processesMonitor->addNewProcess(std::stoi(param));
-		}
 
 		/* no suspious activity */
 		return;

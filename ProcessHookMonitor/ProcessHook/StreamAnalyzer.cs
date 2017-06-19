@@ -58,7 +58,7 @@ namespace ProcessHook
         public static String createHashToFile(String filename, String suffix)
         {
             string refactorFilename = Path.GetFileName(filename);
-            string hashfilename = filename.Replace("\\", "").Replace(":", "") + suffix;
+            string hashfilename = filename.Replace("\\", "").Replace(":", "") + suffix + ".ant.ram.temp";
             runShell("sdhash\\sdhash.exe", Path.GetDirectoryName(filename), refactorFilename + " -o " + appWorkPath + hashfilename);
             return hashfilename + ".sdbf";
         }
