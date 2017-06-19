@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProcessHookMonitor
@@ -22,6 +23,61 @@ namespace ProcessHookMonitor
         private static string channelName = null;
         private static bool serverUp = false;
         private const string dllInjectionName = "ProcessHook.dll";
+
+        class InjectTask
+        {
+            int pid;
+            FunctionCalledHandler h;
+            string injectionLibrary;
+
+            int retVal;
+            string ErrorMsg = "";
+
+            public InjectTask(int pid, string injectionLibrary, FunctionCalledHandler h)
+            {
+                this.h = h;
+                this.pid = pid;
+                this.injectionLibrary = injectionLibrary;
+            }
+
+            public void run()
+            {
+
+                try
+                {
+                    reportStatus(PROCESS_HOOK_MONITOR_CODEID, "Attempting to inject into process " + pid);
+                    // Console.WriteLine("Attempting to inject into process {0}", pid);
+                    // inject into existing process
+                    EasyHook.RemoteHooking.Inject(
+                        pid,          // ID of process to inject into
+                        injectionLibrary,   // 32-bit library to inject (if target is 32-bit)
+                        injectionLibrary,   // 64-bit library to inject (if target is 64-bit)
+                        channelName         // the parameters to pass into injected library
+                                            // ...
+                    );
+                        //register listener
+                        setFunctionListener(pid, h);
+                }
+                catch (Exception e)
+                {
+                    reportStatus(PROCESS_HOOK_MONITOR_CODEID, "There was an error while injecting into target (pid: " + pid + "):\n" + e.Message);
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    //Console.WriteLine("There was an error while injecting into target:");
+                    //Console.ResetColor();
+                    //Console.WriteLine(e.ToString());
+
+                    retVal = -1;
+                }
+
+                //successful injection
+                retVal = 0;
+            }
+
+            public int getRetval()
+            {
+                return retVal;
+            }
+        }
 
         public static void initialize()
         {
@@ -96,21 +152,49 @@ namespace ProcessHookMonitor
             // Get the full path to the assembly we want to inject into the target process
             string injectionLibrary = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), dllInjectionName);
 
+            InjectTask injectTask = new InjectTask(pid, injectionLibrary, listener);
+            Thread task = new Thread(injectTask.run);
+            task.Start();
+            task.Join(2000);
+            if (task.IsAlive)
+            {
+                task.Abort();
+                return -2;
+            }
+            else
+            {
+                return injectTask.getRetval();
+            }
+
+            /* ==== SERIAL CODE ===
             try
             {
                 reportStatus(PROCESS_HOOK_MONITOR_CODEID, "Attempting to inject into process " + pid);
                 // Console.WriteLine("Attempting to inject into process {0}", pid);
                 // inject into existing process
-                EasyHook.RemoteHooking.Inject(
-                    pid,          // ID of process to inject into
-                    injectionLibrary,   // 32-bit library to inject (if target is 32-bit)
-                    injectionLibrary,   // 64-bit library to inject (if target is 64-bit)
-                    channelName         // the parameters to pass into injected library
-                                        // ...
-                );
+                Thread tInject = new Thread(new ThreadStart(() =>
+                {
+                    EasyHook.RemoteHooking.Inject(
+                        pid,          // ID of process to inject into
+                        injectionLibrary,   // 32-bit library to inject (if target is 32-bit)
+                        injectionLibrary,   // 64-bit library to inject (if target is 64-bit)
+                        channelName         // the parameters to pass into injected library
+                                            // ...
+                    );
+                }));
 
-                //register listener
-                setFunctionListener(pid, listener);
+                tInject.Start();
+                tInject.Join(2000);
+                if (tInject.IsAlive)
+                {
+                    tInject.Abort();
+                    return -2;
+                }
+                else
+                {
+                    //register listener
+                    setFunctionListener(pid, listener);
+                }
             }
             catch (Exception e)
             {
@@ -125,6 +209,7 @@ namespace ProcessHookMonitor
 
             //successful injection
             return 0;
+            */
         }
 
         /*

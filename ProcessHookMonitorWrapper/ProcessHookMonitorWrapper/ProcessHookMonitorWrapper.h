@@ -4,6 +4,8 @@
 
 #include "MessageHandlerWrapper.h"
 #include "FunctionCalledHandlerWrapper.h"
+#include "ProcessStartEventWrapper.h"
+#include "ProcessStopEventWrapper.h"
 
 #ifdef PROCESS_HOOK_MONITOR_WRAPPER
 #define PROCESS_HOOK_MONITOR_EXPORT __declspec(dllexport)
@@ -28,5 +30,28 @@ namespace ProcessHookMonitorWrapper {
 		static void inject(int pid, FunctionCalledHandlerWrapper* listener);
 
 		static void close();
+		
+		/*Process Trace
+
+		static void listenProcessesCreation(ProcessStartEventWrapper* listener);
+
+		static void listenProcessesTermination(ProcessStopEventWrapper * listener);
+
+		static void unlistenProcessesCreation();
+
+		static void unlistenProcessesTermination();*/
+	};
+
+	class PROCESS_HOOK_MONITOR_EXPORT ProcessTraceWrapper
+	{
+	public:
+
+		static void listenProcessesCreation(ProcessStartEventWrapper* listener);
+
+		static void listenProcessesTermination(ProcessStopEventWrapper * listener);
+
+		static void unlistenProcessesCreation();
+
+		static void unlistenProcessesTermination();
 	};
 }

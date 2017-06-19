@@ -5,6 +5,8 @@
 #include "ProcessHookMonitorWrapper.h"
 #include "MessageHandlerThunk.h"
 #include "FunctionCalledHandlerThunk.h"
+#include "ProcessStartEventThunk.h"
+#include "ProcessStopEventThunk.h"
 
 //using namespace System;
 //using namespace System::IO;
@@ -87,4 +89,32 @@ void ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::close()
 	/*DirectoryInfo^ target = gcnew DirectoryInfo(ProcessHookMonitor::ProcessHookMonitor::getWorkPath());
 	Directory::Delete(target->FullName, true);*/
 	ProcessHookMonitor::ProcessHookMonitor::close();
+}
+
+void ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(ProcessStartEventWrapper * listener)
+{
+	ProcessStartEventThunk ^thunk = gcnew ProcessStartEventThunk(listener);
+
+	// Bind the ontick event with the thunk
+	ProcessHookMonitor::ProcessTrace::listenProcessesCreation(
+		gcnew ProcessHookMonitor::ProcessStartEvent(thunk, &ProcessStartEventThunk::notify));
+}
+
+void ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination(ProcessStopEventWrapper * listener)
+{
+	ProcessStopEventThunk ^thunk = gcnew ProcessStopEventThunk(listener);
+
+	// Bind the ontick event with the thunk
+	ProcessHookMonitor::ProcessTrace::listenProcessesTermination(
+		gcnew ProcessHookMonitor::ProcessStopEvent(thunk, &ProcessStopEventThunk::notify));
+}
+
+void ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation()
+{
+	ProcessHookMonitor::ProcessTrace::unlistenProcessesCreation();
+}
+
+void ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination()
+{
+	ProcessHookMonitor::ProcessTrace::unlistenProcessesTermination();
 }
