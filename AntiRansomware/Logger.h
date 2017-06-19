@@ -16,6 +16,7 @@ private:
 	bool enable_logger;
 
 	void print(const string verbosity, const string tag, const string msg);
+	void print(const wstring verbosity, const wstring tag, const wstring msg);
 	string get_time();
 public:
 	/* Verbosity level can be: */
@@ -98,6 +99,7 @@ public:
 	/************************************************************************/
 	/* Unicode functions                                                    */
 	/************************************************************************/
+	static std::wstring stringToWString(const std::string &s);
 	static string unicodeToString(LPCWSTR str);
 	//************************************
 	// Method:    debug - print in the log file with log level 'debug'

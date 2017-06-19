@@ -4,10 +4,13 @@
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
+#include <string>
+#include <vector>
 
 #include "ProcessAnalyzer.h"
 #include "ProcessesMonitor.h"
 #include "FileSystemHelper.h"
+#include "StringFunctions.h"
 #include "Logger.h"
 #include "FunctionCalledHandlerWrapper.h"
 #include "FunctionHooksDefinitions.h"
@@ -123,7 +126,10 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	if (!wcscmp(functionName.c_str(), HookDeleteFileW::name)) {
 		processOperation = ProcessPolicy::FILE_DELETE;
 
-		log().debug(__FUNCTION__, wstring(HookDeleteFileW::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+
+		log().debug(__FUNCTION__, wstring(HookDeleteFileW::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" file: " + params[FunctionHooksDefinitions::HookDeleteFileW::FILEPATH]);
 
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
@@ -133,8 +139,13 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	}
 	else if (!wcscmp(functionName.c_str(), HookWriteFile::name)) {
 		processOperation = ProcessPolicy::FILE_CHNAGE_CONTENT;
-
-		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+		
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+		
+		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
+			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
+			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]);
 
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
@@ -145,7 +156,11 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	else if (!wcscmp(functionName.c_str(), HookMoveFileW::name)) {
 		processOperation = ProcessPolicy::FILE_RENAME;
 
-		log().debug(__FUNCTION__, wstring(HookMoveFileW::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+
+		log().debug(__FUNCTION__, wstring(HookMoveFileW::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" from: " + params[FunctionHooksDefinitions::HookMoveFileW::FILEPATH_SRC]
+			+ L" to: " + params[FunctionHooksDefinitions::HookMoveFileW::FILEPATH_DST]);
 	}
 	else if (!wcscmp(functionName.c_str(), HookCryptEncrypt::name)) {
 		processOperation = ProcessPolicy::ENCRYPTION;
@@ -153,13 +168,21 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		log().debug(__FUNCTION__, wstring(HookCryptEncrypt::name) + L" was called from pid " + std::to_wstring(getProcessID()));
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateFileW::name)) {
-		log().debug(__FUNCTION__, wstring(HookCreateFileW::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+
+		log().debug(__FUNCTION__, wstring(HookCreateFileW::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" file: " + params[FunctionHooksDefinitions::HookCreateFileW::FILEPATH]);
 
 		/* no suspious activity */
 		return;
 	}
 	else if (!wcscmp(functionName.c_str(), HookWriteProcessMemory::name)) {
-		log().debug(__FUNCTION__, wstring(HookWriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+		
+		log().debug(__FUNCTION__, wstring(HookWriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" to process: " + params[FunctionHooksDefinitions::HookWriteProcessMemory::DESC_PID]);
 
 		processOperation = ProcessPolicy::PROCESS_INJECTION;
 
@@ -194,10 +217,17 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		}
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateProcess::name)) {
-		log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
-					L" and created process with pid " + param);
 
-		processesMonitor->addNewProcess(std::stoi(param));
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+
+		if (param.find(L"ant.ram.temp\\utils") == std::wstring::npos) {
+			log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
+				L" and created process with pid " + params[FunctionHooksDefinitions::HookCreateProcess::PID]
+				+ L" file exe: " + params[FunctionHooksDefinitions::HookCreateProcess::APPLICATION_NAME]
+				+ L" command: " + params[FunctionHooksDefinitions::HookCreateProcess::COMMAND_LINE]);
+
+			processesMonitor->addNewProcess(std::stoi(param));
+		}
 
 		/* no suspious activity */
 		return;
@@ -205,12 +235,18 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	else if (!wcscmp(functionName.c_str(), HookCreateRemoteThread::name)) {
 		processOperation = ProcessPolicy::CREATE_REMOTE_THREAD;
 
-		log().debug(__FUNCTION__, wstring(HookCreateRemoteThread::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+		std::vector<std::wstring> params = StringFunctions::splitParam(param);
+
+		log().debug(__FUNCTION__, wstring(HookCreateRemoteThread::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" on pid: " + params[FunctionHooksDefinitions::HookCreateRemoteThread::PID]);
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateRemoteThreadEx::name)) {
+		/* IGNORE THIS CASE
 		processOperation = ProcessPolicy::CREATE_REMOTE_THREAD;
 
 		log().debug(__FUNCTION__, wstring(HookCreateRemoteThreadEx::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+		*/
+		return;
 	}
 	else {
 		log().error(__FUNCTION__, L"Unsupported function name: " + functionName);
@@ -218,10 +254,10 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		return;
 	}
 
-	if (updateScore(processOperation)) {
+	//if (updateScore(processOperation)) {
 		//TODO uncomment this command
 		//processesMonitor->alert(getProcessID(), functionName);
-	}
+	//}
 }
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)

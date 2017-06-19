@@ -40,15 +40,15 @@ int main()
 	int pid;
 	std::cin >> pid;
 
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(new startHandle());
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination( new stopHandle());
-	//ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
-	//ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(new startHandle());
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination( new stopHandle());
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
+	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
 
 	std::cout << "hi";
 	std::cin >> c;
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
     return 0;
 }
 

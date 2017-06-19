@@ -75,6 +75,9 @@
     <ClInclude Include="FileSystemHelper.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="StringFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Honeypot.cpp">
@@ -108,6 +111,9 @@
       <Filter>Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="FileSystemHelper.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="StringFunctions.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>

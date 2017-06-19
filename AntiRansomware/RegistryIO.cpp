@@ -103,7 +103,7 @@ list<wstring> RegistryIO::getAllValuesNames(HKEY where)
 		throw CantGetValue();
 	}
 
-	log().debug(__FUNCTION__, "number of values: " + to_string(numOfValues));
+	log().debug(__FUNCTION__, L"number of values: " + std::to_wstring(numOfValues));
 
 	//retrieve value's names under given key
 	if (numOfValues > 0) {	

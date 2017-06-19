@@ -3,6 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <codecvt>
+#include <locale>
+#include <fcntl.h>
+#include <io.h>
 
 #include "Logger.h"
 
@@ -77,6 +81,31 @@ void Logger::print(const string verbosity, const string tag, const string msg)
 	}
 }
 
+void Logger::print(const wstring verbosity, const wstring tag, const wstring msg)
+{
+	if (!this->enable_logger) {
+		return;
+	}
+
+	_setmode(_fileno(stdout), _O_U16TEXT);
+	wcout << verbosity << stringToWString(get_time()) << tag << L":  " << msg << endl;
+
+	//const std::locale utf8_locale = std::locale(std::locale(),
+	//	new std::codecvt_utf8<wchar_t>());
+
+	std::locale mylocale("");
+
+	wofstream myfile(this->file_log_name, ios_base::app);
+	if (myfile.is_open()) {
+		myfile.imbue(mylocale);
+		myfile << verbosity << stringToWString(get_time()) << tag << L":  " << msg << endl;
+		myfile.close();
+	}
+	else {
+		throw LoggerFailedToOpenLogException();
+	}
+}
+
 /* std::string Functions */
 void Logger::debug(const string tag, const string msg)
 {
@@ -109,17 +138,23 @@ string Logger::wstringToString(wstring str) {
 
 void Logger::debug(const string tag, wstring msg)
 {
-	debug(tag, wstringToString(msg));
+	if (this->verbosity_level <= VERBOSE_LEVEL_DEBUG) {
+		print(L"[DEBUG]", stringToWString(tag), msg);	
+	}
 }
 
 void Logger::info(const string tag, wstring msg)
 {
-	info(tag, wstringToString(msg));
+	if (this->verbosity_level <= VERBOSE_LEVEL_INFO) {
+		print(L"[INFO]", stringToWString(tag), msg);
+	}
 }
 
 void Logger::error(const string tag, wstring msg)
 {
-	error(tag, wstringToString(msg));
+	if (this->verbosity_level <= VERBOSE_LEVEL_ERROR) {
+		print(L"[ERROR]", stringToWString(tag), msg);
+	}
 }
 
 /* Unicode functions End */
@@ -129,6 +164,13 @@ string Logger::unicodeToString(LPCWSTR str) {
 	wstring ws(str);
 
 	return string(ws.begin(), ws.end());
+}
+
+std::wstring Logger::stringToWString(const std::string &s)
+{
+	std::wstring wsTmp(s.begin(), s.end());
+
+	return wsTmp;
 }
 
 void Logger::debug(const string tag, LPCWSTR msg)

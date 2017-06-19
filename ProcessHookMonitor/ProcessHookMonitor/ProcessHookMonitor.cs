@@ -155,7 +155,7 @@ namespace ProcessHookMonitor
             InjectTask injectTask = new InjectTask(pid, injectionLibrary, listener);
             Thread task = new Thread(injectTask.run);
             task.Start();
-            task.Join(2000);
+            task.Join(3000);
             if (task.IsAlive)
             {
                 task.Abort();
