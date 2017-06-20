@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -27,18 +25,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE MOVEABLE PURE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE MOVEABLE PURE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE MOVEABLE PURE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -53,18 +51,15 @@ END
 //
 
 IDC_DIALOG DIALOGEX 0, 0, 426, 142
-STYLE DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "Antiransomware by Noam & Aviad"
+STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Anti-Ransomware by Noam & Aviad"
 MENU IDR_MENU1
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | 
-                    LVS_EDITLABELS | WS_BORDER | WS_TABSTOP,2,10,271,116
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_EDITLABELS | WS_BORDER | WS_TABSTOP,0,10,271,116
     GROUPBOX        "",IDC_STATIC,284,6,135,120
-    PUSHBUTTON      "Suspend Process",IDC_SUSPEND,301,23,103,
-                    17,0,WS_EX_STATICEDGE
-    PUSHBUTTON      "Resume Process",IDC_RESUME,301,43,103,16,0,
-                    WS_EX_STATICEDGE
+    PUSHBUTTON      "Suspend Process",IDC_SUSPEND,301,23,103,17,0,WS_EX_STATICEDGE
+    PUSHBUTTON      "Resume Process",IDC_RESUME,301,43,103,16,0,WS_EX_STATICEDGE
     PUSHBUTTON      "KIll Process",IDC_KILL,290,105,44,15,0,WS_EX_STATICEDGE
 END
 
@@ -75,7 +70,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDC_DIALOG, DIALOG
     BEGIN
@@ -84,18 +79,27 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // English (U.S.) resources
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDC_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Unknown language: 0xD, 0x1 resources
+// Hebrew (Israel) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_HEB)
-#ifdef _WIN32
-LANGUAGE 0xD, 0x1
+LANGUAGE LANG_HEBREW, SUBLANG_DEFAULT
 #pragma code_page(1255)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -104,22 +108,23 @@ LANGUAGE 0xD, 0x1
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON3               ICON    DISCARDABLE     "icon3.ico"
+IDI_ICON3               ICON                    "icon3.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDR_MENU1 MENU DISCARDABLE 
+IDR_MENU1 MENU
 BEGIN
     POPUP "Options"
     BEGIN
-        MENUITEM "Exit",             IDC_EXIT
+        MENUITEM "Exit",                        IDC_EXIT
     END
 END
 
-#endif    // Unknown language: 0xD, 0x1 resources
+#endif    // Hebrew (Israel) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

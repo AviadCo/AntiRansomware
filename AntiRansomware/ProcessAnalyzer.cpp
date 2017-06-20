@@ -120,6 +120,8 @@ bool ProcessAnalyzer::updateScore(ProcessHistory history)
 		processesMonitor->updateProcessScore(parentID, history);
 	}
 
+	processesMonitor->updateOccured();
+
 	return checkIfAlert();
 }
 

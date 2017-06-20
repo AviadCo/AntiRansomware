@@ -198,6 +198,7 @@
     <Image Include="fileTypes\gif.gif" />
     <Image Include="fileTypes\jpg.jpg" />
     <Image Include="fileTypes\png.png" />
+    <Image Include="resource\icon3.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fileTypes\csv.csv" />

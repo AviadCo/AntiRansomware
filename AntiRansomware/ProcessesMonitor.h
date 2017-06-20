@@ -16,6 +16,7 @@ class ProcessesMonitor : public MessageHandlerWrapper, ProcessStartEventWrapper
 private:
 	const HoneypotsManager *honeypotsManager;
 	map<unsigned int, ProcessAnalyzer *> processAnalyzers;
+	bool updateOccuered;
 
 	void initProcessAnalyzers();
 	void toggleProcess(DWORD pid, int on);
@@ -33,6 +34,8 @@ public:
 	map<unsigned int, ProcessAnalyzer *> getAllProcessesAnalyzers();
 	~ProcessesMonitor();
 	bool isProcessMonitored(int pid);
+	bool isUpdateOccured();
+	void updateOccured();
 
 	virtual void notifyStartEvent(unsigned int pid, unsigned int parentId);
 

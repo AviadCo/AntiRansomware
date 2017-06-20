@@ -47,7 +47,7 @@ wchar_t tempstr2[100] = L"";
 TCHAR tchar;
 MSG msg;
 
-unsigned int pid = 4976;
+unsigned int pid = 5080;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
@@ -133,6 +133,41 @@ LRESULT ProcessCustomDraw(LPARAM lParam)
 }
 
 //================================About dialog window=============================//
+static void refreshList()
+{
+	wchar_t Temp[255] = { 0 };
+	unsigned int i = 0;
+
+	for (auto const processAnalyzer : processesMonitor.getAllProcessesAnalyzers()) {
+
+		LvItem.iItem = i;
+		SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM)&LvItem);
+		//TODO change this to get all process information
+
+		LvItem.iSubItem = PROCESS_ID;
+		swprintf(Temp, 255, L"%d", processAnalyzer.first);
+		LvItem.pszText = Temp;
+		SendMessage(hList, LVM_SETITEM, PROCESS_ID, (LPARAM)&LvItem);
+
+		LvItem.iSubItem = PROCESS_NAME;
+		swprintf(Temp, 255, L"%s", processAnalyzer.second->getProcessName().c_str());
+		LvItem.pszText = Temp;
+		SendMessage(hList, LVM_SETITEM, PROCESS_NAME, (LPARAM)&LvItem);
+
+		LvItem.iSubItem = PROCESS_SUSPICOUS;
+		swprintf(Temp, 255, L"%d", processAnalyzer.second->getCurrentScore());
+		LvItem.pszText = Temp;
+		SendMessage(hList, LVM_SETITEM, PROCESS_SUSPICOUS, (LPARAM)&LvItem);
+
+		LvItem.iSubItem = PROCESS_IS_SUSPICOUS;
+		swprintf(Temp, 255, L"%s", processAnalyzer.second->getCurrentScore() >= 100 ? L"YES" : L"NO");
+		LvItem.pszText = Temp;
+		SendMessage(hList, LVM_SETITEM, PROCESS_IS_SUSPICOUS, (LPARAM)&LvItem);
+
+		++i;
+	}
+}
+
 BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch (Message)
@@ -302,54 +337,20 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		LvItem.mask = LVIF_TEXT;   // Text Style
 		LvItem.cchTextMax = 256;   // Max size of text
 
-		i = 0;
-		for (auto const processAnalyzer : processesMonitor.getAllProcessesAnalyzers()) {
-
-			LvItem.iItem = i;
-			SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM)&LvItem);
-			//TODO change this to get all process information
-
-			LvItem.iSubItem = PROCESS_ID;
-			swprintf(Temp, 255, L"%d", processAnalyzer.first);
-			LvItem.pszText = Temp;
-			SendMessage(hList, LVM_SETITEM, PROCESS_ID, (LPARAM)&LvItem);
-
-			LvItem.iSubItem = PROCESS_NAME;
-			swprintf(Temp, 255, L"%s", processAnalyzer.second->getProcessName().c_str());
-			LvItem.pszText = Temp;
-			SendMessage(hList, LVM_SETITEM, PROCESS_NAME, (LPARAM)&LvItem);
-
-			LvItem.iSubItem = PROCESS_SUSPICOUS;
-			swprintf(Temp, 255, L"%d", processAnalyzer.second->getCurrentScore());
-			LvItem.pszText = Temp;
-			SendMessage(hList, LVM_SETITEM, PROCESS_SUSPICOUS, (LPARAM)&LvItem);
-
-			LvItem.iSubItem = PROCESS_IS_SUSPICOUS;
-			swprintf(Temp, 255, L"%s", processAnalyzer.second->getCurrentScore() >= 100 ? L"YES" : L"NO");
-			LvItem.pszText = Temp;
-			SendMessage(hList, LVM_SETITEM, PROCESS_IS_SUSPICOUS, (LPARAM)&LvItem);
-
-			++i;
-		}
 
 		//ListView_SetItemState(hList,0,LVIS_SELECTED	,LVIF_STATE);
 		ShowWindow(hWnd, SW_NORMAL);
 		UpdateWindow(hWnd);
 
+
 		while (TRUE)
 		{
+			if (processesMonitor.isUpdateOccured()) {
+				refreshList();
+			}
 
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
-				/*
-				if(msg.message==WM_CHAR)
-				{
-				tchar = (TCHAR)msg.wParam;
-				if(tchar == 0x1b)
-				escKey=1;
-
-				}
-				*/
 				if (msg.message == WM_QUIT)// killing while looking for a message
 				{
 					break;

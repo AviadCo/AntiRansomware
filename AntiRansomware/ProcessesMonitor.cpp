@@ -79,8 +79,10 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 
 	initProcessAnalyzers();
 	
+	updateOccuered = true;
 }
 
+//TODO remove this function after debug
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, unsigned int pid)
 {
 	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(this);
@@ -89,6 +91,8 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, un
 	this->honeypotsManager = honeypotsManager;
 
 	processAnalyzers = map<unsigned int, ProcessAnalyzer *>();
+
+	updateOccuered = true;
 
 	try {
 		processAnalyzers[pid] = new ProcessAnalyzer(pid, this, honeypotsManager);
@@ -151,6 +155,8 @@ void ProcessesMonitor::updateProcessScore(int pid, ProcessHistory history)
 {
 	if (processAnalyzers.at(pid) != NULL) {
 		processAnalyzers.at(pid)->updateScore(history);
+
+		updateOccured();
 	}
 }
 
@@ -170,6 +176,8 @@ void ProcessesMonitor::alert(int pid, const wstring & functionName)
 							 MB_YESNO + MB_ICONQUESTION);
 	if (btn == IDYES) {
 		endProcess(pid);
+
+		updateOccured();
 	}
 	else {
 		resumeProcess(pid);
@@ -196,7 +204,22 @@ bool ProcessesMonitor::isProcessMonitored(int pid)
 	return processAnalyzers.find(pid) != processAnalyzers.end();
 }
 
+bool ProcessesMonitor::isUpdateOccured()
+{
+	bool result = updateOccuered;
+
+	updateOccuered = false;
+
+	return result;
+}
+
+void ProcessesMonitor::updateOccured()
+{
+	updateOccuered = true;
+}
+
 void ProcessesMonitor::notifyStartEvent(unsigned int pid, unsigned int parentId)
 {
+	updateOccured();
 	//addNewProcess(pid);
 }
