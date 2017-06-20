@@ -1,70 +1,186 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AntiRansomware.cpp" />
-    <ClCompile Include="FileSystemHelper.cpp" />
-    <ClCompile Include="Honeypot.cpp" />
-    <ClCompile Include="HoneypotNameGenerator.cpp" />
-    <ClCompile Include="HoneypotsManager.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="ProcessAnalyzer.cpp" />
-    <ClCompile Include="ProcessesMonitor.cpp" />
-    <ClCompile Include="ProcessPolicy.cpp" />
-    <ClCompile Include="RegistryIO.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="HelperFunctions.cpp" />
-    <ClCompile Include="ProcessHistory.cpp" />
+    <ClCompile Include="AntiRansomware.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystemHelper.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="HelperFunctions.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Honeypot.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="HoneypotNameGenerator.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="HoneypotsManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessAnalyzer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessesMonitor.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessHistory.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessPolicy.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistryIO.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EventTypes.h" />
-    <ClInclude Include="FileSystemHelper.h" />
-    <ClInclude Include="Honeypot.h" />
-    <ClInclude Include="HoneypotNameGenerator.h" />
-    <ClInclude Include="HoneypotsManager.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="ProcessAnalyzer.h" />
-    <ClInclude Include="ProcessesMonitor.h" />
-    <ClInclude Include="ProcessPolicy.h" />
-    <ClInclude Include="RegistryIO.h" />
-    <ClInclude Include="resource\resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="HelperFunctions.h" />
-    <ClInclude Include="ProcessHistory.h" />
+    <ClInclude Include="EventTypes.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystemHelper.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="HelperFunctions.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="HoneypotNameGenerator.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="Honeypot.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="HoneypotsManager.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessAnalyzer.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessesMonitor.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessHistory.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessPolicy.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryIO.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\resource.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Heaeders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource\listview.rsrc.rc" />
+    <Media Include="fileTypes\mov.mov">
+      <Filter>Resources</Filter>
+    </Media>
+    <Media Include="fileTypes\mp3.mp3">
+      <Filter>Resources</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="fileTypes\xml.xml" />
+    <Image Include="fileTypes\gif.gif">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="resource\icon3.ico">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="fileTypes\jpg.jpg">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="fileTypes\png.png">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="fileTypes\mov.mov" />
-    <Media Include="fileTypes\mp3.mp3" />
+    <None Include="fileTypes\csv.csv">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\doc.doc">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\docx.docx">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\html.html">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\md.md">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\odt.odt">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\opml.opml">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\pdf.pdf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\ppt.ppt">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\pptx.pptx">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\xls.xls">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\xlsx.xlsx">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="fileTypes\zip.zip">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="fileTypes\gif.gif" />
-    <Image Include="fileTypes\jpg.jpg" />
-    <Image Include="fileTypes\png.png" />
-    <Image Include="resource\icon3.ico" />
+    <Text Include="fileTypes\txt.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="ReadMe.txt">
+      <Filter>Misc</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fileTypes\csv.csv" />
-    <None Include="fileTypes\doc.doc" />
-    <None Include="fileTypes\docx.docx" />
-    <None Include="fileTypes\html.html" />
-    <None Include="fileTypes\md.md" />
-    <None Include="fileTypes\odt.odt" />
-    <None Include="fileTypes\opml.opml" />
-    <None Include="fileTypes\pdf.pdf" />
-    <None Include="fileTypes\ppt.ppt" />
-    <None Include="fileTypes\pptx.pptx" />
-    <None Include="fileTypes\xls.xls" />
-    <None Include="fileTypes\xlsx.xlsx" />
-    <None Include="fileTypes\zip.zip" />
+    <Filter Include="Heaeders">
+      <UniqueIdentifier>{c49ace79-9e30-4420-8194-e952c63a0291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{8df7ba4a-25f6-4ca1-8525-24e363ce0220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{5e3d72eb-61dc-4468-a7f1-1eff49f16d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{151ac5e7-d72f-40f2-92f3-d902a8e63550}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fileTypes\txt.txt" />
-    <Text Include="ReadMe.txt" />
+    <Xml Include="fileTypes\xml.xml">
+      <Filter>Resources</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource\listview.rsrc.rc">
+      <Filter>Misc</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
