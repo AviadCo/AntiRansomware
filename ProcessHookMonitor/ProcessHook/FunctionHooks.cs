@@ -14,6 +14,7 @@ namespace ProcessHook
          ***************************************/
         public const string CreateFileWStr = "CreateFileW";
         public const string WriteFileStr = "WriteFile";
+        public const string ReadFileStr = "ReadFile";
         public const string DeleteFileWStr = "DeleteFileW";
         public const string MoveFileWStr = "MoveFileW";
         public const string CryptEncryptStr = "CryptEncrypt";
@@ -168,6 +169,89 @@ namespace ProcessHook
 
         }
 
+        /****************************************
+         * hook for: ReadFile
+         ***************************************/
+        //delegate
+        /// <summary>
+        /// The ReadFile delegate, this is needed to create a delegate of our hook function <see cref="ReadFile_Hook(IntPtr, IntPtr, uint, out uint, IntPtr)"/>.
+        /// </summary>
+        /// <param name="hFile"></param>
+        /// <param name="lpBuffer"></param>
+        /// <param name="nNumberOfBytesToRead"></param>
+        /// <param name="lpNumberOfBytesRead"></param>
+        /// <param name="lpOverlapped"></param>
+        /// <returns></returns>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        public delegate bool ReadFile_Delegate(
+            IntPtr hFile,
+            IntPtr lpBuffer,
+            uint nNumberOfBytesToRead,
+            out uint lpNumberOfBytesRead,
+            IntPtr lpOverlapped);
+
+        //import of original api
+        /// <summary>
+        /// Using P/Invoke to call the orginal function
+        /// </summary>
+        /// <param name="hFile"></param>
+        /// <param name="lpBuffer"></param>
+        /// <param name="nNumberOfBytesToRead"></param>
+        /// <param name="lpNumberOfBytesRead"></param>
+        /// <param name="lpOverlapped"></param>
+        /// <returns></returns>
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        static extern bool ReadFile(
+            IntPtr hFile,
+            IntPtr lpBuffer,
+            uint nNumberOfBytesToRead,
+            out uint lpNumberOfBytesRead,
+            IntPtr lpOverlapped);
+
+        //hook function
+        /// <summary>
+        /// The ReadFile hook function. This will be called instead of the original ReadFile once hooked.
+        /// </summary>
+        /// <param name="hFile"></param>
+        /// <param name="lpBuffer"></param>
+        /// <param name="nNumberOfBytesToRead"></param>
+        /// <param name="lpNumberOfBytesRead"></param>
+        /// <param name="lpOverlapped"></param>
+        /// <returns></returns>
+        public static bool ReadFile_Hook(
+            IntPtr hFile,
+            IntPtr lpBuffer,
+            uint nNumberOfBytesToRead,
+            out uint lpNumberOfBytesRead,
+            IntPtr lpOverlapped)
+        {
+            bool result = false;
+            string typeAfter = "";
+
+            try
+            {
+
+                //// Retrieve filename from the file handle
+                StringBuilder filename = new StringBuilder(255);
+                GetFinalPathNameByHandle(hFile, filename, 255, 0);
+                filename = filename.Replace("\\\\?\\", "");
+                if (!filename.ToString().Equals(""))
+                {
+                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                }
+
+                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() +  ReadFileStr, filename.ToString(), typeAfter);
+                
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+            
+            return ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, out lpNumberOfBytesRead, lpOverlapped);
+        }
+
+
 
         /****************************************
          * hook for: WriteFile
@@ -201,22 +285,23 @@ namespace ProcessHook
         out uint lpNumberOfBytesWritten,
         IntPtr lpOverlapped)
         {
-            //string hashBeforeFile = "", hashAfterFile = "";
-            //string typeBefore = "", typeAfter = "";
+            string hashBeforeFile = "", hashAfterFile = "";
+            string typeBefore = "", typeAfter = "";
             StringBuilder filename = new StringBuilder(255);
-            //int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
 
             try
             {
                 // Retrieve filename from the file handle
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
-                //if (!filename.ToString().Equals(""))
-                //{
-                //    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
-                //    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
-                //}
+                filename = filename.Replace("\\\\?\\", "");
+                if (!filename.ToString().Equals(""))
+                {
+                    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
+                    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
+                }
             }
-            catch
+            catch (Exception e)
             {
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
@@ -231,21 +316,22 @@ namespace ProcessHook
                 string hashDiffrence = "-1";
                 string typeDiffrence = "-1";
 
-                //if (!filename.ToString().Equals(""))
-                //{
-                //    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
-                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
-                //    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
-                //    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
+                if (!filename.ToString().Equals(""))
+                {
+                    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
+                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
+                    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
 
-                //    deletes temp files
-                //    DeleteFileW(hashBeforeFile);
-                //    DeleteFileW(hashAfterFile);
-                //}
+                    //deletes temp files
+                    DeleteFileW(hashBeforeFile);
+                    DeleteFileW(hashAfterFile);
+                }
 
-                reportEvent(WriteFileStr, filename.ToString(), typeDiffrence, hashDiffrence);
+                
+                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() + WriteFileStr, filename.ToString(), typeDiffrence, hashDiffrence, typeAfter);
             }
-            catch
+            catch (Exception e)
             {
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
@@ -488,7 +574,7 @@ namespace ProcessHook
 
             try
             {
-                reportEvent(CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
+                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() + CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
                     lpApplicationName, lpCommandLine);
             }
             catch

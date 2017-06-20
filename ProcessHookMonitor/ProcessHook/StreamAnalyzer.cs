@@ -37,7 +37,7 @@ namespace ProcessHook
 
             //Start the process
             pProcess.Start();
-
+            
             //Get program output
             string strOutput = pProcess.StandardOutput.ReadToEnd();
 
@@ -50,7 +50,7 @@ namespace ProcessHook
 
         public static String getFileType(String filename)
         {
-            string result = runShell("file\\bin\\file.exe", "", filename);
+            string result = runShell("file\\bin\\file.exe", "", "\"" + filename + "\"" );
             int startPos = result.IndexOf(";");
             return startPos == -1 ? result : result.Substring(startPos + 2);
         }
@@ -59,14 +59,14 @@ namespace ProcessHook
         {
             string refactorFilename = Path.GetFileName(filename);
             string hashfilename = filename.Replace("\\", "").Replace(":", "") + suffix + ".ant.ram.temp";
-            runShell("sdhash\\sdhash.exe", Path.GetDirectoryName(filename), refactorFilename + " -o " + appWorkPath + hashfilename);
+            runShell("sdhash\\sdhash.exe", Path.GetDirectoryName(filename), refactorFilename + " -o " + "\"" + appWorkPath + hashfilename + "\"");
             return hashfilename + ".sdbf";
         }
 
         public static String compareHashes(String filenameBefore, String filenameAfter)
         {
             
-            string output = runShell("sdhash\\sdhash.exe", appWorkPath, " -c " + appWorkPath + filenameBefore +  " " + appWorkPath + filenameAfter);
+            string output = runShell("sdhash\\sdhash.exe", appWorkPath, " -c " + "\"" + appWorkPath + filenameBefore + "\"" +  " " + "\"" + appWorkPath + filenameAfter + "\"");
             if (output.Equals(""))
                 return "-1";
             else

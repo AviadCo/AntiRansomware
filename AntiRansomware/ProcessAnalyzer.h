@@ -33,7 +33,7 @@ private:
 	HANDLE processHandle;
 	DWORD parentID;
 	DWORD injectedByID;
-	unsigned int currentScore;
+	uint64_t currentScore;
 	wstring processName;
 	ProcessHistory processHistory;
 	bool alreadyNotified; // we want to ask user only once per process

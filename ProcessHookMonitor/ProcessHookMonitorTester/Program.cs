@@ -55,7 +55,7 @@ namespace ProcessHookMonitorTester
             //ProcessHookMonitor.ProcessTrace.listenProcessesCreation(new ProcessHookMonitor.ProcessStartEvent(reportToConsole));
             //ProcessHookMonitor.ProcessTrace.listenProcessesTermination(new ProcessHookMonitor.ProcessStopEvent(reportToConsole));
 
-           
+
             ProcessHookMonitor.ProcessHookMonitor.initialize();
             ProcessHookMonitor.ProcessHookMonitor.setStatusHandler(new MessageHandler(reportToConsole));
             /*
@@ -84,8 +84,10 @@ namespace ProcessHookMonitorTester
            }*/
             //Console.WriteLine("#######################################################hello " + count);
 
+            Process[] localByName = Process.GetProcessesByName("Dumsomware");
+              int pid = localByName.ElementAt(0).Id;
 
-            ProcessHookMonitor.ProcessHookMonitor.inject(9188,
+            ProcessHookMonitor.ProcessHookMonitor.inject(pid,
                 new FunctionCalledHandler(reportToConsole));
             Console.WriteLine("hello");
             Console.ReadKey();

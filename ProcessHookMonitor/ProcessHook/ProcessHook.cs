@@ -16,6 +16,18 @@ namespace ProcessHook
         private static IHookServer server = null;
         private static Queue<string> eventsQueue = new Queue<string>();
 
+        private static int mainThreadId = EasyHook.RemoteHooking.GetCurrentThreadId();
+        private static Dictionary<string, EasyHook.LocalHook> hooksMap;
+
+        public static void disableThreadFromHook(string hookFunctionName, int threadID)
+        {
+            hooksMap[hookFunctionName].ThreadACL.SetExclusiveACL(new Int32[] { mainThreadId, threadID });
+        }
+        public static void resetThreadHooking(string hookFunctionName)
+        {
+            hooksMap[hookFunctionName].ThreadACL.SetExclusiveACL(new Int32 [] { mainThreadId });
+        }
+
         /// <summary>
         /// creates function hook objects
         /// </summary>
@@ -23,6 +35,7 @@ namespace ProcessHook
         private List<EasyHook.LocalHook> createFunctionsHooks()
         {
             List<EasyHook.LocalHook> resHooks = new List<EasyHook.LocalHook>();
+            hooksMap = new Dictionary<string, EasyHook.LocalHook>();
 
             // Install hooks
 
@@ -34,6 +47,7 @@ namespace ProcessHook
                     new FunctionHooks.CreateFileW_Delegate(FunctionHooks.CreateFileW_Hook),
                     this);
                 resHooks.Add(createFileHook);
+                hooksMap.Add(FunctionHooks.CreateFileWStr, createFileHook);
             }
             catch (System.MissingMethodException)
             {
@@ -44,6 +58,7 @@ namespace ProcessHook
                 reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
             }
 
+            
             try
             {
                 // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
@@ -52,6 +67,7 @@ namespace ProcessHook
                     new FunctionHooks.WriteFile_Delegate(FunctionHooks.WriteFile_Hook),
                     this);
                 resHooks.Add(writeFileHook);
+                hooksMap.Add(FunctionHooks.WriteFileStr, writeFileHook);
             }
             catch (System.MissingMethodException)
             {
@@ -61,7 +77,7 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
             }
-
+            
             try
             {
                 // DeleteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915(v=vs.85).aspx
@@ -70,6 +86,7 @@ namespace ProcessHook
                     new FunctionHooks.DeleteFileW_Delegate(FunctionHooks.DeleteFileW_Hook),
                     this);
                 resHooks.Add(deleteFileHook);
+                hooksMap.Add(FunctionHooks.DeleteFileWStr, deleteFileHook);
             }
             catch (System.MissingMethodException)
             {
@@ -88,6 +105,7 @@ namespace ProcessHook
                     new FunctionHooks.MoveFileW_Delegate(FunctionHooks.MoveFileW_Hook),
                     this);
                 resHooks.Add(moveFileHook);
+                hooksMap.Add(FunctionHooks.MoveFileWStr, moveFileHook);
             }
             catch (System.MissingMethodException)
             {
@@ -97,7 +115,7 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
             }
-
+            /*
             try
             {
                 // CryptEncrypt https://msdn.microsoft.com/en-us/library/windows/desktop/aa365239(v=vs.85).aspx
@@ -115,7 +133,7 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "Advapi32.dll");
             }
-
+            */
             try
             {
                 // ShellExecuteExW https://msdn.microsoft.com/en-us/library/windows/desktop/bb762154(v=vs.85).aspx
@@ -124,6 +142,7 @@ namespace ProcessHook
                     new FunctionHooks.ShellExecuteExW_Delegate(FunctionHooks.ShellExecuteExW_Hook),
                     this);
                 resHooks.Add(shellExecuteExWHook);
+                hooksMap.Add(FunctionHooks.ShellExecuteExWStr, shellExecuteExWHook);
             }
             catch (System.MissingMethodException)
             {
@@ -134,7 +153,7 @@ namespace ProcessHook
                 reportStatus(ERROR_CANT_FIND_DLL + "Shell32.dll");
             }
 
-            /*
+            
             try
             {
                 // WriteProcessMemory https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
@@ -143,6 +162,7 @@ namespace ProcessHook
                     new FunctionHooks.WriteProcessMemory_Delegate(FunctionHooks.WriteProcessMemory_Hook),
                     this);
                 resHooks.Add(WriteProcessMemoryHook);
+                hooksMap.Add(FunctionHooks.WriteProcessMemoryStr, WriteProcessMemoryHook);
             }
             catch (System.MissingMethodException)
             {
@@ -152,7 +172,7 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
             }
-            */
+            
             try
             {
                 // CreateProcessW https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
@@ -161,6 +181,7 @@ namespace ProcessHook
                     new FunctionHooks.CreateProcessW_Delegate(FunctionHooks.CreateProcessW_Hook),
                     this);
                 resHooks.Add(CreateProcessWHook);
+                hooksMap.Add(FunctionHooks.CreateProcessWStr, CreateProcessWHook);
             }
             catch (System.MissingMethodException)
             {
@@ -179,6 +200,7 @@ namespace ProcessHook
                     new FunctionHooks.CreateRemoteThread_Delegate(FunctionHooks.CreateRemoteThread_Hook),
                     this);
                 resHooks.Add(CreateRemoteThreadHook);
+                hooksMap.Add(FunctionHooks.CreateRemoteThreadStr, CreateRemoteThreadHook);
             }
             catch (System.MissingMethodException)
             {
@@ -197,6 +219,7 @@ namespace ProcessHook
                     new FunctionHooks.CreateRemoteThreadEx_Delegate(FunctionHooks.CreateRemoteThreadEx_Hook),
                     this);
                 resHooks.Add(CreateRemoteThreadExHook);
+                hooksMap.Add(FunctionHooks.CreateRemoteThreadExStr, CreateRemoteThreadExHook);
             }
             catch (System.MissingMethodException)
             {
@@ -207,16 +230,26 @@ namespace ProcessHook
                 reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
             }
 
-
-
-            /*
-            // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
-            var readFileHook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("kernel32.dll", "ReadFile"),
-                new ReadFile_Delegate(ReadFile_Hook),
+            
+            try
+            {
+                // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
+                var readFileHook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.ReadFileStr),
+                new FunctionHooks.ReadFile_Delegate(FunctionHooks.ReadFile_Hook),
                 this);
-
-            */
+                resHooks.Add(readFileHook);
+                hooksMap.Add(FunctionHooks.ReadFileStr, readFileHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.ReadFileStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
+            }
+            
 
             return resHooks;
         }
@@ -273,7 +306,7 @@ namespace ProcessHook
             readFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             */
 
-            reportStatus("function hooks installed successfully");
+            reportStatus(hooks.Count + " function hooks installed successfully");
             
 
             try

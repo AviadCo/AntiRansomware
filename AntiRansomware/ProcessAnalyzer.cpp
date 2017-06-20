@@ -102,11 +102,11 @@ bool ProcessAnalyzer::isProcessStillActive() const
 bool ProcessAnalyzer::checkIfAlert() const
 {
 
-	if (currentScore >= 100) {
+	if (currentScore >= SCORE_THRESHOLD) {
 		log().info(__FUNCTION__, L"Alert, process with PID " + std::to_wstring(getProcessID()) + L" is act suspiously");
 	}
 
-	return currentScore >= 100;
+	return currentScore >= SCORE_THRESHOLD;
 }
 
 bool ProcessAnalyzer::updateScore(ProcessHistory history)
@@ -116,6 +116,8 @@ bool ProcessAnalyzer::updateScore(ProcessHistory history)
 	processHistory.addHistory(history);
 
 	currentScore = ProcessPolicy::getScoreForHistory(processHistory);
+
+	log().info(__FUNCTION__, L"pid: " + std::to_wstring(getProcessID()) + L" have score of: " + std::to_wstring(currentScore));
 
 	if (parentID != -1 && processesMonitor->isProcessMonitored(parentID)) {
 		/* updating parent score also */
@@ -155,18 +157,21 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	}
 	else if (!wcscmp(functionName.c_str(), HookWriteFile::name)) {
 		processOperation = ProcessPolicy::FILE_CHNAGE_CONTENT;
-		
+
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
-		
-		
-		double entropy = 0; //Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
-		/*
+
+		double entropy = -1;
+		if (params[FunctionHooksDefinitions::HookWriteFile::FILEPATH].compare(L"") != 0) {
+			entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
+		}
+
+
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
 			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
 			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]
 			+ L" antropy: " + std::to_wstring(entropy));
-			*/
+
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
 
@@ -174,10 +179,12 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		}
 
 		history.counterWriteFile++;
-		if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0")) {
+		if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0") == 0) {
 			history.counterFileTypeChanged++;
 		}
-		history.entropyOfWrite += entropy;
+		if (entropy != -1) {
+			history.entropyOfWrite += entropy;
+		}
 	}
 	else if (!wcscmp(functionName.c_str(), HookMoveFileW::name)) {
 		processOperation = ProcessPolicy::FILE_RENAME;
@@ -210,7 +217,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	else if (!wcscmp(functionName.c_str(), HookWriteProcessMemory::name)) {
 
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
-		
+
 		log().debug(__FUNCTION__, wstring(HookWriteProcessMemory::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" to process: " + params[FunctionHooksDefinitions::HookWriteProcessMemory::DESC_PID]);
 
@@ -264,12 +271,12 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 			//our activity - ignore
 			return;
 		}
-			log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
-				L" and created process with pid " + params[FunctionHooksDefinitions::HookCreateProcess::PID]
-				+ L" file exe: " + params[FunctionHooksDefinitions::HookCreateProcess::APPLICATION_NAME]
-				+ L" command: " + params[FunctionHooksDefinitions::HookCreateProcess::COMMAND_LINE]);
+		log().debug(__FUNCTION__, wstring(HookCreateProcess::name) + L" was called from pid " + std::to_wstring(getProcessID()) +
+			L" and created process with pid " + params[FunctionHooksDefinitions::HookCreateProcess::PID]
+			+ L" file exe: " + params[FunctionHooksDefinitions::HookCreateProcess::APPLICATION_NAME]
+			+ L" command: " + params[FunctionHooksDefinitions::HookCreateProcess::COMMAND_LINE]);
 
-			processesMonitor->addNewProcess(std::stoi(param));
+		processesMonitor->addNewProcess(std::stoi(param));
 
 		/* no suspious activity */
 		return;
