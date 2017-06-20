@@ -10,6 +10,7 @@
 #define IDC_RESUME                      1002
 #define IDC_KILL                        1006
 #define IDC_EXIT                        1007
+#define IDT_TIMER                       1008
 
 // Next default values for new objects
 // 

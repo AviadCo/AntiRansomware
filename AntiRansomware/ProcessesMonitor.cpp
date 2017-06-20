@@ -60,6 +60,7 @@ void ProcessesMonitor::checkProcessesLiveness()
 		try {
 			if (processAnalyzer.second->isProcessStillActive()) {
 				processAnalyzers.erase(processAnalyzer.first);
+				updateOccured();
 			}
 		}
 		catch (ProcessAnalyzerException e) {

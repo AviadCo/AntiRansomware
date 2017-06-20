@@ -47,7 +47,7 @@ wchar_t tempstr2[100] = L"";
 TCHAR tchar;
 MSG msg;
 
-unsigned int pid = 5080;
+unsigned int pid = 1752;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
@@ -291,6 +291,16 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 
+	case WM_TIMER:
+		switch (wParam)
+		{
+		case IDT_TIMER:
+			/* checking process liveness */
+			processesMonitor.checkProcessesLiveness();
+
+			return 0;
+		}
+
 	// This Window Message is the heart of the dialog  //
 	//================================================//
 	case WM_INITDIALOG:
@@ -431,7 +441,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
 	hInst = hInstance;
 
+	//TODO fix timer
+	SetTimer(hList, IDT_TIMER, 6000, (TIMERPROC)NULL);
+
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG), NULL, (DLGPROC)DialogProc, 0);
+
+	KillTimer(hList, IDT_TIMER);
+
 	return 0;
 }
 //======================================================================================================//
