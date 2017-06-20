@@ -30,3 +30,7 @@ namespace StringFunctions
 	std::vector<std::wstring> splitParam(const std::wstring &sourceStr);
 };
 
+
+namespace Antropy {
+	double calcAntropy(const std::wstring& filepath);
+}

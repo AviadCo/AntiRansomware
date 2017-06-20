@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "ProcessesMonitor.h"
+#include "ProcessHistory.h"
 #include "Logger.h"
 #include "ProcessHookMonitorWrapper.h"
 
@@ -71,6 +72,7 @@ void ProcessesMonitor::checkProcessesLiveness()
 
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 {
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(this);
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);
 
 	this->honeypotsManager = honeypotsManager;
@@ -81,6 +83,7 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, unsigned int pid)
 {
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(this);
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);
 
 	this->honeypotsManager = honeypotsManager;
@@ -144,10 +147,10 @@ void ProcessesMonitor::endProcess(int pid)
 	CloseHandle(processHandle);
 }
 
-void ProcessesMonitor::updateProcessScore(int pid, ProcessPolicy::ProcessOperation processOperation)
+void ProcessesMonitor::updateProcessScore(int pid, ProcessHistory history)
 {
 	if (processAnalyzers.at(pid) != NULL) {
-		processAnalyzers.at(pid)->updateScore(processOperation);
+		processAnalyzers.at(pid)->updateScore(history);
 	}
 }
 
@@ -174,7 +177,12 @@ map<unsigned int, ProcessAnalyzer *> ProcessesMonitor::getAllProcessesAnalyzers(
 
 ProcessesMonitor::~ProcessesMonitor()
 {
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
 	for (auto const processAnalyzer : processAnalyzers) {
 		delete processAnalyzer.second;
 	}
+}
+
+void ProcessesMonitor::notifyStartEvent(unsigned int pid, unsigned int parentId)
+{
 }

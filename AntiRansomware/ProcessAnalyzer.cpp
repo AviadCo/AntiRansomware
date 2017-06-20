@@ -10,7 +10,7 @@
 #include "ProcessAnalyzer.h"
 #include "ProcessesMonitor.h"
 #include "FileSystemHelper.h"
-#include "StringFunctions.h"
+#include "HelperFunctions.h"
 #include "Logger.h"
 #include "FunctionCalledHandlerWrapper.h"
 #include "FunctionHooksDefinitions.h"
@@ -107,14 +107,17 @@ bool ProcessAnalyzer::checkIfAlert() const
 	return currentScore >= 100;
 }
 
-bool ProcessAnalyzer::updateScore(ProcessPolicy::ProcessOperation processOperation)
+bool ProcessAnalyzer::updateScore(ProcessHistory history)
 {
 	DWORD parentID = GetParentProcessID(getProcessID());
-	currentScore += ProcessPolicy::getScoreForOperation(processOperation);
+
+	processHistory.addHistory(history);
+
+	currentScore = ProcessPolicy::getScoreForHistory(processHistory);
 
 	if (parentID != -1) {
 		/* updating parent score also */
-		processesMonitor->updateProcessScore(parentID, processOperation);
+		processesMonitor->updateProcessScore(parentID, history);
 	}
 
 	return checkIfAlert();
@@ -123,12 +126,14 @@ bool ProcessAnalyzer::updateScore(ProcessPolicy::ProcessOperation processOperati
 void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const wstring & param)
 {
 	ProcessPolicy::ProcessOperation processOperation;
+	ProcessHistory history;
 
 	if (!wcscmp(functionName.c_str(), HookDeleteFileW::name)) {
 		if (param.find(L".ant.ram.temp") != std::wstring::npos) {
 			//our deletion - ignore
 			return;
 		}
+
 		processOperation = ProcessPolicy::FILE_DELETE;
 
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
@@ -141,22 +146,33 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 			return;
 		}
+
+		history.counterDeleteFileW++;
 	}
 	else if (!wcscmp(functionName.c_str(), HookWriteFile::name)) {
 		processOperation = ProcessPolicy::FILE_CHNAGE_CONTENT;
 		
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
 		
+		double entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
+
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
 			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
-			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]);
+			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]
+			+ L" antropy: " + std::to_wstring(entropy));
 
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
 
 			return;
 		}
+
+		history.counterWriteFile++;
+		if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0")) {
+			history.counterFileTypeChanged++;
+		}
+		history.entropyOfWrite += entropy;
 	}
 	else if (!wcscmp(functionName.c_str(), HookMoveFileW::name)) {
 		processOperation = ProcessPolicy::FILE_RENAME;
@@ -166,11 +182,15 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		log().debug(__FUNCTION__, wstring(HookMoveFileW::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" from: " + params[FunctionHooksDefinitions::HookMoveFileW::FILEPATH_SRC]
 			+ L" to: " + params[FunctionHooksDefinitions::HookMoveFileW::FILEPATH_DST]);
+
+		history.counterMoveFileWCounter++;
 	}
 	else if (!wcscmp(functionName.c_str(), HookCryptEncrypt::name)) {
 		processOperation = ProcessPolicy::ENCRYPTION;
 
 		log().debug(__FUNCTION__, wstring(HookCryptEncrypt::name) + L" was called from pid " + std::to_wstring(getProcessID()));
+
+		history.counterCryptEncryptCounter++;
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateFileW::name)) {
 
@@ -193,6 +213,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		injectedByID = std::stoi(param);
 
+		history.counterWriteProcessMemoryCounter++;
+
 		//TODO update process monitor if needed
 	}
 	else if (!wcscmp(functionName.c_str(), HookShellExecuteExW::name)) {
@@ -200,21 +222,29 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 			processOperation = ProcessPolicy::DISABLE_SHADOW_COPY;
 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteExW::name) + L" is trying to disable shadow copy from pid " + std::to_wstring(getProcessID()));
+
+			history.counterDisableShadowCopy++;
 		}
 		else if ((param.find(L"wbadmin") != std::wstring::npos) && (param.find(L"disable") != std::wstring::npos) && (param.find(L"backup") != std::wstring::npos)) {
 			processOperation = ProcessPolicy::DISABLE_WINDOWS_BACKUP;
 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteExW::name) + L" is trying to disable backup from pid " + std::to_wstring(getProcessID()));
+
+			history.counterDisableBackup++;
 		}
 		else if ((param.find(L"net") != std::wstring::npos) && (param.find(L"stop") != std::wstring::npos) && (param.find(L"srservice") != std::wstring::npos)) {
 			processOperation = ProcessPolicy::DISABLE_WINDOWS_RESTORE;
 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteExW::name) + L" is trying to disable windows restore from pid " + std::to_wstring(getProcessID()));
+
+			history.counterDisableWindowsRestore++;
 		}
 		else if ((param.find(L"sc") != std::wstring::npos) && (param.find(L"stop") != std::wstring::npos) && (param.find(L"WinDefend") != std::wstring::npos)) {
 			processOperation = ProcessPolicy::DISABLOE_WINDOWS_DEFENDER;
 
 			log().debug(__FUNCTION__, wstring(HookShellExecuteExW::name) + L" is trying to disable windows defender from pid " + std::to_wstring(getProcessID()));
+
+			history.counterDisableWindowsDefender++;
 		}
 		else {
 			/* no suspious activity */
@@ -246,6 +276,9 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		log().debug(__FUNCTION__, wstring(HookCreateRemoteThread::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" on pid: " + params[FunctionHooksDefinitions::HookCreateRemoteThread::PID]);
+
+		history.counterCreateRemoteThreadCounter++;
+
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateRemoteThreadEx::name)) {
 		/* IGNORE THIS CASE
@@ -261,10 +294,10 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		return;
 	}
 
-	//if (updateScore(processOperation)) {
+	if (updateScore(history)) {
 		//TODO uncomment this command
-		//processesMonitor->alert(getProcessID(), functionName);
-	//}
+		processesMonitor->alert(getProcessID(), functionName);
+	}
 }
 
 wstring ProcessAnalyzer::getProcessName() const

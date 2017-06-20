@@ -6,10 +6,12 @@
 #include <map>
 #include <functional>
 #include <string>
+#include <inttypes.h>
 
 #include "EventTypes.h"
 #include "ProcessPolicy.h"
 #include "HoneypotsManager.h"
+#include "ProcessHistory.h"
 
 /* includes for hooking */
 #include "MessageHandlerWrapper.h"
@@ -24,6 +26,7 @@ class ProcessesMonitor;
 /* This represent an analyzer for one process in the system */
 class ProcessAnalyzer : public FunctionCalledHandlerWrapper
 {
+	const uint64_t SCORE_THRESHOLD = 150;
 private:
 	ProcessesMonitor *processesMonitor;
 	const HoneypotsManager *honeypotsManager;
@@ -32,7 +35,8 @@ private:
 	DWORD injectedByID;
 	unsigned int currentScore;
 	wstring processName;
-	
+	ProcessHistory processHistory;
+
 	void setHooks(DWORD proccessID);
 	DWORD GetParentProcessID(DWORD dwProcessID);
 
@@ -43,7 +47,7 @@ public:
 	DWORD getParentID();
 	bool isProcessStillActive() const;
 	bool checkIfAlert() const;
-	bool updateScore(ProcessPolicy::ProcessOperation processOperation);
+	bool updateScore(ProcessHistory history);
 	void parseHookNotification(const wstring& functionName, const wstring& param);
 	wstring getProcessName() const;
 	unsigned int getCurrentScore() const;

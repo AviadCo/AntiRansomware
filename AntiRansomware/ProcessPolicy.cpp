@@ -38,3 +38,22 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 		throw ProcessPolicyException();
 	}
 }
+
+uint64_t ProcessPolicy::getScoreForHistory(ProcessHistory history)
+{
+	uint64_t score = 0;
+
+	score += history.counterWriteProcessMemoryCounter * PROCESS_INJECTION;
+	score += history.counterDisableBackup * DISABLE_WINDOWS_BACKUP;
+	score += history.counterDisableShadowCopy * DISABLE_WINDOWS_BACKUP;
+	score += history.counterDisableWindowsDefender * DISABLOE_WINDOWS_DEFENDER;
+	score += history.counterDisableWindowsRestore * DISABLE_WINDOWS_RESTORE;
+	score += history.counterWriteFile * FILE_CHNAGE_CONTENT_SCORE;
+	score += history.counterFileTypeChanged * FILE_CHNAGE_TYPE_SCORE;
+	score += history.counterDeleteFileW * FILE_DELETE_SCORE;
+	score += history.counterCryptEncryptCounter * ENCRYPTION_SCORE;
+	score += history.counterMoveFileWCounter * FILE_RENAME_SCORE;
+
+	return score;
+
+}
