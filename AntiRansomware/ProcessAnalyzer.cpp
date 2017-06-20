@@ -154,14 +154,15 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
 		
-		double entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
-
+		
+		double entropy = 0; //Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
+		/*
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
 			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
 			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]
 			+ L" antropy: " + std::to_wstring(entropy));
-
+			*/
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
 

@@ -85,7 +85,7 @@ namespace ProcessHookMonitorTester
             //Console.WriteLine("#######################################################hello " + count);
 
 
-            ProcessHookMonitor.ProcessHookMonitor.inject(1288,
+            ProcessHookMonitor.ProcessHookMonitor.inject(9188,
                 new FunctionCalledHandler(reportToConsole));
             Console.WriteLine("hello");
             Console.ReadKey();

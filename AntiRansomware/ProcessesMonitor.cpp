@@ -154,9 +154,15 @@ void ProcessesMonitor::updateProcessScore(int pid, ProcessHistory history)
 	}
 }
 
+bool flag = false;
 void ProcessesMonitor::alert(int pid, const wstring & functionName)
 {
 	log().info(__FUNCTION__, functionName + L" caused for process ID " + std::to_wstring(pid) + L" to be suspicious");
+	
+	if (flag) {
+		return;
+	}
+	flag = true;
 
 	suspendProcess(pid);
 	int btn = MessageBox(0, (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
@@ -192,5 +198,5 @@ bool ProcessesMonitor::isProcessMonitored(int pid)
 
 void ProcessesMonitor::notifyStartEvent(unsigned int pid, unsigned int parentId)
 {
-	addNewProcess(pid);
+	//addNewProcess(pid);
 }

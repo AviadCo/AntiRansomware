@@ -201,20 +201,20 @@ namespace ProcessHook
         out uint lpNumberOfBytesWritten,
         IntPtr lpOverlapped)
         {
-            string hashBeforeFile = "", hashAfterFile = "";
-            string typeBefore = "", typeAfter = "";
+            //string hashBeforeFile = "", hashAfterFile = "";
+            //string typeBefore = "", typeAfter = "";
             StringBuilder filename = new StringBuilder(255);
-            int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            //int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
 
             try
             {
                 // Retrieve filename from the file handle
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
-                if (!filename.ToString().Equals(""))
-                {
-                    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
-                    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
-                }
+                //if (!filename.ToString().Equals(""))
+                //{
+                //    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
+                //    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
+                //}
             }
             catch
             {
@@ -231,17 +231,17 @@ namespace ProcessHook
                 string hashDiffrence = "-1";
                 string typeDiffrence = "-1";
 
-                if (!filename.ToString().Equals(""))
-                {
-                    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
-                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
-                    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
-                    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
+                //if (!filename.ToString().Equals(""))
+                //{
+                //    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
+                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                //    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
+                //    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
 
-                    //deletes temp files
-                    DeleteFileW(hashBeforeFile);
-                    DeleteFileW(hashAfterFile);
-                }
+                //    deletes temp files
+                //    DeleteFileW(hashBeforeFile);
+                //    DeleteFileW(hashAfterFile);
+                //}
 
                 reportEvent(WriteFileStr, filename.ToString(), typeDiffrence, hashDiffrence);
             }

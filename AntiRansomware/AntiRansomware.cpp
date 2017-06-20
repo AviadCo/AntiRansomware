@@ -14,6 +14,10 @@
 #include "FileSystemHelper.h"
 #include "ProcessesMonitor.h"
 #include <algorithm>
+#include <windows.h>
+#include "resource\resource.h"
+#include <commctrl.h>
+#include <stdio.h>
 
 #include "FunctionCalledHandlerWrapper.h"
 #include "ProcessHookMonitorWrapper.h"
@@ -27,79 +31,6 @@ using std::endl;
 #define PROCESS_NAME 1
 #define PROCESS_SUSPICOUS 2
 #define PROCESS_IS_SUSPICOUS 3
-
-
-
-/*
-int main()
-{	
-	unsigned int pid = 20900;
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
-	HoneypotsManager honeypotsManager = HoneypotsManager();
-	ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
-
-	//processesMonitor.suspendProcess(pid);
-
-	Sleep(6000);
-
-	unsigned int totalTime, intervalTime;
-	HoneypotsManager honeypotsManager = HoneypotsManager();
-
-	wcout << L"Creating default number of honeypots" << endl;
-
-	wcout << L"Please Enter total time to run the application in seconds" << endl;
-	cin >> totalTime;
-
-	log().info(__FUNCTION__, "Total time from user: " + totalTime);
-
-	wcout << L"Please Enter interval time to run the application in seconds" << endl;
-	cin >> intervalTime;
-
-	log().info(__FUNCTION__, "Interval time from user: " + intervalTime);
-
-	if (totalTime < intervalTime) {
-		wcout << L"Interval time must be lower than total time, quiting" << endl;
-	}
-
-	for (unsigned int i = 0; i < totalTime / intervalTime; ++i) {
-		wcout << L"Interval " << i << " started" << endl;
-
-		if (honeypotsManager.monitorHoneypots()) {
-			wcout << L"Alert - Honeypot has changed" << endl;
-		}
-		else {
-			wcout << L"Interval finished with no alerts" << endl;
-		}
-
-		Sleep(intervalTime * 1000);
-	}
-
-	wcout << L"Total time passed, removing honeypots and quiting" << endl;
-
-	honeypotsManager.removeAllHoneypots();
-
-	list<wstring> subDir = FileSystemHelper::getAllFilesInDir(L"C:\\Users\\ransomware\\Downloads");
-	wstring firstFile, lastFile;
-
-	FileSystemHelper::getFirstAndLastFileLexicographicOrder(L"C:\\Users\\ransomware\\Downloads", firstFile, lastFile);
-
-	wcout << firstFile << endl;
-	wcout << lastFile << endl;
-
-	/*
-	std::for_each(subDir.begin(), subDir.end(), [](wstring cur)
-	{
-		wcout << cur << endl;
-	});
-
-	
-    return 0;
-}*/
-
-#include <windows.h>
-#include "resource\resource.h"
-#include <commctrl.h>
-#include <stdio.h>
 
 //==============Global Vatriabls===================
 static HWND hList = NULL;  // List View identifier
@@ -116,7 +47,7 @@ wchar_t tempstr2[100] = L"";
 TCHAR tchar;
 MSG msg;
 
-unsigned int pid = 8680;
+unsigned int pid = 4976;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);

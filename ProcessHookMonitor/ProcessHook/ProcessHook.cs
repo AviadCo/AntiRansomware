@@ -134,6 +134,7 @@ namespace ProcessHook
                 reportStatus(ERROR_CANT_FIND_DLL + "Shell32.dll");
             }
 
+            /*
             try
             {
                 // WriteProcessMemory https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
@@ -151,7 +152,7 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "Kernel32.dll");
             }
-
+            */
             try
             {
                 // CreateProcessW https://msdn.microsoft.com/en-us/library/windows/desktop/ms681674(v=vs.85).aspx
