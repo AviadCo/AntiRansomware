@@ -161,16 +161,10 @@ void ProcessesMonitor::updateProcessScore(int pid, ProcessHistory history)
 	}
 }
 
-bool flag = false;
 void ProcessesMonitor::alert(int pid, const wstring & functionName)
 {
 	log().info(__FUNCTION__, functionName + L" caused for process ID " + std::to_wstring(pid) + L" to be suspicious");
 	
-	if (flag) {
-		return;
-	}
-	flag = true;
-
 	suspendProcess(pid);
 	int btn = MessageBox(0, (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
 					         L"Do you want to kill the process?").c_str(), L"AntiRansomware - Suspicious Activity Detected",

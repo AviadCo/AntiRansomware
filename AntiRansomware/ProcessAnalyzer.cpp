@@ -68,6 +68,8 @@ ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMo
 	currentScore = 0;
 
 	setHooks(proccessID);
+
+	alreadyNotified = false;
 }
 
 ProcessAnalyzer::~ProcessAnalyzer()
@@ -297,8 +299,9 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		return;
 	}
 
-	if (updateScore(history)) {
+	if (updateScore(history) && !alreadyNotified) {
 		//TODO uncomment this command
+		alreadyNotified = true;
 		processesMonitor->alert(getProcessID(), functionName);
 	}
 }

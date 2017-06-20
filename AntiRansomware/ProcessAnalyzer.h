@@ -36,6 +36,7 @@ private:
 	unsigned int currentScore;
 	wstring processName;
 	ProcessHistory processHistory;
+	bool alreadyNotified; // we want to ask user only once per process
 
 	void setHooks(DWORD proccessID);
 	DWORD GetParentProcessID(DWORD dwProcessID);
