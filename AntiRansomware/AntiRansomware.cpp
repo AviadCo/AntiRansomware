@@ -116,7 +116,7 @@ wchar_t tempstr2[100] = L"";
 TCHAR tchar;
 MSG msg;
 
-unsigned int pid = 3672;
+unsigned int pid = 8680;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);

@@ -158,8 +158,10 @@ void ProcessesMonitor::alert(int pid, const wstring & functionName)
 {
 	log().info(__FUNCTION__, functionName + L" caused for process ID " + std::to_wstring(pid) + L" to be suspicious");
 
-	int btn = MessageBox(0, L"AntiRansomware - Suspicious Activity Detected", (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
-																			   L"Do you want to kill the process?").c_str(), MB_YESNO + MB_ICONQUESTION);
+	suspendProcess(pid);
+	int btn = MessageBox(0, (L"Process ID " + std::to_wstring(pid) + L" is acting suspicious.\n" +
+					         L"Do you want to kill the process?").c_str(), L"AntiRansomware - Suspicious Activity Detected",
+							 MB_YESNO + MB_ICONQUESTION);
 	if (btn == IDYES) {
 		endProcess(pid);
 	}
