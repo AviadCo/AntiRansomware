@@ -348,7 +348,7 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 
 		SendMessage(hList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT); // Set style
 
-		SendMessageA(hWnd, WM_SETICON, (WPARAM)1, (LPARAM)LoadIconA(hInst, MAKEINTRESOURCEA(IDI_ICON1)));
+		SendMessageA(hWnd, WM_SETICON, (WPARAM)1, (LPARAM)LoadIconA(hInst, MAKEINTRESOURCEA(IDI_ICON3)));
 
 		// Here we put the info on the Coulom headers
 		// this is not data, only name of each header we like

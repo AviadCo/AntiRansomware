@@ -3,7 +3,7 @@
 // Used by listview.rsrc.rc
 //
 #define IDC_DIALOG                      101
-#define IDI_ICON1                       102
+#define IDI_ICON3                       102
 #define IDR_MENU1                       106
 #define IDC_LIST                        1000
 #define IDC_SUSPEND                     1001
