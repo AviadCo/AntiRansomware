@@ -42,6 +42,9 @@ unsigned int ProcessPolicy::getScoreForOperation(ProcessOperation operation)
 uint64_t ProcessPolicy::getScoreForHistory(ProcessHistory history)
 {
 	uint64_t score = 0;
+	std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - history.processCreationTime;
+
+	//TODO now to get time use - elapsed_seconds.count()
 
 	score += history.counterWriteProcessMemoryCounter * PROCESS_INJECTION;
 	score += history.counterDisableBackup * DISABLE_WINDOWS_BACKUP;

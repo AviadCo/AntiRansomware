@@ -4,6 +4,7 @@
 
 ProcessHistory::ProcessHistory()
 {
+	processCreationTime = std::chrono::system_clock::now();
 	counterWriteFile = 0;
 	counterFileTypeChanged = 0;
 	entropyOfRead = 0;

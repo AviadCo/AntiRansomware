@@ -1,8 +1,14 @@
 #pragma once
+
 #include <inttypes.h>
+#include <chrono>
+#include <ctime>
+
 class ProcessHistory
 {
 public:
+	std::chrono::time_point<std::chrono::system_clock> processCreationTime;
+
 	uint64_t counterWriteFile;
 	uint64_t counterFileTypeChanged;
 	double entropyOfRead;
