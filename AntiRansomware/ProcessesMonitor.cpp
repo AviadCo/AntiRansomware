@@ -183,6 +183,12 @@ ProcessesMonitor::~ProcessesMonitor()
 	}
 }
 
+bool ProcessesMonitor::isProcessMonitored(int pid)
+{
+	return processAnalyzers.find(pid) != processAnalyzers.end();
+}
+
 void ProcessesMonitor::notifyStartEvent(unsigned int pid, unsigned int parentId)
 {
+	addNewProcess(pid);
 }

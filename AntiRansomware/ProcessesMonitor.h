@@ -32,6 +32,7 @@ public:
 	void alert(int pid, const wstring& functionName);
 	map<unsigned int, ProcessAnalyzer *> getAllProcessesAnalyzers();
 	~ProcessesMonitor();
+	bool isProcessMonitored(int pid);
 
 	virtual void notifyStartEvent(unsigned int pid, unsigned int parentId);
 

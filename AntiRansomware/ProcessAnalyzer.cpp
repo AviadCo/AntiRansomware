@@ -115,7 +115,7 @@ bool ProcessAnalyzer::updateScore(ProcessHistory history)
 
 	currentScore = ProcessPolicy::getScoreForHistory(processHistory);
 
-	if (parentID != -1) {
+	if (parentID != -1 && processesMonitor->isProcessMonitored(parentID)) {
 		/* updating parent score also */
 		processesMonitor->updateProcessScore(parentID, history);
 	}
