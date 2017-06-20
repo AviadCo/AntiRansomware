@@ -5,22 +5,25 @@
 
 #pragma comment(lib, "comctl32.lib")
 
+/* includes */
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <windows.h>
+#include <commctrl.h>
+#include <stdio.h>
 
 #include "HoneypotsManager.h"
 #include "HoneypotNameGenerator.h"
 #include "Honeypot.h"
 #include "FileSystemHelper.h"
 #include "ProcessesMonitor.h"
-#include <algorithm>
-#include <windows.h>
-#include "resource\resource.h"
-#include <commctrl.h>
-#include <stdio.h>
-
 #include "FunctionCalledHandlerWrapper.h"
 #include "ProcessHookMonitorWrapper.h"
+
+#include "resource\resource.h"
+
+/* using namespaces */
 using std::wstring;
 using std::list;
 using std::wcout;
@@ -32,31 +35,39 @@ using std::endl;
 #define PROCESS_SUSPICOUS 2
 #define PROCESS_IS_SUSPICOUS 3
 
-//==============Global Vatriabls===================
+/* Global variables for GUI */
 static HWND hList = NULL;  // List View identifier
+HWND hEdit;
+
 LVCOLUMN LvCol; // Make Coluom struct for ListView
 LVITEM LvItem;  // ListView Item struct
 LV_DISPINFO lvd;
+
 int iSelect = 0;
 int index = 0;
 int flag = 0;
-HWND hEdit;
+
 bool escKey = 0;
-wchar_t tempstr[100] = L"";
+
+wchar_t tempstr[100]  = L"";
 wchar_t tempstr2[100] = L"";
+
 TCHAR tchar;
+
 MSG msg;
 
-unsigned int pid = 1752;
+/* init ProcessesMonitor */
+//TODO remove pid after debug
+unsigned int pid = 8896;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
-//===================================================
 
-//======================Handles================================================//
-HINSTANCE hInst; // main function handler
+/* Handles */
+HINSTANCE hInst;			// main function handler
 #define WIN32_LEAN_AND_MEAN // this will assume smaller exe
 
+/* Setting colors of the list */
 LRESULT ProcessCustomDraw(LPARAM lParam)
 {
 	LPNMLVCUSTOMDRAW lplvcd = (LPNMLVCUSTOMDRAW)lParam;
@@ -132,7 +143,7 @@ LRESULT ProcessCustomDraw(LPARAM lParam)
 	return CDRF_DODEFAULT;
 }
 
-//================================About dialog window=============================//
+/* refresh list of changes */
 static void refreshList()
 {
 	wchar_t Temp[255] = { 0 };
@@ -172,10 +183,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch (Message)
 	{
-
-		// This Window Message will close the dialog  //
-		//============================================//
-
 	case WM_CLOSE:
 	{
 		PostQuitMessage(0);
@@ -231,7 +238,7 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					lstrcat(Temp1, Temp);
 				}
 
-				MessageBox(hWnd, Temp1, L"test", MB_OK);
+				MessageBox(hWnd, Temp1, L"Process Info", MB_OK);
 
 			}
 			if (((LPNMHDR)lParam)->code == NM_CLICK)
@@ -244,42 +251,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 				}
 				index = iSelect;
 				flag = 1;
-			}
-
-			if (((LPNMHDR)lParam)->code == LVN_BEGINLABELEDIT)
-			{
-				//Editing=1;
-				hEdit = ListView_GetEditControl(hList);
-				GetWindowText(hEdit, tempstr, sizeof(tempstr));
-			}
-
-			if (((LPNMHDR)lParam)->code == LVN_ENDLABELEDIT)
-			{
-				int iIndex;
-				wchar_t text[255] = L"";
-
-				tchar = (TCHAR)msg.wParam;
-				if (tchar == 0x1b)
-					escKey = 1;
-
-				iIndex = SendMessage(hList, LVM_GETNEXTITEM, -1, LVNI_FOCUSED);
-				if (iIndex == -1)
-					break;
-
-				LvItem.iSubItem = 0;
-
-				if (escKey == 0)
-				{
-					LvItem.pszText = text;
-					GetWindowText(hEdit, text, sizeof(text));
-					SendMessage(hList, LVM_SETITEMTEXT, (WPARAM)iIndex, (LPARAM)&LvItem);
-				}
-				else {
-					LvItem.pszText = tempstr;
-					SendMessage(hList, LVM_SETITEMTEXT, (WPARAM)iIndex, (LPARAM)&LvItem);
-					escKey = 0;
-				}
-				//Editing=0;
 			}
 			break;
 		}
@@ -352,7 +323,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		ShowWindow(hWnd, SW_NORMAL);
 		UpdateWindow(hWnd);
 
-
 		while (TRUE)
 		{
 			if (processesMonitor.isUpdateOccured()) {
@@ -365,7 +335,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 				{
 					break;
 				}
-
 
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
@@ -398,6 +367,7 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		{
 		case IDC_KILL:
 			processesMonitor.endProcess(std::stoi(LvItem.pszText));
+
 			SendMessage(hList, LVM_DELETEITEM, iSelect, 0);
 		break;
 
@@ -428,10 +398,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 //===========================MAIN FUNCTION-WIN32 STARTING POINT========================================//
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	// add this code if win2000/nt/xp doesn't
-	// load ur winmain (experimental only)
-	// also add comctl32.lib
-
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
 
 	INITCOMMONCONTROLSEX InitCtrls;
