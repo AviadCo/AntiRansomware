@@ -58,7 +58,8 @@ double Antropy::calcAntropy(const std::wstring & filepath)
 
 	memset(alphabet, 0, sizeof(long) * 256);
 
-	if (_wfopen_s(&pFile, filepath.c_str(), L"rb") == 0) {
+	int result = _wfopen_s(&pFile, filepath.c_str(), L"rb");
+	if (result == 0) {
 		/* Read the whole file in parts of 1024 */
 		while ((n = fread(buffer, 1, 1024, pFile)) != 0)
 		{

@@ -356,8 +356,5 @@ unsigned int ProcessAnalyzer::getCurrentScore() const
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)
 {
-	if (!wcscmp(functionName, HookCreateRemoteThreadEx::name)) {
-		return;
-	}
 	parseHookNotification(functionName, param);
 }

@@ -58,7 +58,7 @@ MSG msg;
 
 /* init ProcessesMonitor */
 //TODO remove pid after debug
-unsigned int pid = 8896;
+unsigned int pid = 18632;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProcessHookMonitor
 {
-    public delegate void ProcessStartEvent(uint pid, uint parentID);
+    public delegate void ProcessStartEvent(uint pid, string processName, uint parentID);
     public delegate void ProcessStopEvent(uint pid);
 
     public class ProcessTrace
@@ -63,7 +63,9 @@ namespace ProcessHookMonitor
         {
             uint parentId = (uint)e.NewEvent.GetPropertyValue("ParentProcessID");
             uint processId = (uint)e.NewEvent.GetPropertyValue("ProcessID");
-            processStartHandler(processId, parentId);
+            string processName = (string)e.NewEvent.GetPropertyValue("ProcessName");
+
+            processStartHandler(processId, processName, parentId);
         }
     }
 }

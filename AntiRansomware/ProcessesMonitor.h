@@ -5,13 +5,14 @@
 
 #include "MessageHandlerWrapper.h"
 #include "ProcessStartEventWrapper.h"
+#include "ProcessStopEventWrapper.h"
 #include "ProcessAnalyzer.h"
 #include "EventTypes.h"
 
 using std::map;
 using std::vector;
 
-class ProcessesMonitor : public MessageHandlerWrapper, ProcessStartEventWrapper
+class ProcessesMonitor : public MessageHandlerWrapper, ProcessStartEventWrapper, ProcessStopEventWrapper
 {
 private:
 	const HoneypotsManager *honeypotsManager;
@@ -37,8 +38,8 @@ public:
 	bool isUpdateOccured();
 	void updateOccured();
 
-	virtual void notifyStartEvent(unsigned int pid, unsigned int parentId);
-
+	virtual void notifyStartEvent(unsigned int pid, LPUWSTR processName, unsigned int parentID);
+	virtual void notifyStopEvent(unsigned int pid);
 };
 
 class ProcessesMonitorException : public exception {};

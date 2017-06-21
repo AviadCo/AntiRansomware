@@ -22,8 +22,8 @@ class func : public FunctionCalledHandlerWrapper {
 };
 
 class startHandle : public ProcessStartEventWrapper {
-	virtual void notifyStartEvent(unsigned int pid, unsigned int parentId) {
-		std::wcout << pid << " , " << parentId  << std::endl << std::flush;
+	virtual void notifyStartEvent(unsigned int pid, LPUWSTR processName, unsigned int parentId) {
+		std::wcout << pid << " " << processName << " , " << parentId << std::endl << std::flush;
 	}
 };
 
@@ -40,15 +40,15 @@ int main()
 	int pid;
 	std::cin >> pid;
 
-	//ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(new startHandle());
-	//ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination( new stopHandle());
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(new startHandle());
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination( new stopHandle());
+	//ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::initialize();
+	//ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject(pid, new func());
 
 	std::cout << "hi";
 	std::cin >> c;
-	//ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
-	//ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
+	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
     return 0;
 }
 

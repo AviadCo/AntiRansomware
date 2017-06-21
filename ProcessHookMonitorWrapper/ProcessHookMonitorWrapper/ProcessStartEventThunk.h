@@ -7,5 +7,5 @@ ref class ProcessStartEventThunk
 public:
 	ProcessStartEventThunk(ProcessStartEventWrapper* handler);
 
-	void notify(unsigned int pid, unsigned int parentId);
+	void notify(unsigned int pid, System::String^ functionName, unsigned int parentId);
 };

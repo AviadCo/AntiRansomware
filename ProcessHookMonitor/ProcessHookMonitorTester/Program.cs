@@ -35,9 +35,9 @@ namespace ProcessHookMonitorTester
             Console.WriteLine("stop pid: " + pid);
         }
 
-        static void reportToConsole(uint pid, uint ppid)
+        static void reportToConsole(uint pid, string name, uint ppid)
         {
-            Console.WriteLine("start pid: " +pid + " ppid: " + ppid);
+            Console.WriteLine("start pid: " + pid + " name: " + name + " ppid: " + ppid);
         }
 
         static void reportToConsole(int pid, string name)

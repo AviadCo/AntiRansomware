@@ -213,8 +213,13 @@ void ProcessesMonitor::updateOccured()
 	updateOccuered = true;
 }
 
-void ProcessesMonitor::notifyStartEvent(unsigned int pid, unsigned int parentId)
+void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, unsigned int parentId)
 {
 	updateOccured();
 	//addNewProcess(pid);
+}
+
+void ProcessesMonitor::notifyStopEvent(unsigned int pid)
+{
+	updateOccured();
 }
