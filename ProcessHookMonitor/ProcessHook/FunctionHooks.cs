@@ -225,30 +225,31 @@ namespace ProcessHook
             out uint lpNumberOfBytesRead,
             IntPtr lpOverlapped)
         {
-            bool result = false;
-            string typeAfter = "";
+            //string typeAfter = "";
+            bool result = ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, out lpNumberOfBytesRead, lpOverlapped);
 
             try
             {
-
+                //reportEvent(ReadFileStr, "fileptr: " + hFile);
                 //// Retrieve filename from the file handle
                 StringBuilder filename = new StringBuilder(255);
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
-                filename = filename.Replace("\\\\?\\", "");
-                if (!filename.ToString().Equals(""))
-                {
-                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
-                }
+                //filename = filename.Replace("\\\\?\\", "");
+                //if (!filename.ToString().Equals(""))
+                //{
+                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                //}
 
-                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() +  ReadFileStr, filename.ToString(), typeAfter);
-                
+                reportEvent(ReadFileStr, filename.ToString());
+
             }
-            catch
+            catch (Exception e)
             {
+                reportEvent(ReadFileStr, "exception! " + e.ToString());
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
-            
-            return ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, out lpNumberOfBytesRead, lpOverlapped);
+      
+            return result;
         }
 
 
@@ -285,24 +286,25 @@ namespace ProcessHook
         out uint lpNumberOfBytesWritten,
         IntPtr lpOverlapped)
         {
-            string hashBeforeFile = "", hashAfterFile = "";
-            string typeBefore = "", typeAfter = "";
+            //string hashBeforeFile = "", hashAfterFile = "";
+            //string typeBefore = "", typeAfter = "";
             StringBuilder filename = new StringBuilder(255);
-            int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            //int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
 
             try
             {
                 // Retrieve filename from the file handle
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
                 filename = filename.Replace("\\\\?\\", "");
-                if (!filename.ToString().Equals(""))
-                {
-                    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
-                    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
-                }
+                //if (!filename.ToString().Equals(""))
+                //{
+                //    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
+                //    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
+                //}
             }
             catch (Exception e)
             {
+                reportEvent(WriteFileStr, "exception1! " + e.ToString());
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
 
@@ -313,26 +315,27 @@ namespace ProcessHook
 
             try
             {
-                string hashDiffrence = "-1";
-                string typeDiffrence = "-1";
+                //string hashDiffrence = "-1";
+                //string typeDiffrence = "-1";
 
-                if (!filename.ToString().Equals(""))
-                {
-                    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
-                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
-                    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
-                    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
+                //if (!filename.ToString().Equals(""))
+                //{
+                //    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
+                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                //    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
+                //    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
 
-                    //deletes temp files
-                    DeleteFileW(hashBeforeFile);
-                    DeleteFileW(hashAfterFile);
-                }
+                //    //deletes temp files
+                //    DeleteFileW(hashBeforeFile);
+                //    DeleteFileW(hashAfterFile);
+                //}
 
                 
-                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() + WriteFileStr, filename.ToString(), typeDiffrence, hashDiffrence, typeAfter);
+                reportEvent(WriteFileStr, filename.ToString()/*, typeDiffrence, hashDiffrence, typeAfter*/);
             }
             catch (Exception e)
             {
+                reportEvent(WriteFileStr, "exception2! " + e.ToString());
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
 
@@ -574,7 +577,7 @@ namespace ProcessHook
 
             try
             {
-                reportEvent(EasyHook.RemoteHooking.GetCurrentThreadId().ToString() + CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
+                reportEvent(CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
                     lpApplicationName, lpCommandLine);
             }
             catch

@@ -37,10 +37,16 @@ namespace ProcessHook
 
             //Start the process
             pProcess.Start();
+            string strOutput = "";
+            try
+            {
+                //Get program output
+                strOutput = pProcess.StandardOutput.ReadToEnd();
+            } catch
+            {
+                
+            }
             
-            //Get program output
-            string strOutput = pProcess.StandardOutput.ReadToEnd();
-
             //Wait for process to finish
             pProcess.WaitForExit();
 

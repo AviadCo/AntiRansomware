@@ -17,9 +17,9 @@ namespace FunctionHooksDefinitions {
 
 		typedef enum args {
 			FILEPATH,		//char* 
-			IS_TYPE_SAME,	//int (1-true, 0-flase)
+			/*IS_TYPE_SAME,	//int (1-true, 0-flase)
 			SIMILARITY,		//int (between 0-100, where 100 is same)
-			FILE_TYPE,		//char*
+			FILE_TYPE,		//char* */
 		} args;
 	}
 
@@ -28,7 +28,7 @@ namespace FunctionHooksDefinitions {
 
 		typedef enum args {
 			FILEPATH,		//char* 
-			FILE_TYPE,		//char*
+			/*FILE_TYPE,		//char* */
 		} args;
 	}
 

@@ -155,6 +155,36 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		history.counterDeleteFileW++;
 	}
+	else if (!wcscmp(functionName.c_str(), HookReadFile::name)) {
+
+
+		std::vector<std::wstring> params = StringFunctions::splitParam(param); 
+
+		if (params.empty() || params[FunctionHooksDefinitions::HookReadFile::FILEPATH].compare(L"") == 0) {
+			return;
+		}
+
+		double entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookReadFile::FILEPATH]);
+
+		log().debug(__FUNCTION__, wstring(HookReadFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" on file: " + params[FunctionHooksDefinitions::HookReadFile::FILEPATH]
+			/*+ L" file type: " + params[FunctionHooksDefinitions::HookReadFile::FILE_TYPE]*/
+			+ L" entropy: " + std::to_wstring(entropy));
+
+		if (FileSystemHelper::isTempOrAppData(param)) {
+			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
+
+			return;
+		}
+
+		//history.counterWriteFile++;
+		//if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0") == 0) {
+		//	history.counterFileTypeChanged++;
+		//}
+		//if (entropy != -1) {
+		//	history.entropyOfWrite += entropy;
+		//}
+	}
 	else if (!wcscmp(functionName.c_str(), HookWriteFile::name)) {
 		processOperation = ProcessPolicy::FILE_CHNAGE_CONTENT;
 
@@ -168,9 +198,10 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
-			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
+			/*+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
 			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]
-			+ L" antropy: " + std::to_wstring(entropy));
+			+ L" file type: " + params[FunctionHooksDefinitions::HookWriteFile::FILE_TYPE]*/
+			+ L" entropy: " + std::to_wstring(entropy));
 
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
@@ -179,9 +210,9 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		}
 
 		history.counterWriteFile++;
-		if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0") == 0) {
+		/*if (params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME].compare(L"0") == 0) {
 			history.counterFileTypeChanged++;
-		}
+		}*/
 		if (entropy != -1) {
 			history.entropyOfWrite += entropy;
 		}
@@ -205,7 +236,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		history.counterCryptEncryptCounter++;
 	}
 	else if (!wcscmp(functionName.c_str(), HookCreateFileW::name)) {
-
+		
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
 
 		log().debug(__FUNCTION__, wstring(HookCreateFileW::name) + L" was called from pid " + std::to_wstring(getProcessID())
@@ -325,5 +356,8 @@ unsigned int ProcessAnalyzer::getCurrentScore() const
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)
 {
+	if (!wcscmp(functionName, HookCreateRemoteThreadEx::name)) {
+		return;
+	}
 	parseHookNotification(functionName, param);
 }
