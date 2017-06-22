@@ -6,6 +6,7 @@
 #include <Tlhelp32.h>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "ProcessAnalyzer.h"
 #include "ProcessesMonitor.h"
@@ -351,7 +352,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 	if (updateScore(history) && !alreadyNotified) {
 		//TODO uncomment this command
 		alreadyNotified = true;
-		processesMonitor->alert(getProcessID(), functionName);
+
+		std::thread t1(&(ProcessesMonitor::alert), processesMonitor, getProcessID(), functionName);
 	}
 }
 
