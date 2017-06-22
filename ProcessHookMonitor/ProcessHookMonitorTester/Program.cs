@@ -85,7 +85,7 @@ namespace ProcessHookMonitorTester
             //Console.WriteLine("#######################################################hello " + count);
 
             Process[] localByName = Process.GetProcessesByName("Dumsomware");
-            int pid = 11152;// localByName.ElementAt(0).Id;
+            int pid = 18868;// localByName.ElementAt(0).Id;
 
             ProcessHookMonitor.ProcessHookMonitor.inject(pid,
                 new FunctionCalledHandler(reportToConsole));

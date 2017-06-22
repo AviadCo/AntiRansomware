@@ -43,7 +43,7 @@ std::vector<std::wstring> StringFunctions::split(const std::wstring &sourceStr,
 
 std::vector<std::wstring> StringFunctions::splitParam(const std::wstring &sourceStr)
 {
-	return split(sourceStr, std::wstring(L"|/|/|"), true);
+	return split(sourceStr, std::wstring(L"|/|/|"), false);
 }
 
 double Antropy::calcAntropy(const std::wstring & filepath)
@@ -85,6 +85,6 @@ double Antropy::calcAntropy(const std::wstring & filepath)
 		return entropy;
 	}
 	else {
-		return -1.0;
+		return -result;
 	}
 }

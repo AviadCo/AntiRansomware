@@ -17,6 +17,7 @@ namespace ProcessHook
         public const string ReadFileStr = "ReadFile";
         public const string DeleteFileWStr = "DeleteFileW";
         public const string MoveFileWStr = "MoveFileW";
+        public const string MoveFileExWStr = "MoveFileExW";
         public const string CryptEncryptStr = "CryptEncrypt";
         public const string ShellExecuteExWStr = "ShellExecuteExW";
         public const string WriteProcessMemoryStr = "WriteProcessMemory";
@@ -60,6 +61,16 @@ namespace ProcessHook
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern uint GetFinalPathNameByHandle(IntPtr hFile, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszFilePath, uint cchFilePath, uint dwFlags);
 
+        [Flags]
+        public enum MoveFileFlags
+        {
+            MOVEFILE_REPLACE_EXISTING = 0x00000001,
+            MOVEFILE_COPY_ALLOWED = 0x00000002,
+            MOVEFILE_DELAY_UNTIL_REBOOT = 0x00000004,
+            MOVEFILE_WRITE_THROUGH = 0x00000008,
+            MOVEFILE_CREATE_HARDLINK = 0x00000010,
+            MOVEFILE_FAIL_IF_NOT_TRACKABLE = 0x00000020
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct SHELLEXECUTEINFO
@@ -107,6 +118,12 @@ namespace ProcessHook
             public int dwThreadId;
         }
 
+
+        /****************************************
+         * 
+         *          API     HOOKS
+         * 
+         * *************************************/
 
 
         /****************************************
@@ -225,22 +242,26 @@ namespace ProcessHook
             out uint lpNumberOfBytesRead,
             IntPtr lpOverlapped)
         {
-            //string typeAfter = "";
+            string typeAfter = "-1";
             bool result = ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, out lpNumberOfBytesRead, lpOverlapped);
-
+            double entropy = -1;
             try
             {
-                //reportEvent(ReadFileStr, "fileptr: " + hFile);
+                //get entropy of buffer
+                byte[] buffer = new byte[lpNumberOfBytesRead];
+                Marshal.Copy(lpBuffer, buffer, 0, (int)lpNumberOfBytesRead);
+                entropy = DataEntropy.GetEntropyOfStream(buffer, (int)lpNumberOfBytesRead);
+
                 //// Retrieve filename from the file handle
                 StringBuilder filename = new StringBuilder(255);
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
-                //filename = filename.Replace("\\\\?\\", "");
-                //if (!filename.ToString().Equals(""))
-                //{
-                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
-                //}
+                filename = filename.Replace("\\\\?\\", "");
+                if (!filename.ToString().Equals(""))
+                {
+                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                }
 
-                reportEvent(ReadFileStr, filename.ToString());
+                reportEvent(ReadFileStr, filename.ToString(), typeAfter, entropy + "", lpNumberOfBytesRead + "");
 
             }
             catch (Exception e)
@@ -287,20 +308,27 @@ namespace ProcessHook
         IntPtr lpOverlapped)
         {
             //string hashBeforeFile = "", hashAfterFile = "";
-            //string typeBefore = "", typeAfter = "";
+            string typeBefore = "", typeAfter = "";
             StringBuilder filename = new StringBuilder(255);
             //int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            double entropy = -1;
 
             try
             {
+                //get entropy of buffer
+                byte[] buffer = new byte[nNumberOfBytesToWrite];
+                Marshal.Copy(lpBuffer, buffer, 0, (int)nNumberOfBytesToWrite);
+                entropy = DataEntropy.GetEntropyOfStream(buffer, (int)nNumberOfBytesToWrite);
+
+
                 // Retrieve filename from the file handle
                 GetFinalPathNameByHandle(hFile, filename, 255, 0);
                 filename = filename.Replace("\\\\?\\", "");
-                //if (!filename.ToString().Equals(""))
-                //{
-                //    hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
-                //    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
-                //}
+                if (!filename.ToString().Equals(""))
+                {
+                    //hashBeforeFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "b");
+                    typeBefore = StreamAnalyzer.getFileType(filename.ToString());
+                }
             }
             catch (Exception e)
             {
@@ -316,22 +344,23 @@ namespace ProcessHook
             try
             {
                 //string hashDiffrence = "-1";
-                //string typeDiffrence = "-1";
+                string typeDiffrence = "-1";
 
-                //if (!filename.ToString().Equals(""))
-                //{
-                //    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
-                //    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                if (!filename.ToString().Equals(""))
+                {
+                    //    hashAfterFile = StreamAnalyzer.createHashToFile(filename.ToString(), "_" + currentPid + "a");
+                    typeAfter = StreamAnalyzer.getFileType(filename.ToString());
+                    
                 //    hashDiffrence = StreamAnalyzer.compareHashes(hashBeforeFile, hashAfterFile);
-                //    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
+                    typeDiffrence = typeBefore.Equals(typeAfter) ? "1" : "0";
 
                 //    //deletes temp files
-                //    DeleteFileW(hashBeforeFile);
+                //DeleteFileW("-----");
                 //    DeleteFileW(hashAfterFile);
-                //}
+                }
 
-                
-                reportEvent(WriteFileStr, filename.ToString()/*, typeDiffrence, hashDiffrence, typeAfter*/);
+
+                reportEvent(WriteFileStr, filename.ToString(), typeAfter, typeDiffrence, entropy + "" , nNumberOfBytesToWrite + "");
             }
             catch (Exception e)
             {
@@ -392,6 +421,7 @@ namespace ProcessHook
         public static bool MoveFileW_Hook(string lpExistingFileName,
            string lpNewFileName)
         {
+            
             try
             {
                 reportEvent(MoveFileWStr, lpExistingFileName, lpNewFileName);
@@ -404,6 +434,42 @@ namespace ProcessHook
             return MoveFileW(lpExistingFileName, lpNewFileName);
         }
 
+        /****************************************
+         * hook for: MoveFileExW
+         ***************************************/
+        // delegate of 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool MoveFileExW_Delegate(
+            string lpExistingFileName,
+            string lpNewFileName,
+            MoveFileFlags dwFlags);
+
+        // import of original api
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool MoveFileExW(
+            string lpExistingFileName, 
+            string lpNewFileName,
+            MoveFileFlags dwFlags);
+
+        // hook function
+        public static bool MoveFileExW_Hook(
+            string lpExistingFileName,
+            string lpNewFileName,
+            MoveFileFlags dwFlags)
+        {
+            try
+            {
+                reportEvent(MoveFileExWStr, lpExistingFileName, lpNewFileName);
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return MoveFileW(lpExistingFileName, lpNewFileName);
+        }
 
 
         /****************************************

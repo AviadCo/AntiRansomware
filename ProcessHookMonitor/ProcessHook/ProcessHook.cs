@@ -21,7 +21,12 @@ namespace ProcessHook
 
         public static void disableThreadFromHook(string hookFunctionName, int threadID)
         {
-            hooksMap[hookFunctionName].ThreadACL.SetExclusiveACL(new Int32[] { mainThreadId, threadID });
+            if (hooksMap.ContainsKey(hookFunctionName))
+            {
+                reportStatus("hook: " + hookFunctionName + " found, disable: " + threadID);
+                hooksMap[hookFunctionName].ThreadACL.SetExclusiveACL(new Int32[] { mainThreadId, threadID });
+            }
+            
         }
         public static void resetThreadHooking(string hookFunctionName)
         {
@@ -115,6 +120,26 @@ namespace ProcessHook
             {
                 reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
             }
+
+            try
+            {
+                // MoveFileEx https://msdn.microsoft.com/en-us/library/windows/desktop/aa365240(v=vs.85).aspx
+                var moveFileExHook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("kernel32.dll", FunctionHooks.MoveFileExWStr),
+                    new FunctionHooks.MoveFileExW_Delegate(FunctionHooks.MoveFileExW_Hook),
+                    this);
+                resHooks.Add(moveFileExHook);
+                hooksMap.Add(FunctionHooks.MoveFileExWStr, moveFileExHook);
+            }
+            catch (System.MissingMethodException)
+            {
+                reportStatus(ERROR_CANT_FIND_HOOK + FunctionHooks.MoveFileWStr);
+            }
+            catch (System.DllNotFoundException)
+            {
+                reportStatus(ERROR_CANT_FIND_DLL + "kernel32.dll");
+            }
+
             /*
             try
             {
@@ -285,6 +310,8 @@ namespace ProcessHook
             string channelName)
         {
             int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
+            mainThreadId = currentPid;
+
             List<EasyHook.LocalHook> hooks;
 
             // Injection is now complete and the server interface is connected
