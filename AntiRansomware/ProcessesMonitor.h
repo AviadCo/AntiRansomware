@@ -18,6 +18,8 @@ private:
 	const HoneypotsManager *honeypotsManager;
 	map<unsigned int, ProcessAnalyzer *> processAnalyzers;
 	bool updateOccuered;
+	int startCounter;
+	int stopCounter;
 
 	void initProcessAnalyzers();
 	void toggleProcess(DWORD pid, int on);

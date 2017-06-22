@@ -81,6 +81,8 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 	initProcessAnalyzers();
 	
 	updateOccuered = true;
+	startCounter = 0;
+	stopCounter = 0;
 }
 
 //TODO remove this function after debug
@@ -94,6 +96,8 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, un
 	processAnalyzers = map<unsigned int, ProcessAnalyzer *>();
 
 	updateOccuered = true;
+	startCounter = 0;
+	stopCounter = 0;
 
 	try {
 		processAnalyzers[pid] = new ProcessAnalyzer(pid, this, honeypotsManager);
@@ -215,11 +219,31 @@ void ProcessesMonitor::updateOccured()
 
 void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, unsigned int parentId)
 {
+	++startCounter;
+
+	if (wcscmp(processName, L"EasyHook64Svc.exe") == 0) {
+		return;
+	}
+
+	try {
+		addNewProcess(pid);
+	}
+	catch (ProcessAnalyzerException& e) {
+		return;
+	}
+
 	updateOccured();
-	//addNewProcess(pid);
 }
 
+//TODO check why notifyStopEvent never called
 void ProcessesMonitor::notifyStopEvent(unsigned int pid)
 {
+	++stopCounter;
+
+	if (processAnalyzers.find(pid) != processAnalyzers.end()) {
+		delete processAnalyzers.at(pid);
+		processAnalyzers.erase(pid);
+	}
+
 	updateOccured();
 }

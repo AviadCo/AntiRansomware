@@ -58,7 +58,7 @@ MSG msg;
 
 /* init ProcessesMonitor */
 //TODO remove pid after debug
-unsigned int pid = 18632;
+unsigned int pid = 8896;
 HoneypotsManager honeypotsManager;
 //TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
@@ -70,76 +70,6 @@ HINSTANCE hInst;			// main function handler
 /* Setting colors of the list */
 LRESULT ProcessCustomDraw(LPARAM lParam)
 {
-	LPNMLVCUSTOMDRAW lplvcd = (LPNMLVCUSTOMDRAW)lParam;
-
-	switch (lplvcd->nmcd.dwDrawStage)
-	{
-	case CDDS_PREPAINT: //Before the paint cycle begins
-						//request notifications for individual listview items
-		return CDRF_NOTIFYITEMDRAW;
-
-	case CDDS_ITEMPREPAINT: //Before an item is drawn
-	{
-		return CDRF_NOTIFYSUBITEMDRAW;
-	}
-	break;
-
-	case CDDS_SUBITEM | CDDS_ITEMPREPAINT: //Before a subitem is drawn
-	{
-		switch (lplvcd->iSubItem)
-		{
-		case 0:
-		{
-			lplvcd->clrText = RGB(255, 255, 255);
-			lplvcd->clrTextBk = RGB(240, 55, 23);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		case 1:
-		{
-			lplvcd->clrText = RGB(255, 255, 0);
-			lplvcd->clrTextBk = RGB(0, 0, 0);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		case 2:
-		{
-			lplvcd->clrText = RGB(20, 26, 158);
-			lplvcd->clrTextBk = RGB(200, 200, 10);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		case 3:
-		{
-			lplvcd->clrText = RGB(12, 15, 46);
-			lplvcd->clrTextBk = RGB(200, 200, 200);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		case 4:
-		{
-			lplvcd->clrText = RGB(120, 0, 128);
-			lplvcd->clrTextBk = RGB(20, 200, 200);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		case 5:
-		{
-			lplvcd->clrText = RGB(255, 255, 255);
-			lplvcd->clrTextBk = RGB(0, 0, 150);
-			return CDRF_NEWFONT;
-		}
-		break;
-
-		}
-
-	}
-	}
 	return CDRF_DODEFAULT;
 }
 
@@ -149,11 +79,13 @@ static void refreshList()
 	wchar_t Temp[255] = { 0 };
 	unsigned int i = 0;
 
+	ListView_DeleteAllItems(hList);
+
 	for (auto const processAnalyzer : processesMonitor.getAllProcessesAnalyzers()) {
 
 		LvItem.iItem = i;
+		LvItem.iSubItem = 0;
 		SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM)&LvItem);
-		//TODO change this to get all process information
 
 		LvItem.iSubItem = PROCESS_ID;
 		swprintf(Temp, 255, L"%d", processAnalyzer.first);

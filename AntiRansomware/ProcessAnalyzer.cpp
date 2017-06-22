@@ -192,17 +192,27 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		std::vector<std::wstring> params = StringFunctions::splitParam(param);
 
 		double entropy = -1;
-		//if (params[FunctionHooksDefinitions::HookWriteFile::FILEPATH].compare(L"") != 0) {
-		//	entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
-		//}
-
-
 		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
 			+ L" On file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
 			+ L" Is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
 			+ L" File type: " + params[FunctionHooksDefinitions::HookWriteFile::FILE_TYPE]
 			+ L" Entropy: " + params[FunctionHooksDefinitions::HookWriteFile::ENTROPY]
 			+ L" Entropy group size: " + params[FunctionHooksDefinitions::HookWriteFile::ENTROPY_SIZE]);
+
+		//TODO Noam - we get vector out of range here - fix this!
+		/*
+		if (params[FunctionHooksDefinitions::HookWriteFile::FILEPATH].compare(L"") != 0) {
+			entropy = Antropy::calcAntropy(params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]);
+		}
+		*/
+		/*
+		log().debug(__FUNCTION__, wstring(HookWriteFile::name) + L" was called from pid " + std::to_wstring(getProcessID())
+			+ L" on file: " + params[FunctionHooksDefinitions::HookWriteFile::FILEPATH]
+			+ L" is same type: " + params[FunctionHooksDefinitions::HookWriteFile::IS_TYPE_SAME]
+			+ L" similarity: " + params[FunctionHooksDefinitions::HookWriteFile::SIMILARITY]
+			+ L" file type: " + params[FunctionHooksDefinitions::HookWriteFile::FILE_TYPE]
+			+ L" entropy: " + std::to_wstring(entropy));
+			*/
 
 		if (FileSystemHelper::isTempOrAppData(param)) {
 			log().debug(__FUNCTION__, param + L" file is a temp or app data file, ignoring access");
