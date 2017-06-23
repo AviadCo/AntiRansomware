@@ -196,11 +196,16 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	break;
 
 	case WM_TIMER:
+
+		if (processesMonitor.isUpdateOccured()) {
+			refreshList();
+		}
+
 		switch (wParam)
 		{
 		case IDT_TIMER:
 			/* checking process liveness */
-			processesMonitor.checkProcessesLiveness();
+			//processesMonitor.checkProcessesLiveness();
 
 			return 0;
 		}
@@ -209,6 +214,8 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	//================================================//
 	case WM_INITDIALOG:
 	{
+		SetTimer(hWnd, IDT_TIMER, 5000, (TIMERPROC)NULL);
+
 		int i;
 		wchar_t Temp[255];
 		LVBKIMAGE plvbki = { 0 };
@@ -258,9 +265,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 
 		while (TRUE)
 		{
-			if (processesMonitor.isUpdateOccured()) {
-				refreshList();
-			}
 
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
@@ -341,7 +345,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	hInst = hInstance;
 
 	//TODO fix timer
-	//SetTimer(hList, IDT_TIMER, 6000, (TIMERPROC)NULL);
+	
 
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG), NULL, (DLGPROC)DialogProc, 0);
 

@@ -40,13 +40,7 @@ void ProcessesMonitor::initProcessAnalyzers()
 		}
 
 		try {
-
-			std::thread first([i, &pProcessIDs, this]()-> void
-			{
-				this->processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
-			});
-			first.detach();
-			//processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
+			processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
 		}
 		catch (ProcessAnalyzerException e) {
 			log().error(__FUNCTION__, L"Failed to init events notifier");
@@ -222,15 +216,18 @@ bool ProcessesMonitor::isUpdateOccured()
 
 void ProcessesMonitor::updateOccured()
 {
-	static int refreshRate = 0;
 
-	if (refreshRate % 1000) {
+	updateOccuered = true;
+
+	/*static int refreshRate = 0;
+
+	if (refreshRate % 1000000) {
 		updateOccuered = true;
 		refreshRate = 0;
 	}
 	else {
 		refreshRate++;
-	}
+	}*/
 	
 }
 

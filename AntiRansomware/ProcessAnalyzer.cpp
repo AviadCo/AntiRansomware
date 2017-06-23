@@ -23,7 +23,12 @@ using namespace FunctionHooksDefinitions;
 
 void ProcessAnalyzer::setHooks(DWORD proccessID)
 {
-	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int) proccessID, this);
+	std::thread first([proccessID, this]()-> void
+	{
+		ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int)proccessID, this);
+	});
+	first.detach();
+	
 }
 
 DWORD ProcessAnalyzer::GetParentProcessID(DWORD dwProcessID)
@@ -333,6 +338,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 wstring ProcessAnalyzer::getProcessName() const
 {
+	
 	return processName;
 }
 
