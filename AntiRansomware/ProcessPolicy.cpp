@@ -10,7 +10,7 @@
 const wstring ProcessPolicy::FILE_TYPE_EMPTY = L"empty";
 const wstring ProcessPolicy::FILE_TYPE_DATA = L"data";
 
-const double ProcessPolicy::TIME_DURATION_RATIO = 5;
+const double ProcessPolicy::TIME_DURATION_RATIO = 1;
 
 unsigned int ProcessPolicy::getScoreForOperation(ProcessEvent::ProcessOperationTag operation)
 {

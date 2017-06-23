@@ -25,7 +25,12 @@ void ProcessAnalyzer::setHooks(DWORD proccessID)
 {
 	std::thread first([proccessID, this]()-> void
 	{
-		ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int)proccessID, this);
+		try {
+			ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int)proccessID, this);
+		}
+		catch (exception& e){
+
+		}
 	});
 	first.detach();
 	
@@ -338,8 +343,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 wstring ProcessAnalyzer::getProcessName() const
 {
-	
-	return processName;
+	return L"";
+	//return processName;
 }
 
 unsigned int ProcessAnalyzer::getCurrentScore() const
