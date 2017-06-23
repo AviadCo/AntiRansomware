@@ -26,7 +26,6 @@ class ProcessesMonitor;
 /* This represent an analyzer for one process in the system */
 class ProcessAnalyzer : public FunctionCalledHandlerWrapper
 {
-	const uint64_t SCORE_THRESHOLD = 150;
 private:
 	ProcessesMonitor *processesMonitor;
 	const HoneypotsManager *honeypotsManager;
@@ -48,7 +47,7 @@ public:
 	DWORD getParentID();
 	bool isProcessStillActive() const;
 	bool checkIfAlert() const;
-	bool updateScore(ProcessHistory history);
+	bool updateScore(ProcessEvent& action);
 	void parseHookNotification(const wstring& functionName, const wstring& param);
 	wstring getProcessName() const;
 	unsigned int getCurrentScore() const;

@@ -40,6 +40,18 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessEvent.cpp">
+      <Filter>Sources\events</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessFileIOEvent.cpp">
+      <Filter>Sources\events</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessFileOpEvent.cpp">
+      <Filter>Sources\events</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessIntEvent.cpp">
+      <Filter>Sources\events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventTypes.h">
@@ -86,6 +98,18 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Heaeders</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessIntEvent.h">
+      <Filter>Heaeders\events</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessEvent.h">
+      <Filter>Heaeders\events</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessFileIOEvent.h">
+      <Filter>Heaeders\events</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessFileOpEvent.h">
+      <Filter>Heaeders\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +195,12 @@
     </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{151ac5e7-d72f-40f2-92f3-d902a8e63550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\events">
+      <UniqueIdentifier>{2437fe81-baf4-4465-8edb-1519b9e90c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Heaeders\events">
+      <UniqueIdentifier>{baf9a247-3f11-48d4-8759-c5c985a672f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

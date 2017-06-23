@@ -156,10 +156,10 @@ void ProcessesMonitor::endProcess(int pid)
 	CloseHandle(processHandle);
 }
 
-void ProcessesMonitor::updateProcessScore(int pid, ProcessHistory history)
+void ProcessesMonitor::updateProcessScore(int pid, ProcessEvent& action)
 {
 	if (processAnalyzers.at(pid) != NULL) {
-		processAnalyzers.at(pid)->updateScore(history);
+		processAnalyzers.at(pid)->updateScore(action);
 
 		updateOccured();
 	}

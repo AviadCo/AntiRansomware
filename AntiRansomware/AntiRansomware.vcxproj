@@ -161,7 +161,11 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ProcessAnalyzer.h" />
     <ClInclude Include="ProcessesMonitor.h" />
+    <ClInclude Include="ProcessEvent.h" />
+    <ClInclude Include="ProcessFileIOEvent.h" />
+    <ClInclude Include="ProcessFileOpEvent.h" />
     <ClInclude Include="ProcessHistory.h" />
+    <ClInclude Include="ProcessIntEvent.h" />
     <ClInclude Include="ProcessPolicy.h" />
     <ClInclude Include="RegistryIO.h" />
     <ClInclude Include="resource\resource.h" />
@@ -178,7 +182,11 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ProcessAnalyzer.cpp" />
     <ClCompile Include="ProcessesMonitor.cpp" />
+    <ClCompile Include="ProcessEvent.cpp" />
+    <ClCompile Include="ProcessFileIOEvent.cpp" />
+    <ClCompile Include="ProcessFileOpEvent.cpp" />
     <ClCompile Include="ProcessHistory.cpp" />
+    <ClCompile Include="ProcessIntEvent.cpp" />
     <ClCompile Include="ProcessPolicy.cpp" />
     <ClCompile Include="RegistryIO.cpp" />
     <ClCompile Include="stdafx.cpp">

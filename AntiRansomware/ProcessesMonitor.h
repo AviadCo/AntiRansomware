@@ -32,7 +32,7 @@ public:
 	void suspendProcess(int pid);
 	void resumeProcess(int pid);
 	void endProcess(int pid);
-	void updateProcessScore(int pid, ProcessHistory processOperation);
+	void updateProcessScore(int pid, ProcessEvent& action);
 	void alert(int pid, const wstring& functionName);
 	map<unsigned int, ProcessAnalyzer *> getAllProcessesAnalyzers();
 	~ProcessesMonitor();
