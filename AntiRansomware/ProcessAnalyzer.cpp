@@ -354,5 +354,11 @@ unsigned int ProcessAnalyzer::getCurrentScore() const
 
 void ProcessAnalyzer::report(int pid, LPUWSTR functionName, LPUWSTR param)
 {
-	parseHookNotification(functionName, param);
+	try {
+		parseHookNotification(functionName, param);
+	}
+	catch (exception& e) {
+		log().error(__FUNCTION__, L"Error occured while handling event. ");
+	}
+	
 }

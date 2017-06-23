@@ -245,6 +245,9 @@ void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, u
 	catch (ProcessAnalyzerException& e) {
 		return;
 	}
+	catch (exception& e) {
+		return;
+	}
 
 	updateOccured();
 }
@@ -252,11 +255,17 @@ void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, u
 //TODO check why notifyStopEvent never called
 void ProcessesMonitor::notifyStopEvent(unsigned int pid)
 {
+	
 	++stopCounter;
 
-	if (processAnalyzers.find(pid) != processAnalyzers.end()) {
-		delete processAnalyzers.at(pid);
-		processAnalyzers.erase(pid);
+	try {
+		if (processAnalyzers.find(pid) != processAnalyzers.end()) {
+			delete processAnalyzers.at(pid);
+			processAnalyzers.erase(pid);
+		}
+	}
+	catch (exception& e) {
+		return;
 	}
 
 	updateOccured();
