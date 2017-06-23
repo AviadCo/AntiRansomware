@@ -167,7 +167,11 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(CreateFileWStr, filename);
+                if ((filename != null) || (filename.Length > 0))
+                {
+                    reportEvent(CreateFileWStr, filename);
+                }
+                
             }
             catch
             {
@@ -261,7 +265,11 @@ namespace ProcessHook
                     typeAfter = StreamAnalyzer.getFileType(filename.ToString());
                 }
 
-                reportEvent(ReadFileStr, filename.ToString(), typeAfter, entropy + "", lpNumberOfBytesRead + "");
+                if ((filename != null) || (filename.ToString().Length > 0))
+                {
+                    reportEvent(ReadFileStr, filename.ToString(), typeAfter, entropy + "", lpNumberOfBytesRead + "");
+                }
+                
 
             }
             catch (Exception e)
@@ -308,7 +316,7 @@ namespace ProcessHook
         IntPtr lpOverlapped)
         {
             //string hashBeforeFile = "", hashAfterFile = "";
-            string typeBefore = "", typeAfter = "";
+            string typeBefore = "-1", typeAfter = "-1";
             StringBuilder filename = new StringBuilder(255);
             //int currentPid = EasyHook.RemoteHooking.GetCurrentProcessId();
             double entropy = -1;
@@ -359,8 +367,11 @@ namespace ProcessHook
                 //    DeleteFileW(hashAfterFile);
                 }
 
-
-                reportEvent(WriteFileStr, filename.ToString(), typeAfter, typeDiffrence, entropy + "" , nNumberOfBytesToWrite + "");
+                if ((filename != null) || (filename.ToString().Length > 0))
+                {
+                    reportEvent(WriteFileStr, filename.ToString(), typeAfter, typeDiffrence, entropy + "", nNumberOfBytesToWrite + "");
+                }
+                
             }
             catch (Exception e)
             {
@@ -391,7 +402,11 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(DeleteFileWStr, filename);
+                if ((filename != null) || (filename.Length > 0))
+                {
+                    reportEvent(DeleteFileWStr, filename);
+                }
+                
             }
             catch
             {
@@ -424,7 +439,14 @@ namespace ProcessHook
             
             try
             {
-                reportEvent(MoveFileWStr, lpExistingFileName, lpNewFileName);
+                if ((lpExistingFileName != null) || (lpExistingFileName.Length > 0))
+                {
+                    if ((lpNewFileName != null) || (lpNewFileName.Length > 0))
+                    {
+                        reportEvent(MoveFileWStr, lpExistingFileName, lpNewFileName);
+                    }
+                }
+                
             }
             catch
             {
@@ -461,7 +483,14 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(MoveFileExWStr, lpExistingFileName, lpNewFileName);
+                if ((lpExistingFileName != null) || (lpExistingFileName.Length > 0))
+                {
+                    if ((lpNewFileName != null) || (lpNewFileName.Length > 0))
+                    {
+                        reportEvent(MoveFileExWStr, lpExistingFileName, lpNewFileName);
+                    }
+                }
+                
             }
             catch
             {
@@ -511,7 +540,8 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(CryptEncryptStr, "");
+                reportEvent(CryptEncryptStr, "-1");
+                
             }
             catch
             {
@@ -540,7 +570,19 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(ShellExecuteExWStr, lpExecInfo.lpFile, lpExecInfo.lpParameters);
+                string file = "-1";
+                string parameters = "-1";
+
+                if ((lpExecInfo.lpFile != null) || (lpExecInfo.lpFile.Length > 0))
+                {
+                    file = lpExecInfo.lpFile;
+                }
+                if ((lpExecInfo.lpParameters  != null) || (lpExecInfo.lpParameters.Length > 0))
+                {
+                    parameters = lpExecInfo.lpParameters;
+                }
+
+                reportEvent(ShellExecuteExWStr, file, parameters);
             }
             catch
             {
@@ -581,7 +623,9 @@ namespace ProcessHook
         {
             try
             {
-                reportEvent(WriteProcessMemoryStr, Convert.ToString(GetProcessId(hProcess)));
+                if (hProcess != IntPtr.Zero) {
+                    reportEvent(WriteProcessMemoryStr, Convert.ToString(GetProcessId(hProcess)));
+                }
             }
             catch
             {
@@ -643,8 +687,23 @@ namespace ProcessHook
 
             try
             {
-                reportEvent(CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
-                    lpApplicationName, lpCommandLine);
+                if (lpProcessInformation.hProcess != IntPtr.Zero)
+                {
+                    string applicationName = "-1";
+                    string commandLine = "-1";
+
+                    if ((lpApplicationName != null) || (lpApplicationName.Length > 0))
+                    {
+                        applicationName = lpApplicationName;
+                    }
+                    if ((lpCommandLine != null) || (lpCommandLine.Length > 0))
+                    {
+                        commandLine = lpCommandLine;
+                    }
+
+                    reportEvent(CreateProcessWStr, Convert.ToString(GetProcessId(lpProcessInformation.hProcess)),
+                        applicationName, commandLine);
+                }
             }
             catch
             {
@@ -693,7 +752,8 @@ namespace ProcessHook
 
             try
             {
-                reportEvent(CreateRemoteThreadStr, Convert.ToString(GetProcessId(hProcess)));
+                if (hProcess != IntPtr.Zero)
+                    reportEvent(CreateRemoteThreadStr, Convert.ToString(GetProcessId(hProcess)));
             }
             catch
             {
@@ -746,7 +806,8 @@ namespace ProcessHook
 
             try
             {
-                reportEvent(CreateRemoteThreadExStr, Convert.ToString(GetProcessId(hProcess)));
+                if (hProcess != IntPtr.Zero)
+                    reportEvent(CreateRemoteThreadExStr, Convert.ToString(GetProcessId(hProcess)));
             }
             catch
             {

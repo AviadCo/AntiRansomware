@@ -7,6 +7,7 @@
 
 #include <psapi.h>
 #include <windows.h>
+#include <thread> 
 
 #define MAX_NUMBER_OF_PROCESSES 300
 
@@ -39,7 +40,13 @@ void ProcessesMonitor::initProcessAnalyzers()
 		}
 
 		try {
-			processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
+
+			std::thread first([i, &pProcessIDs, this]()-> void
+			{
+				this->processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
+			});
+			first.detach();
+			//processAnalyzers[pProcessIDs[i]] = new ProcessAnalyzer(pProcessIDs[i], this, honeypotsManager);
 		}
 		catch (ProcessAnalyzerException e) {
 			log().error(__FUNCTION__, L"Failed to init events notifier");
@@ -215,7 +222,16 @@ bool ProcessesMonitor::isUpdateOccured()
 
 void ProcessesMonitor::updateOccured()
 {
-	updateOccuered = true;
+	static int refreshRate = 0;
+
+	if (refreshRate % 1000) {
+		updateOccuered = true;
+		refreshRate = 0;
+	}
+	else {
+		refreshRate++;
+	}
+	
 }
 
 void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, unsigned int parentId)

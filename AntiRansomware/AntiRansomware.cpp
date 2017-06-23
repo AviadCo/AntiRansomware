@@ -58,10 +58,11 @@ MSG msg;
 
 /* init ProcessesMonitor */
 //TODO remove pid after debug
-unsigned int pid = 26592;
+unsigned int pid = 5300;
 HoneypotsManager honeypotsManager;
-//TODO use ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
-ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
+//TODO use 
+ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
+//ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
 
 /* Handles */
 HINSTANCE hInst;			// main function handler
@@ -340,7 +341,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	hInst = hInstance;
 
 	//TODO fix timer
-	SetTimer(hList, IDT_TIMER, 6000, (TIMERPROC)NULL);
+	//SetTimer(hList, IDT_TIMER, 6000, (TIMERPROC)NULL);
 
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG), NULL, (DLGPROC)DialogProc, 0);
 

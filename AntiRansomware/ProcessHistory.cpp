@@ -84,7 +84,7 @@ wstring ProcessHistory::toString() {
 		wstring(L"entropyOfRead: ")					+ std::to_wstring(this->entropyOfRead) + L"\n" +
 		wstring(L"entropyOfWrite: ")				+ std::to_wstring(this->entropyOfWrite) + L"\n" +	
 		wstring(L"entropy Delta: ")					+ std::to_wstring(this->entropyOfWrite - this->entropyOfRead) + L"\n" +
-		wstring(L"entropy Avg Delta: ")				+ std::to_wstring((this->entropyOfWrite / this->counterWriteFile) - (this->entropyOfRead / this->counterReadFile)) + L"\n" +
+		wstring(L"entropy Avg Delta: ")				+ std::to_wstring(entropyAvgDelta) + L"\n" +
 		wstring(L"entropy Sum Delta: ")				+ std::to_wstring(this->entropySumDelta) + L"\n" +
 		wstring(L"listTypesRead.size: ")			+ std::to_wstring(this->listTypesRead.size()) + L"\n" +
 		wstring(L"listTypesWrite.size: ")			+ std::to_wstring(this->listTypesWrite.size()) + L"\n" +
