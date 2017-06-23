@@ -325,6 +325,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 		alreadyNotified = true;
 
 		std::thread t1(&(ProcessesMonitor::alert), processesMonitor, getProcessID(), functionName);
+		t1.detach();
 	}
 
 	delete action;
