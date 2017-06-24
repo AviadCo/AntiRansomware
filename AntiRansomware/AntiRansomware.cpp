@@ -57,12 +57,8 @@ TCHAR tchar;
 MSG msg;
 
 /* init ProcessesMonitor */
-//TODO remove pid after debug
-unsigned int pid = 5300;
-HoneypotsManager honeypotsManager;
-//TODO use 
+HoneypotsManager honeypotsManager = HoneypotsManager(60);
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
-//ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager, pid);
 
 /* Handles */
 HINSTANCE hInst;			// main function handler
@@ -109,6 +105,10 @@ static void refreshList()
 		SendMessage(hList, LVM_SETITEM, PROCESS_IS_SUSPICOUS, (LPARAM)&LvItem);
 
 		++i;
+	}
+
+	if (processesMonitor.monitorHoneypots()) {
+		MessageBox(0, L"Alert - Honeypot Manager found suspicious act in one of the Honeypots", L"AntiRansomware - Suspicious Activity Detected", MB_OK);
 	}
 }
 
@@ -205,7 +205,7 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		{
 		case IDT_TIMER:
 			/* checking process liveness */
-			//processesMonitor.checkProcessesLiveness();
+			processesMonitor.checkProcessesLiveness();
 
 			return 0;
 		}
@@ -342,14 +342,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	InitCtrls.dwSize = sizeof(INITCOMMONCONTROLSEX);
 	BOOL bRet = InitCommonControlsEx(&InitCtrls);
 
-	hInst = hInstance;
-
-	//TODO fix timer
-	
+	hInst = hInstance;	
 
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG), NULL, (DLGPROC)DialogProc, 0);
 
-	KillTimer(hList, IDT_TIMER);
+	honeypotsManager.removeAllHoneypots();
 
 	return 0;
 }

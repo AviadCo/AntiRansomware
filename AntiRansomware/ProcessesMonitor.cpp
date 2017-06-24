@@ -252,7 +252,6 @@ void ProcessesMonitor::notifyStartEvent(unsigned int pid, LPUWSTR processName, u
 	updateOccured();
 }
 
-//TODO check why notifyStopEvent never called
 void ProcessesMonitor::notifyStopEvent(unsigned int pid)
 {
 	
@@ -269,4 +268,9 @@ void ProcessesMonitor::notifyStopEvent(unsigned int pid)
 	}
 
 	updateOccured();
+}
+
+bool ProcessesMonitor::monitorHoneypots()
+{
+	return honeypotsManager->monitorHoneypots();
 }

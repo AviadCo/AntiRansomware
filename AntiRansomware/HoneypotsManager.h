@@ -9,7 +9,7 @@
 using std::list;
 using std::exception;
 
-#define DEFAULT_HONEYPOTS_LIMIT 1
+#define DEFAULT_HONEYPOTS_LIMIT 60
 
 class HoneypotsManager
 {
@@ -17,7 +17,7 @@ private:
 	RegistryIO registryIO;
 	list<Honeypot> honeypots;
 	
-	void addHoneypot(Honeypot& honeypot);
+	void addHoneypot(Honeypot& honeypot, bool listMostAccessTime);
 	void removeOneHoneypot();
 	void addHoneypots(unsigned int num);
 	void removeHoneypots(unsigned int num);
@@ -27,7 +27,7 @@ private:
 public:
 	HoneypotsManager();
 	HoneypotsManager(unsigned int limit);
-	bool monitorHoneypots();
+	bool monitorHoneypots() const;
 	void removeAllHoneypots();
 	~HoneypotsManager();
 	bool isFileHoneypot(wstring filename);

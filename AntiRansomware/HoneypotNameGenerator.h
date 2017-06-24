@@ -9,8 +9,11 @@
 
 #include <vector>
 #include <list>
+#include <chrono>
+#include <random>
 
 #include "Logger.h"
+#include "FileSystemHelper.h"
 
 using std::list;
 using std::vector;
@@ -61,6 +64,13 @@ public:
 		return fileName.substr(extIndex + 1);
 	}
 
+	static wstring getFileDirectory(const wstring& fileName)
+	{
+		std::wstring::size_type extIndex = fileName.find_last_of(L"\\");
+		
+		return wstring(fileName.substr(0, extIndex));
+	}
+
 	static int getFilePriority(const wstring& fileName)
 	{
 		return getPriorityByExtenstion(getFileExtenstion(fileName));
@@ -68,9 +78,18 @@ public:
 
 	static wstring HoneypotNameGenerator::getRandomFileExtenstion()
 	{
-		srand(time(NULL));
+		const vector<wstring> FILE_EXTENSTIONS_TEMP = {
+			/* This list of extenstions was taken from
+			https://www.cise.ufl.edu/~traynor/papers/scaife-icdcs16.pdf
+			on page 310 */
+			L"pdf", L"odt", L"docx", L"pptx", L"txt", L"mov", L"zip",
+			L"md", L"opml", L"jpg", L"xls", L"csv",
+			L"doc", L"ppt", L"gif", L"png", L"xml", L"html", L"xlsx", L"mp3",
+		};
 
-		return FILE_EXTENSTIONS[rand() % (FILE_EXTENSTIONS.size() - 1)];
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::mt19937 generator(seed);
+		return FILE_EXTENSTIONS_TEMP[generator() % (FILE_EXTENSTIONS_TEMP.size() - 1)];
 	}
 
 	static wstring HoneypotNameGenerator::getFileExtenstion(unsigned int extension)
@@ -96,23 +115,24 @@ public:
 		static const wchar_t alphanum[] =
 			L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-		srand(time(NULL));
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::mt19937 generator(seed);
 		for (unsigned int i = 0; i < len; ++i) {
-			fileName += alphanum[rand() % (sizeof(alphanum) - 1)];
+			fileName += alphanum[generator() % (sizeof(alphanum) / sizeof(*alphanum) - 1)];
 		}
 
 		return fileName + L"." + fileExtenstion;
 	}
 
 	static wstring HoneypotNameGenerator::generateRandomFileName(wstring fileExtenstion) {
-		srand(time(NULL));
-
-		return generateRandomFileName(rand() % MAX_FILENAME_LENGTH + 1, fileExtenstion);
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::mt19937 generator(seed);
+		return generateRandomFileName(generator() % MAX_FILENAME_LENGTH + 1, fileExtenstion);
 	}
 
 	static wstring HoneypotNameGenerator::getDirectoryPath(REFKNOWNFOLDERID rdid)
 	{
-		PWSTR path = NULL;
+		PWSTR path = nullptr;
 		wstring pathStr = L"";
 
 		if (SUCCEEDED(SHGetKnownFolderPath(rdid, 0, NULL, &path))) {
@@ -176,11 +196,17 @@ public:
 	{
 		list<wstring> filesList = list<wstring>();
 
-		for (unsigned int i = 0; i < num_of_files; ++i) {
-			wstring newFileName = getRandomFullFileName(getRandomFolderID());
+		for (unsigned int i = 0; i < num_of_files / 2; ++i) {
+			REFKNOWNFOLDERID folderID = getRandomFolderID();
+			wstring directoryPath = getDirectoryPath(folderID);
+			wstring newFileName;
 
+			newFileName = getRandomFullFileName(folderID);
 			log().info(__FUNCTION__, L"New Honeypot name created: " + newFileName);
+			filesList.push_back(newFileName);
 
+			newFileName = getRandomFullFileName(folderID);
+			log().info(__FUNCTION__, L"New Honeypot name created: " + newFileName);
 			filesList.push_back(newFileName);
 		}
 

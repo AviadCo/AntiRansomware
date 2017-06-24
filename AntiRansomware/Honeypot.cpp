@@ -19,7 +19,7 @@ Honeypot::Honeypot(const wstring lpFileName) : lpFileName(lpFileName),
 						 priority(HoneypotNameGenerator::getFilePriority(lpFileName)){
 }
 
-const wstring Honeypot::getFileName() {
+const wstring Honeypot::getFileName() const {
 	return lpFileName;
 }
 
@@ -31,8 +31,10 @@ static wstring ExePath() {
 	return wstring(buffer).substr(0, pos);
 }
 
-DWORD Honeypot::create() {
-	wstring fileType;
+DWORD Honeypot::create(bool listAccessTime) {
+	wstring firstFile, lastFile, fileType;
+	wstring dirPath = HoneypotNameGenerator::getFileDirectory(lpFileName);
+	FILETIME accessTime, writeTime;
 
 	fileType = HoneypotNameGenerator::getFileExtenstion(lpFileName);
 	fileType = ExePath() + L"\\..\\fileTypes\\" + fileType + L"." + fileType;
@@ -43,11 +45,38 @@ DWORD Honeypot::create() {
 		return GetLastError();
 	}
 
+	FileSystemHelper::getFirstAndLastAccessTimeOrder(dirPath, firstFile, lastFile);
+	if (listAccessTime) {
+		accessTime = FileSystemHelper::getFileAttribute(dirPath + L"\\" + firstFile, FileSystemHelper::FILE_ACCESS_TIME_ATTRIBUTE);
+		accessTime.dwLowDateTime -= 5;
+		accessTime.dwHighDateTime -= 5;
+	}
+	else {
+		accessTime = FileSystemHelper::getFileAttribute(dirPath + L"\\" + lastFile, FileSystemHelper::FILE_ACCESS_TIME_ATTRIBUTE);
+		accessTime.dwLowDateTime += 5;
+		accessTime.dwHighDateTime += 5;
+	}
+
+	FileSystemHelper::getFirstAndLastFileWriteTimeOrder(dirPath, firstFile, lastFile);
+	if (listAccessTime) {
+		writeTime = FileSystemHelper::getFileAttribute(dirPath + L"\\" + firstFile, FileSystemHelper::FILE_WRITE_TIME_ATTRIBUTE);
+		writeTime.dwLowDateTime -= 5;
+		writeTime.dwHighDateTime -= 5;
+	}
+	else {
+		writeTime = FileSystemHelper::getFileAttribute(dirPath + L"\\" + lastFile, FileSystemHelper::FILE_WRITE_TIME_ATTRIBUTE);
+		writeTime.dwLowDateTime += 5;
+		writeTime.dwHighDateTime += 5;
+	}
+
+	FileSystemHelper::setFileAttribute(lpFileName, FileSystemHelper::getFileAttribute(lpFileName, FileSystemHelper::FILE_CREATION_TIME_ATTRIBUTE),
+									   accessTime, writeTime);
+
 	return 0;
 }
 
 #define TEMP_BUFFER_LENGTH 10000
-bool Honeypot::compareFile(FILE* f1, FILE* f2) {
+bool Honeypot::compareFile(FILE* f1, FILE* f2) const {
 	char buf1[TEMP_BUFFER_LENGTH];
 	char buf2[TEMP_BUFFER_LENGTH];
 
@@ -63,7 +92,7 @@ bool Honeypot::compareFile(FILE* f1, FILE* f2) {
 	return feof(f1) && feof(f2);
 }
 
-bool Honeypot::isChanged() {
+bool Honeypot::isChanged() const {
 	bool result;
 	errno_t err;
 	wstring fileType;

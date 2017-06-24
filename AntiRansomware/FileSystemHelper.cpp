@@ -253,8 +253,7 @@ FILETIME FileSystemHelper::getFileAttribute(const wstring & filename, int fileAt
 
 void FileSystemHelper::setFileAttribute(const wstring & filename, FILETIME creationTime, FILETIME accessTime, FILETIME writeTime)
 {
-	WIN32_FIND_DATA ffd;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
+	HANDLE hFile = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;
 
 	log().debug(__FUNCTION__, L"Getting file name in " + filename);
@@ -265,24 +264,30 @@ void FileSystemHelper::setFileAttribute(const wstring & filename, FILETIME creat
 		throw FileSystemHelperException();
 	}
 
-	hFind = FindFirstFile((filename).c_str(), &ffd);
+	hFile = CreateFile((filename).c_str(), // file to be opened
+		GENERIC_WRITE, // open for writing
+		FILE_SHARE_WRITE, // share for writing
+		NULL,
+		OPEN_ALWAYS,
+		0,
+		NULL);
 
-	if (INVALID_HANDLE_VALUE == hFind)
+	if (INVALID_HANDLE_VALUE == hFile)
 	{
 		log().error(__FUNCTION__, L"Failed to get file in " + filename + L"Error: " + to_wstring(GetLastError()));
 
 		throw FileSystemHelperException();
 	}
 
-	if (! SetFileTime(hFind, &creationTime, &accessTime, &writeTime)) {
+	if (SetFileTime(hFile, &creationTime, &accessTime, &writeTime) == 0) {
 		log().error(__FUNCTION__, L"Failed to set file attributes to " + filename + L"Error: " + to_wstring(GetLastError()));
 
-		FindClose(hFind);
+		CloseHandle(hFile);
 
 		throw FileSystemHelperException();
 	}
 
-	FindClose(hFind);
+	CloseHandle(hFile);
 }
 
 bool FileSystemHelper::isTempOrAppData(const wstring & filename)

@@ -8,10 +8,10 @@
 using std::wcout;
 using std::endl;
 
-void HoneypotsManager::addHoneypot(Honeypot& honeypot)
+void HoneypotsManager::addHoneypot(Honeypot& honeypot, bool listMostAccessTime)
 {
 	honeypots.push_front(honeypot);
-	honeypot.create();
+	honeypot.create(listMostAccessTime);
 	registryIO.writeHoneypot(honeypot);
 }
 
@@ -27,6 +27,7 @@ void HoneypotsManager::addHoneypots(unsigned int num)
 {
 	list<wstring> newFilenames = HoneypotNameGenerator::createFullFileNames(num);
 	unsigned int countAlreadyExist = 0; /* some of the files might exist already */
+	unsigned int i = 0;
 
 	for (wstring const& filename : newFilenames) {
 		Honeypot tempHP(filename);
@@ -34,7 +35,7 @@ void HoneypotsManager::addHoneypots(unsigned int num)
 		/* check if the given Honeypot already exists */
 		bool tempHPfound = std::find(honeypots.begin(), honeypots.end(), tempHP) != honeypots.end();
 		if (!tempHPfound) {
-			addHoneypot(tempHP);
+			addHoneypot(tempHP, i % 2 == 0);
 		}
 		else {
 			++countAlreadyExist;
@@ -94,11 +95,11 @@ HoneypotsManager::HoneypotsManager(unsigned int numOfHP)
 	changeHoneypotsAmountInFileSystem(numOfHP);
 }
 
-bool HoneypotsManager::monitorHoneypots()
+bool HoneypotsManager::monitorHoneypots() const
 {
 	bool alert = false;
 
-	for (Honeypot& honeypot : honeypots) {
+	for (const Honeypot& honeypot : honeypots) {
 		if (honeypot.isChanged()) {
 			wcout << L"Alert - Honeypot Manager found suspicious act in one of the Honeypots" << endl;
 			wcout << L"Honeypot path is: " + honeypot.getFileName() << endl;
