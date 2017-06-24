@@ -59,8 +59,9 @@ void ProcessesMonitor::checkProcessesLiveness()
 {
 	for (auto const processAnalyzer : processAnalyzers) {
 		try {
-			if (processAnalyzer.second->isProcessStillActive()) {
+			if (!processAnalyzer.second->isProcessStillActive()) {			
 				processAnalyzers.erase(processAnalyzer.first);
+				delete processAnalyzer.second;
 				updateOccured();
 			}
 		}
@@ -75,7 +76,7 @@ void ProcessesMonitor::checkProcessesLiveness()
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 {
 	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesCreation(this);
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination(this);
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::listenProcessesTermination(this);
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);
 
 	this->honeypotsManager = honeypotsManager;
@@ -194,7 +195,7 @@ map<unsigned int, ProcessAnalyzer *> ProcessesMonitor::getAllProcessesAnalyzers(
 ProcessesMonitor::~ProcessesMonitor()
 {
 	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesCreation();
-	ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
+	//ProcessHookMonitorWrapper::ProcessTraceWrapper::unlistenProcessesTermination();
 	for (auto const processAnalyzer : processAnalyzers) {
 		delete processAnalyzer.second;
 	}

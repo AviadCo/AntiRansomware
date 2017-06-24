@@ -343,8 +343,8 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 wstring ProcessAnalyzer::getProcessName() const
 {
-	return L"";
-	//return processName;
+	
+	return processName;
 }
 
 unsigned int ProcessAnalyzer::getCurrentScore() const

@@ -57,7 +57,8 @@ TCHAR tchar;
 MSG msg;
 
 /* init ProcessesMonitor */
-HoneypotsManager honeypotsManager = HoneypotsManager(60);
+HoneypotsManager honeypotsManager = HoneypotsManager(1);
+
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
 
 /* Handles */
@@ -197,16 +198,15 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 
 	case WM_TIMER:
 
-		if (processesMonitor.isUpdateOccured()) {
-			refreshList();
-		}
-
 		switch (wParam)
 		{
 		case IDT_TIMER:
 			/* checking process liveness */
-			processesMonitor.checkProcessesLiveness();
+			//processesMonitor.checkProcessesLiveness();
 
+			if (processesMonitor.isUpdateOccured()) {
+				refreshList();
+			}
 			return 0;
 		}
 
@@ -345,6 +345,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	hInst = hInstance;	
 
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG), NULL, (DLGPROC)DialogProc, 0);
+
+	KillTimer(hList, IDT_TIMER);
 
 	honeypotsManager.removeAllHoneypots();
 
