@@ -23,16 +23,21 @@ using namespace FunctionHooksDefinitions;
 
 void ProcessAnalyzer::setHooks(DWORD proccessID)
 {
-	std::thread first([proccessID, this]()-> void
-	{
-		try {
-			ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int)proccessID, this);
-		}
-		catch (exception& e){
+	try {
+		std::thread first([proccessID, this]()-> void
+		{
+			try {
+				ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::inject((int)proccessID, this);
+			}
+			catch (exception& e) {
 
-		}
-	});
-	first.detach();
+			}
+		});
+		first.detach();
+	}
+	catch (exception& e) {
+		log().error(__FUNCTION__, wstring(L"error while injecting to process: ") + std::to_wstring(proccessID));
+	}
 	
 }
 
