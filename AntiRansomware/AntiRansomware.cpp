@@ -82,32 +82,36 @@ static void refreshList()
 	ListView_DeleteAllItems(hList);
 
 	for (auto const processAnalyzer : processesMonitor.getAllProcessesAnalyzers()) {
+		if (processAnalyzer.second != nullptr && processAnalyzer.second->isProcessStillActive()
+			&& processAnalyzer.second->getCurrentScore() > 0) {
+			LvItem.iItem = i;
+			LvItem.iSubItem = 0;
+			SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM)&LvItem);
 
-		LvItem.iItem = i;
-		LvItem.iSubItem = 0;
-		SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM)&LvItem);
+			LvItem.iSubItem = PROCESS_ID;
+			swprintf(Temp, 255, L"%d", processAnalyzer.first);
+			LvItem.pszText = Temp;
+			SendMessage(hList, LVM_SETITEM, PROCESS_ID, (LPARAM)&LvItem);
 
-		LvItem.iSubItem = PROCESS_ID;
-		swprintf(Temp, 255, L"%d", processAnalyzer.first);
-		LvItem.pszText = Temp;
-		SendMessage(hList, LVM_SETITEM, PROCESS_ID, (LPARAM)&LvItem);
+			LvItem.iSubItem = PROCESS_NAME;
+			swprintf(Temp, 255, L"%s", processAnalyzer.second->getProcessName().c_str());
+			LvItem.pszText = Temp;
+			SendMessage(hList, LVM_SETITEM, PROCESS_NAME, (LPARAM)&LvItem);
 
-		LvItem.iSubItem = PROCESS_NAME;
-		swprintf(Temp, 255, L"%s", processAnalyzer.second->getProcessName().c_str());
-		LvItem.pszText = Temp;
-		SendMessage(hList, LVM_SETITEM, PROCESS_NAME, (LPARAM)&LvItem);
+			LvItem.iSubItem = PROCESS_SUSPICOUS;
+			swprintf(Temp, 255, L"%d", processAnalyzer.second->getCurrentScore());
+			LvItem.pszText = Temp;
+			SendMessage(hList, LVM_SETITEM, PROCESS_SUSPICOUS, (LPARAM)&LvItem);
 
-		LvItem.iSubItem = PROCESS_SUSPICOUS;
-		swprintf(Temp, 255, L"%d", processAnalyzer.second->getCurrentScore());
-		LvItem.pszText = Temp;
-		SendMessage(hList, LVM_SETITEM, PROCESS_SUSPICOUS, (LPARAM)&LvItem);
+			LvItem.iSubItem = PROCESS_IS_SUSPICOUS;
+			unsigned int score = processAnalyzer.second->getCurrentScore();
+			swprintf(Temp, 255, L"%s", score >= ProcessPolicy::SCORE_THRESHOLD ? L"HIGH" :
+				score >= ProcessPolicy::SCORE_THRESHOLD / 2 ? L"MEDIUM" : L"LOW");
+			LvItem.pszText = Temp;
+			SendMessage(hList, LVM_SETITEM, PROCESS_IS_SUSPICOUS, (LPARAM)&LvItem);
 
-		LvItem.iSubItem = PROCESS_IS_SUSPICOUS;
-		swprintf(Temp, 255, L"%s", processAnalyzer.second->getCurrentScore() >= 100 ? L"YES" : L"NO");
-		LvItem.pszText = Temp;
-		SendMessage(hList, LVM_SETITEM, PROCESS_IS_SUSPICOUS, (LPARAM)&LvItem);
-
-		++i;
+			++i;
+		}
 	}
 
 	if (!alreadyAlert && processesMonitor.monitorHoneypots()) {

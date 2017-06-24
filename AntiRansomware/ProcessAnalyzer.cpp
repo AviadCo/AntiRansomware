@@ -133,6 +133,10 @@ bool ProcessAnalyzer::updateScore(ProcessEvent& action)
 {
 	DWORD parentID = GetParentProcessID(getProcessID());
 
+	if (processName.compare(L"explorer.exe") == 0) {
+		return false;
+	}
+
 	currentScore = ProcessPolicy::getScoreForHistory(processHistory, action);
 
 	log().info(__FUNCTION__, L"pid: " + std::to_wstring(getProcessID()) + L" have score of: " + std::to_wstring(currentScore));
