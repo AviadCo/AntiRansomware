@@ -57,9 +57,11 @@ TCHAR tchar;
 MSG msg;
 
 /* init ProcessesMonitor */
-HoneypotsManager honeypotsManager = HoneypotsManager(1);
+HoneypotsManager honeypotsManager = HoneypotsManager(60);
 
 ProcessesMonitor processesMonitor = ProcessesMonitor(&honeypotsManager);
+
+bool alreadyAlert = false;
 
 /* Handles */
 HINSTANCE hInst;			// main function handler
@@ -108,7 +110,8 @@ static void refreshList()
 		++i;
 	}
 
-	if (processesMonitor.monitorHoneypots()) {
+	if (!alreadyAlert && processesMonitor.monitorHoneypots()) {
+		alreadyAlert = true;
 		MessageBox(0, L"Alert - Honeypot Manager found suspicious act in one of the Honeypots", L"AntiRansomware - Suspicious Activity Detected", MB_OK);
 	}
 }
