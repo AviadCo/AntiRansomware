@@ -88,7 +88,7 @@ ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager)
 	stopCounter = 0;
 }
 
-//TODO remove this function after debug
+
 ProcessesMonitor::ProcessesMonitor(const HoneypotsManager * honeypotsManager, unsigned int pid)
 {
 	ProcessHookMonitorWrapper::ProcessHookMonitorWrapper::setStatusHandler(this);

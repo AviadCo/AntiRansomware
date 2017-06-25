@@ -23,7 +23,6 @@ const wstring Honeypot::getFileName() const {
 	return lpFileName;
 }
 
-//TODO remove this function
 static wstring ExePath() {
 	wchar_t buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);

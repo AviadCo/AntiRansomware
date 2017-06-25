@@ -72,7 +72,7 @@ DWORD ProcessAnalyzer::GetParentProcessID(DWORD dwProcessID)
 
 ProcessAnalyzer::ProcessAnalyzer(DWORD proccessID, ProcessesMonitor *processesMonitor, const HoneypotsManager *honeypotsManager)
 {
-	//TODO check if a lower level of access is needed
+	
 	processHandle = OpenProcess(PROCESS_ALL_ACCESS, TRUE, proccessID);
 	if (!processHandle) {
 		log().error(__FUNCTION__, L"Failed to get process handle, errno: " + GetLastError());
@@ -261,7 +261,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 		action = new ProcessIntEvent(ProcessEvent::INJECTION, params[FunctionHooksDefinitions::HookWriteProcessMemory::DESC_PID]);
 
-		//TODO update process monitor if needed
+		
 	}
 	else if (!wcscmp(functionName.c_str(), HookShellExecuteExW::name)) {
 		if ((param.find(L"vssadmin.exe") != std::wstring::npos) && (param.find(L"delete") != std::wstring::npos)) {
@@ -340,7 +340,7 @@ void ProcessAnalyzer::parseHookNotification(const wstring & functionName, const 
 
 	bool retVal = updateScore(*action);
 	if (retVal && !alreadyNotified) {
-		//TODO uncomment this command
+		
 		alreadyNotified = true;
 
 		std::thread t1(&(ProcessesMonitor::alert), processesMonitor, getProcessID(), functionName);

@@ -208,8 +208,6 @@ BOOL CALLBACK DialogProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case IDT_TIMER:
-			/* checking process liveness */
-			//processesMonitor.checkProcessesLiveness();
 
 			if (processesMonitor.isUpdateOccured()) {
 				refreshList();

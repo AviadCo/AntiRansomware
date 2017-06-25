@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 namespace FunctionHooksDefinitions {
-	//TODO define a better splitter
+	
 	LPUWSTR PARAM_SPLITTER = L"|/|/|";
 
 	namespace HookCreateFileW {

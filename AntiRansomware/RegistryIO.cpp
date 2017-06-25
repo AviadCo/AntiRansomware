@@ -134,7 +134,7 @@ void RegistryIO::deleteValueByName(HKEY where, wstring name)
 
 	if (nError != ERROR_SUCCESS) {
 		log().error(__FUNCTION__, L"can't delete value: " + name);
-		//todo bug here - Noam please debug it
+		
 		throw CantDeleteValue();
 	}
 
